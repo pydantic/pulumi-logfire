@@ -20,6 +20,7 @@ on:
         value: ${{ jobs.prerequisites.outputs.version }}
 
 env:
+  GOPRIVATE: github.com/pydantic/*
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
@@ -74,10 +75,13 @@ jobs:
           sdk/go/*.sum
           sdk/*.sum
           *.sum
+    - name: Configure git for private modules
+      run: git config --global url."https://x-access-token:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
     - name: Prepare local workspace before restoring previously built files
       run: make prepare_local_workspace
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOPRIVATE: github.com/pydantic/*
     - name: Generate schema
       run: make schema
     - name: Build provider binary

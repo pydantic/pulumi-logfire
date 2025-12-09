@@ -79,10 +79,13 @@ jobs:
           key: go-provider-${{ matrix.platform.os }}-${{ matrix.platform.arch }}-${{ hashFiles('provider/go.sum') }}
           restore-keys: |
             go-provider-${{ matrix.platform.os }}-${{ matrix.platform.arch }}-
+      - name: Configure git for private modules
+        run: git config --global url."https://x-access-token:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
       - name: Prepare local workspace before restoring previously built
         run: make prepare_local_workspace
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOPRIVATE: github.com/pydantic/*
       - name: Restore prerequisites
         uses: ./.github/actions/download-prerequisites
       - name: Restore makefile progress
