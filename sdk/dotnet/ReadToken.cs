@@ -9,6 +9,9 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Logfire
 {
+    /// <summary>
+    /// Manages a Logfire read token.
+    /// </summary>
     [LogfireResourceType("logfire:index/readToken:ReadToken")]
     public partial class ReadToken : global::Pulumi.CustomResource
     {

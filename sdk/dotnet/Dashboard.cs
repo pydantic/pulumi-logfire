@@ -9,6 +9,9 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Logfire
 {
+    /// <summary>
+    /// Manages a Logfire dashboard.
+    /// </summary>
     [LogfireResourceType("logfire:index/dashboard:Dashboard")]
     public partial class Dashboard : global::Pulumi.CustomResource
     {

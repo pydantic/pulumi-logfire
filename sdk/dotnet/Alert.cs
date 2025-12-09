@@ -9,6 +9,9 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Logfire
 {
+    /// <summary>
+    /// Manages a Logfire alert.
+    /// </summary>
     [LogfireResourceType("logfire:index/alert:Alert")]
     public partial class Alert : global::Pulumi.CustomResource
     {

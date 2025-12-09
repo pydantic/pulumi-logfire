@@ -9,6 +9,9 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Logfire
 {
+    /// <summary>
+    /// Manages a Logfire project.
+    /// </summary>
     [LogfireResourceType("logfire:index/project:Project")]
     public partial class Project : global::Pulumi.CustomResource
     {

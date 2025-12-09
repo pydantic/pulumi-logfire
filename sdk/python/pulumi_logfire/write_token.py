@@ -168,7 +168,8 @@ class WriteToken(pulumi.CustomResource):
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Create a WriteToken resource with the given unique name, props, and options.
+        Manages a Logfire write token.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the token.
@@ -180,7 +181,8 @@ class WriteToken(pulumi.CustomResource):
                  args: WriteTokenArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a WriteToken resource with the given unique name, props, and options.
+        Manages a Logfire write token.
+
         :param str resource_name: The name of the resource.
         :param WriteTokenArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.

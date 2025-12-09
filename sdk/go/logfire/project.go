@@ -11,6 +11,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
+// Manages a Logfire project.
 type Project struct {
 	pulumi.CustomResourceState
 

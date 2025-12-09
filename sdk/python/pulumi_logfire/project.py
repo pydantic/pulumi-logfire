@@ -155,7 +155,8 @@ class Project(pulumi.CustomResource):
                  visibility: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Create a Project resource with the given unique name, props, and options.
+        Manages a Logfire project.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] description: Project description.
@@ -169,7 +170,8 @@ class Project(pulumi.CustomResource):
                  args: Optional[ProjectArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a Project resource with the given unique name, props, and options.
+        Manages a Logfire project.
+
         :param str resource_name: The name of the resource.
         :param ProjectArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.

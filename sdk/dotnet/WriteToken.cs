@@ -9,6 +9,9 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Logfire
 {
+    /// <summary>
+    /// Manages a Logfire write token.
+    /// </summary>
     [LogfireResourceType("logfire:index/writeToken:WriteToken")]
     public partial class WriteToken : global::Pulumi.CustomResource
     {

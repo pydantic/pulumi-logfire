@@ -12,6 +12,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
+// Manages a Logfire dashboard.
 type Dashboard struct {
 	pulumi.CustomResourceState
 
