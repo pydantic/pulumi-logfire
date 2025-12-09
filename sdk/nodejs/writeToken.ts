@@ -4,6 +4,9 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/**
+ * Manages a Logfire write token.
+ */
 export class WriteToken extends pulumi.CustomResource {
     /**
      * Get an existing WriteToken resource's state with the given name, ID, and optional extra

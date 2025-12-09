@@ -45,18 +45,25 @@ jobs:
       - id: esc-secrets
         name: Map environment to ESC outputs
         uses: ./.github/actions/esc-action
+      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        id: app-auth
+        with:
+          app-id: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_APP_ID }}
+          private-key: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
       # Without ldid cross-compiling Node binaries on a Linux worker intended to work on darwin-arm64 fails to sign the
       # binaries properly and they do not work as expected. See https://github.com/pulumi/pulumi-awsx/issues/1490
       - uses: MOZGIII/install-ldid-action@d5ab465f3a66a4d60a59882b935eb30e18e8d043 # v1
         with:
           tag: v2.1.5-procursus2
       - name: Setup mise
-        uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3
+        uses: blampe/mise-action@blampe/plugins
         env:
           MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
         with:
           version: 2025.11.6
-          github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
+          github_token: ${{ steps.app-auth.outputs.token }}
+          plugin_install: https://github.com/pulumi/vfox-pulumi
           # only saving the cache in the prerequisites job
           cache_save: false
       # Based on https://github.com/actions/cache/blob/main/examples.md#go---modules
@@ -71,7 +78,7 @@ jobs:
         run: |
           echo "path=$(go env GOMODCACHE)" >> "${GITHUB_OUTPUT}"
       - name: Go Cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
         with:
           path: |
             ${{ steps.gocache.outputs.path }}
@@ -79,13 +86,10 @@ jobs:
           key: go-provider-${{ matrix.platform.os }}-${{ matrix.platform.arch }}-${{ hashFiles('provider/go.sum') }}
           restore-keys: |
             go-provider-${{ matrix.platform.os }}-${{ matrix.platform.arch }}-
-      - name: Configure git for private modules
-        run: git config --global url."https://x-access-token:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
       - name: Prepare local workspace before restoring previously built
         run: make prepare_local_workspace
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOPRIVATE: github.com/pydantic/*
       - name: Restore prerequisites
         uses: ./.github/actions/download-prerequisites
       - name: Restore makefile progress
@@ -105,7 +109,7 @@ jobs:
         run: make provider_dist-${{ matrix.platform.os }}-${{ matrix.platform.arch }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: pulumi-resource-logfire-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
           path: bin/pulumi-resource-logfire-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz

@@ -4,7 +4,7 @@ description: Upload the SDK for a specific language as an asset for the workflow
 inputs:
   language:
     required: true
-    description: One of nodejs, python, dotnet, go, java
+    description: One of nodejs, python, go
 
 runs:
   using: "composite"
@@ -13,7 +13,7 @@ runs:
       shell: bash
       run: tar -zcf sdk/${{ inputs.language }}.tar.gz -C sdk/${{ inputs.language }} .
     - name: Upload artifacts
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         name: ${{ inputs.language  }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/${{ inputs.language }}.tar.gz

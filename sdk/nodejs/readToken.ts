@@ -4,6 +4,9 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/**
+ * Manages a Logfire read token.
+ */
 export class ReadToken extends pulumi.CustomResource {
     /**
      * Get an existing ReadToken resource's state with the given name, ID, and optional extra

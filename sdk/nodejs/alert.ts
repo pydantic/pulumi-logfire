@@ -4,6 +4,9 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/**
+ * Manages a Logfire alert.
+ */
 export class Alert extends pulumi.CustomResource {
     /**
      * Get an existing Alert resource's state with the given name, ID, and optional extra

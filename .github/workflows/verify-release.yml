@@ -37,16 +37,9 @@ on:
         required: false
 
 env:
-  JAVA_SIGNING_KEY: ${{ secrets.JAVA_SIGNING_KEY }}
-  JAVA_SIGNING_KEY_ID: ${{ secrets.JAVA_SIGNING_KEY_ID }}
-  JAVA_SIGNING_PASSWORD: ${{ secrets.JAVA_SIGNING_PASSWORD }}
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  NUGET_PUBLISH_KEY: ${{ secrets.NUGET_PUBLISH_KEY }}
-  OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-  OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
-  PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
   TF_APPEND_USER_AGENT: pulumi
 
@@ -58,7 +51,6 @@ jobs:
     # releaseVerification:
     #   nodejs: path/to/nodejs/project
     #   python: path/to/python/project
-    #   dotnet: path/to/dotnet/project
     #   go: path/to/go/project
     if: false
     strategy:
@@ -80,10 +72,6 @@ jobs:
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version: 3.11.8
-      - name: Setup DotNet
-        uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602 # v5.0.1
-        with:
-          dotnet-version: 8.0.x
       - name: Setup Node
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
         with:

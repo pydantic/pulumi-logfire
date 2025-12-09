@@ -141,7 +141,8 @@ class Channel(pulumi.CustomResource):
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Create a Channel resource with the given unique name, props, and options.
+        Manages a Logfire alert channel.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the channel is active.
@@ -155,7 +156,8 @@ class Channel(pulumi.CustomResource):
                  args: Optional[ChannelArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a Channel resource with the given unique name, props, and options.
+        Manages a Logfire alert channel.
+
         :param str resource_name: The name of the resource.
         :param ChannelArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.

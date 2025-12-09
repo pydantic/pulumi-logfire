@@ -6,6 +6,9 @@ import * as inputs from "./types/input";
 import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
+/**
+ * Manages a Logfire alert channel.
+ */
 export class Channel extends pulumi.CustomResource {
     /**
      * Get an existing Channel resource's state with the given name, ID, and optional extra

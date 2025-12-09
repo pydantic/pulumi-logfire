@@ -12,6 +12,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
+// Manages a Logfire write token.
 type WriteToken struct {
 	pulumi.CustomResourceState
 

@@ -347,7 +347,8 @@ class Alert(pulumi.CustomResource):
                  time_window: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Create a Alert resource with the given unique name, props, and options.
+        Manages a Logfire alert.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
@@ -367,7 +368,8 @@ class Alert(pulumi.CustomResource):
                  args: AlertArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a Alert resource with the given unique name, props, and options.
+        Manages a Logfire alert.
+
         :param str resource_name: The name of the resource.
         :param AlertArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.

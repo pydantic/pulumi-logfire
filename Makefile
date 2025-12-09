@@ -52,9 +52,9 @@ prepare_local_workspace: .make/mise_install upstream
 prepare_local_workspace: | mise_env
 # Creates all generated files which need to be committed
 generate: generate_sdks schema
-generate_sdks: generate_dotnet generate_go generate_nodejs generate_python
-build_sdks: build_dotnet build_go build_nodejs build_python
-install_sdks: install_dotnet_sdk install_go_sdk install_nodejs_sdk install_python_sdk
+generate_sdks: generate_go generate_nodejs generate_python
+build_sdks: build_go build_nodejs build_python
+install_sdks: install_go_sdk install_nodejs_sdk install_python_sdk
 .PHONY: development only_build build generate generate_sdks build_sdks install_sdks mise_install mise_env
 
 # Installs all necessary tools with mise and records completion in a sentinel
@@ -104,27 +104,13 @@ help:
 	@echo "  build_[language]       Build the SDK to check correctness"
 	@echo "  install_[language]_sdk Install the SDK ready for testing"
 	@echo ""
-	@echo "  [language] = dotnet go nodejs python"
+	@echo "  [language] = go nodejs python"
 	@echo ""
 .PHONY: help
 
 GEN_PULUMI_HOME := $(WORKING_DIR)/.pulumi
 GEN_PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(GEN_PULUMI_HOME)/examples-cache
 GEN_ENVS := PULUMI_HOME=$(GEN_PULUMI_HOME) PULUMI_CONVERT_EXAMPLES_CACHE_DIR=$(GEN_PULUMI_CONVERT_EXAMPLES_CACHE_DIR) PULUMI_CONVERT=$(PULUMI_CONVERT) PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=$(PULUMI_CONVERT)
-
-generate_dotnet: .make/generate_dotnet
-build_dotnet: .make/build_dotnet
-.make/generate_dotnet: .make/mise_install bin/$(CODEGEN)
-.make/generate_dotnet: | mise_env
-	$(GEN_ENVS) $(WORKING_DIR)/bin/$(CODEGEN) dotnet --out sdk/dotnet/
-	cd sdk/dotnet/ && \
-		printf "module fake_dotnet_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
-		echo "$(PROVIDER_VERSION)" >version.txt
-	@touch $@
-.make/build_dotnet: .make/generate_dotnet
-	cd sdk/dotnet/ && dotnet build
-	@touch $@
-.PHONY: generate_dotnet build_dotnet
 
 generate_go: .make/generate_go
 build_go: .make/build_go
@@ -136,22 +122,6 @@ build_go: .make/build_go
 	cd sdk && go list "$$(grep -e "^module" go.mod | cut -d ' ' -f 2)/go/..." | xargs -I {} bash -c 'go build {} && go clean -i {}'
 	@touch $@
 .PHONY: generate_go build_go
-
-generate_java: .make/generate_java
-build_java: .make/build_java
-.make/generate_java: PACKAGE_VERSION := $(PROVIDER_VERSION)
-.make/generate_java: .make/mise_install bin/$(CODEGEN)
-.make/generate_java: | mise_env
-	$(GEN_ENVS) $(WORKING_DIR)/bin/$(CODEGEN) java --out sdk/java/
-	printf "module fake_java_module // Exclude this directory from Go tools\n\ngo 1.17\n" > sdk/java/go.mod
-	@touch $@
-.make/build_java: PACKAGE_VERSION := $(PROVIDER_VERSION)
-.make/build_java: .make/generate_java
-	cd sdk/java/ && \
-		gradle --console=plain build && \
-		gradle --console=plain javadoc
-	@touch $@
-.PHONY: generate_java build_java
 
 generate_nodejs: .make/generate_nodejs
 build_nodejs: .make/build_nodejs
@@ -188,31 +158,19 @@ build_python: .make/build_python
 .PHONY: generate_python build_python
 
 clean:
-	rm -rf sdk/{dotnet,nodejs,go,python}
+	rm -rf sdk/{nodejs,go,python}
 	rm -rf bin/*
 	rm -rf .make/*
 	rm -rf "$(GEN_PULUMI_CONVERT_EXAMPLES_CACHE_DIR)"
-	if dotnet nuget list source | grep "$(WORKING_DIR)/nuget"; then \
-		dotnet nuget remove source "$(WORKING_DIR)/nuget" \
-	; fi
 .PHONY: clean
 
-install_dotnet_sdk: .make/install_dotnet_sdk
-.make/install_dotnet_sdk: .make/build_dotnet
-	mkdir -p nuget
-	find sdk/dotnet/bin -name '*.nupkg' -print -exec cp -p "{}" ${WORKING_DIR}/nuget \;
-	if ! dotnet nuget list source | grep "${WORKING_DIR}/nuget"; then \
-		dotnet nuget add source "${WORKING_DIR}/nuget" --name "${WORKING_DIR}/nuget" \
-	; fi
-	@touch $@
 install_go_sdk:
-install_java_sdk:
 install_nodejs_sdk: .make/install_nodejs_sdk
 .make/install_nodejs_sdk: .make/build_nodejs
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
 	@touch $@
 install_python_sdk:
-.PHONY: install_dotnet_sdk install_go_sdk install_java_sdk install_nodejs_sdk install_python_sdk
+.PHONY: install_go_sdk install_nodejs_sdk install_python_sdk
 
 lint_provider: upstream
 	cd provider && golangci-lint run --path-prefix provider -c ../.golangci.yml

@@ -1,7 +1,0 @@
-name: logfire-dotnet
-runtime: dotnet
-description: Pulumi Logfire .NET example
-config:
-  pulumi:tags:
-    value:
-      pulumi:template: dotnet

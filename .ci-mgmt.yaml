@@ -18,13 +18,12 @@ pulumiConvert: 1
 providerDefaultBranch: main
 # Explicit list of languages to support for SDKs. Java is currently excluded because it doesn't yet work well for non-internal providers.
 languages:
-    - dotnet
     - go
     - nodejs
     - python
 # Disable Java publishing and pushing the provider binary to the CDN as these only work internally within Pulumi.
 publish:
-    sdk: "all,!java"
+    sdk: "nodejs,python"
     cdn: false
 # Enables automatic generation of basic docs pages for the registry.
 # registryDocs: true

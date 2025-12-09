@@ -21,14 +21,9 @@ yarn.lock
 ci-scripts
 provider/**/schema-embed.json
 **/version.txt
-**/nuget
 **/dist
-
-sdk/java/build
-sdk/java/.gradle
-sdk/java/gradle
-sdk/java/gradlew
-sdk/java/gradlew.bat
+sdk/nodejs/.gitattributes
+sdk/nodejs/.gitignore
 
 sdk/python/venv
 

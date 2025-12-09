@@ -36,14 +36,6 @@ To use from Go, use `go get` to grab the latest version of the library:
 go get github.com/pulumi/pulumi-logfire/sdk/go/...
 ```
 
-### .NET
-
-To use from .NET, install using `dotnet add package`:
-
-```bash
-dotnet add package Pulumi.Logfire
-```
-
 ## Configuration
 
 The following configuration points are available for the `logfire` provider:

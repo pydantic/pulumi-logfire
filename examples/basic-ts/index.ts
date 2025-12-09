@@ -10,8 +10,11 @@ const provider = new logfire.Provider("logfire", {
     apiKey,
 });
 
+const stack = pulumi.getStack();
+const stackSuffix = stack.slice(0, 34);
+
 const project = new logfire.Project("proj", {
-    name: "pulumi-basic",
+    name: `pulumi-basic-ts-${stackSuffix}`,
     description: "Pulumi example project",
 }, { provider });
 

@@ -12,6 +12,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
+// Manages a Logfire alert.
 type Alert struct {
 	pulumi.CustomResourceState
 

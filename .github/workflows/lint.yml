@@ -9,10 +9,8 @@ on:
 env:
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
-  PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   PULUMI_PROVIDER_AUTOMATION_TOKEN: ${{ secrets.PULUMI_PROVIDER_AUTOMATION_TOKEN }}
   PULUMI_PULUMI_ENABLE_JOURNALING: "true"
-  GOPRIVATE: github.com/pydantic/*
   TF_APPEND_USER_AGENT: pulumi
 
 jobs:
@@ -31,16 +29,21 @@ jobs:
     - id: esc-secrets
       name: Map environment to ESC outputs
       uses: ./.github/actions/esc-action
+    - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+      id: app-auth
+      with:
+        app-id: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_APP_ID }}
+        private-key: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
     - name: Setup mise
-      uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3
+      uses: blampe/mise-action@blampe/plugins
       env:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
         version: 2025.11.6
-        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
+        github_token: ${{ steps.app-auth.outputs.token }}
+        plugin_install: https://github.com/pulumi/vfox-pulumi
         cache_save: false # A different job handles caching our tools.
-    - name: Configure git for private modules
-      run: git config --global url."https://x-access-token:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
     - name: disarm go:embed directives to enable lint
       continue-on-error: true # this fails if there are no go:embed directives
       run: |

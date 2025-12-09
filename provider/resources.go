@@ -106,14 +106,6 @@ func Provider() tfbridge.ProviderInfo {
 			// RespectSchemaVersion ensures the SDK is generated linking to the correct version of the provider.
 			RespectSchemaVersion: true,
 		},
-		CSharp: &tfbridge.CSharpInfo{
-			// RespectSchemaVersion ensures the SDK is generated linking to the correct version of the provider.
-			RespectSchemaVersion: true,
-			// Use a wildcard import so NuGet will prefer the latest possible version.
-			PackageReferences: map[string]string{
-				"Pulumi": "3.*",
-			},
-		},
 	}
 
 	// MustComputeTokens maps all resources and datasources from the upstream provider into Pulumi.
