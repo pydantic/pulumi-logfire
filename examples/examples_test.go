@@ -2,12 +2,9 @@
 package examples
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
@@ -72,7 +69,7 @@ func getCwd(t *testing.T) string {
 func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	t.Helper()
 	return integration.ProgramTestOptions{
-		Config: integration.ConfigMap{
+		Config: map[string]string{
 			"logfire:baseUrl": os.Getenv("LOGFIRE_BASE_URL"),
 			"logfire:apiKey":  os.Getenv("LOGFIRE_API_KEY"),
 		},
