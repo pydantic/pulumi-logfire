@@ -1,0 +1,27 @@
+{
+    "name": "@pulumi/logfire",
+    "version": "1.0.0-alpha.0+dev",
+    "description": "A Pulumi package for creating and managing logfire cloud resources.",
+    "keywords": [
+        "logfire",
+        "category/cloud"
+    ],
+    "homepage": "https://pydantic.dev/logfire",
+    "repository": "https://github.com/pydantic/pulumi-logfire",
+    "license": "Apache-2.0",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.142.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18",
+        "typescript": "^4.3.5"
+    },
+    "pulumi": {
+        "resource": true,
+        "name": "logfire",
+        "version": "1.0.0-alpha.0+dev"
+    }
+}

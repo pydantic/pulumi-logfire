@@ -1,0 +1,36 @@
+{
+    "auto-aliasing": {
+        "resources": {
+            "logfire_alert": {
+                "current": "logfire:index/alert:Alert",
+                "majorVersion": 1,
+                "fields": {
+                    "channel_ids": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "logfire_channel": {
+                "current": "logfire:index/channel:Channel",
+                "majorVersion": 1
+            },
+            "logfire_dashboard": {
+                "current": "logfire:index/dashboard:Dashboard",
+                "majorVersion": 1
+            },
+            "logfire_project": {
+                "current": "logfire:index/project:Project",
+                "majorVersion": 1
+            },
+            "logfire_read_token": {
+                "current": "logfire:index/readToken:ReadToken",
+                "majorVersion": 1
+            },
+            "logfire_write_token": {
+                "current": "logfire:index/writeToken:WriteToken",
+                "majorVersion": 1
+            }
+        }
+    },
+    "auto-settings": {}
+}

@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "target": "ES2020",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "declaration": true,
+        "sourceMap": true,
+        "stripInternal": true,
+        "experimentalDecorators": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true
+    },
+    "files": [
+        "alert.ts",
+        "channel.ts",
+        "config/index.ts",
+        "config/vars.ts",
+        "dashboard.ts",
+        "index.ts",
+        "project.ts",
+        "provider.ts",
+        "readToken.ts",
+        "types/index.ts",
+        "types/input.ts",
+        "types/output.ts",
+        "utilities.ts",
+        "writeToken.ts"
+    ]
+}
