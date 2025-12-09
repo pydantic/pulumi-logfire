@@ -6,11 +6,12 @@ cfg = Config('logfire')
 base_url = cfg.require('baseUrl')
 api_key = cfg.require_secret('apiKey')
 stack = pulumi.get_stack()
+stack_suffix = stack[:34]
 
 provider = Provider('logfire', base_url=base_url, api_key=api_key)
 
 proj = Project('proj',
-               name=f'pulumi-basic-py-{stack}',
+               name=f'pulumi-basic-py-{stack_suffix}',
                description='Pulumi example project',
                opts=pulumi.ResourceOptions(provider=provider))
 

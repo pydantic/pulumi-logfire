@@ -16,10 +16,11 @@ return await Deployment.RunAsync(() =>
     });
 
     var stack = Deployment.Instance.StackName;
+    var stackSuffix = stack.Length > 30 ? stack[..30] : stack;
 
     var project = new Project("proj", new ProjectArgs
     {
-        Name = $"pulumi-basic-dotnet-{stack}",
+        Name = $"pulumi-basic-dotnet-{stackSuffix}",
         Description = "Pulumi example project",
     }, new CustomResourceOptions { Provider = provider });
 

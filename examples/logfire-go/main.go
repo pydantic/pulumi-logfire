@@ -21,6 +21,9 @@ func main() {
 		}
 
 		stack := ctx.Stack()
+		if len(stack) > 34 {
+			stack = stack[:34]
+		}
 
 		proj, err := logfire.NewProject(ctx, "proj", &logfire.ProjectArgs{
 			Name:        pulumi.StringPtr("pulumi-basic-go-" + stack),
