@@ -2,21 +2,28 @@ package main
 
 import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+		cfg := config.New(ctx, "logfire")
+		baseURL := cfg.Require("baseUrl")
+		apiKey := cfg.RequireSecret("apiKey")
+
 		provider, err := logfire.NewProvider(ctx, "logfire", &logfire.ProviderArgs{
-			BaseUrl: pulumi.String(ctx.GetConfig("logfire:baseUrl")),
-			ApiKey:  pulumi.String(ctx.GetConfig("logfire:apiKey")),
+			BaseUrl: pulumi.StringPtr(baseURL),
+			ApiKey:  apiKey.ToStringPtrOutput(),
 		})
 		if err != nil {
 			return err
 		}
 
+		stack := ctx.Stack()
+
 		proj, err := logfire.NewProject(ctx, "proj", &logfire.ProjectArgs{
-			Name:        pulumi.String("pulumi-basic"),
+			Name:        pulumi.StringPtr("pulumi-basic-go-" + stack),
 			Description: pulumi.StringPtr("Pulumi example project"),
 		}, pulumi.Provider(provider))
 		if err != nil {

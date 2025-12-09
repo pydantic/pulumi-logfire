@@ -15,9 +15,11 @@ return await Deployment.RunAsync(() =>
         ApiKey = apiKey,
     });
 
+    var stack = Deployment.Instance.StackName;
+
     var project = new Project("proj", new ProjectArgs
     {
-        Name = "pulumi-basic",
+        Name = $"pulumi-basic-dotnet-{stack}",
         Description = "Pulumi example project",
     }, new CustomResourceOptions { Provider = provider });
 

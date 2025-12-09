@@ -5,10 +5,14 @@ from pulumi import Config
 cfg = Config('logfire')
 base_url = cfg.require('baseUrl')
 api_key = cfg.require_secret('apiKey')
+stack = pulumi.get_stack()
 
 provider = Provider('logfire', base_url=base_url, api_key=api_key)
 
-proj = Project('proj', name='pulumi-basic', description='Pulumi example project', opts=pulumi.ResourceOptions(provider=provider))
+proj = Project('proj',
+               name=f'pulumi-basic-py-{stack}',
+               description='Pulumi example project',
+               opts=pulumi.ResourceOptions(provider=provider))
 
 chan = Channel('alerts',
                name='alerts-webhook',
