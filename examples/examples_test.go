@@ -38,7 +38,7 @@ func getGoBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	base := getBaseOptions(t)
 	baseJS := base.With(integration.ProgramTestOptions{
 		Dependencies: []string{
-			filepath.Join("..", "sdk", "go"),
+			filepath.Join("..", "sdk"),
 		},
 	})
 

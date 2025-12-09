@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using Pulumi;
 using Pulumi.Logfire;
+using Pulumi.Logfire.Inputs;
 
 return await Deployment.RunAsync(() =>
 {
-    var config = new Config("logfire");
+    var config = new Pulumi.Config("logfire");
     var baseUrl = config.Require("baseUrl");
     var apiKey = config.RequireSecret("apiKey");
 

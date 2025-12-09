@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pydantic/pulumi-logfire/sdk/v1/go/logfire"
+	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
 )
 
 func main() {
