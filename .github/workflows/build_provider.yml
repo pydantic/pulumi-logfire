@@ -29,7 +29,7 @@ jobs:
     name: Build ${{ matrix.platform.os }}-${{ matrix.platform.arch }}
     runs-on: ubuntu-latest
     env:
-  PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+      PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
       PROVIDER_VERSION: ${{ inputs.version }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
