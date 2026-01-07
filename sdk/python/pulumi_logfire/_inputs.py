@@ -25,7 +25,7 @@ if not MYPY:
     class ChannelConfigArgsDict(TypedDict):
         type: pulumi.Input[_builtins.str]
         """
-        Channel type (`webhook` or `opsgenie`).
+        Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
         """
         auth_key: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -50,7 +50,7 @@ class ChannelConfigArgs:
                  format: Optional[pulumi.Input[_builtins.str]] = None,
                  url: Optional[pulumi.Input[_builtins.str]] = None):
         """
-        :param pulumi.Input[_builtins.str] type: Channel type (`webhook` or `opsgenie`).
+        :param pulumi.Input[_builtins.str] type: Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
         :param pulumi.Input[_builtins.str] auth_key: Opsgenie API key.
         :param pulumi.Input[_builtins.str] format: Webhook payload format.
         :param pulumi.Input[_builtins.str] url: Webhook URL endpoint.
@@ -67,7 +67,7 @@ class ChannelConfigArgs:
     @pulumi.getter
     def type(self) -> pulumi.Input[_builtins.str]:
         """
-        Channel type (`webhook` or `opsgenie`).
+        Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
         """
         return pulumi.get(self, "type")
 

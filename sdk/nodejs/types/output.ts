@@ -15,7 +15,7 @@ export interface ChannelConfig {
      */
     format?: string;
     /**
-     * Channel type (`webhook` or `opsgenie`).
+     * Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
      */
     type: string;
     /**

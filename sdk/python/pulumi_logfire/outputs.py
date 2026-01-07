@@ -43,7 +43,7 @@ class ChannelConfig(dict):
                  format: Optional[_builtins.str] = None,
                  url: Optional[_builtins.str] = None):
         """
-        :param _builtins.str type: Channel type (`webhook` or `opsgenie`).
+        :param _builtins.str type: Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
         :param _builtins.str auth_key: Opsgenie API key.
         :param _builtins.str format: Webhook payload format.
         :param _builtins.str url: Webhook URL endpoint.
@@ -60,7 +60,7 @@ class ChannelConfig(dict):
     @pulumi.getter
     def type(self) -> _builtins.str:
         """
-        Channel type (`webhook` or `opsgenie`).
+        Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
         """
         return pulumi.get(self, "type")
 

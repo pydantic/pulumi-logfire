@@ -48,7 +48,7 @@ export class Project extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly organization: pulumi.Output<string>;
     /**
-     * Project visibility (`public` or `private`).
+     * Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
      */
     declare public readonly visibility: pulumi.Output<string>;
 
@@ -98,7 +98,7 @@ export interface ProjectState {
      */
     organization?: pulumi.Input<string>;
     /**
-     * Project visibility (`public` or `private`).
+     * Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
      */
     visibility?: pulumi.Input<string>;
 }
@@ -116,7 +116,7 @@ export interface ProjectArgs {
      */
     name?: pulumi.Input<string>;
     /**
-     * Project visibility (`public` or `private`).
+     * Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
      */
     visibility?: pulumi.Input<string>;
 }
