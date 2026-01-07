@@ -21,7 +21,7 @@ type Project struct {
 	Name pulumi.StringOutput `pulumi:"name"`
 	// Organization name. Computed from the API and cannot be set.
 	Organization pulumi.StringOutput `pulumi:"organization"`
-	// Project visibility (`public` or `private`).
+	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
 	Visibility pulumi.StringOutput `pulumi:"visibility"`
 }
 
@@ -61,7 +61,7 @@ type projectState struct {
 	Name *string `pulumi:"name"`
 	// Organization name. Computed from the API and cannot be set.
 	Organization *string `pulumi:"organization"`
-	// Project visibility (`public` or `private`).
+	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
 	Visibility *string `pulumi:"visibility"`
 }
 
@@ -72,7 +72,7 @@ type ProjectState struct {
 	Name pulumi.StringPtrInput
 	// Organization name. Computed from the API and cannot be set.
 	Organization pulumi.StringPtrInput
-	// Project visibility (`public` or `private`).
+	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
 	Visibility pulumi.StringPtrInput
 }
 
@@ -85,7 +85,7 @@ type projectArgs struct {
 	Description *string `pulumi:"description"`
 	// Project name/slug. Must be unique within the organization.
 	Name *string `pulumi:"name"`
-	// Project visibility (`public` or `private`).
+	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
 	Visibility *string `pulumi:"visibility"`
 }
 
@@ -95,7 +95,7 @@ type ProjectArgs struct {
 	Description pulumi.StringPtrInput
 	// Project name/slug. Must be unique within the organization.
 	Name pulumi.StringPtrInput
-	// Project visibility (`public` or `private`).
+	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
 	Visibility pulumi.StringPtrInput
 }
 
@@ -201,7 +201,7 @@ func (o ProjectOutput) Organization() pulumi.StringOutput {
 	return o.ApplyT(func(v *Project) pulumi.StringOutput { return v.Organization }).(pulumi.StringOutput)
 }
 
-// Project visibility (`public` or `private`).
+// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
 func (o ProjectOutput) Visibility() pulumi.StringOutput {
 	return o.ApplyT(func(v *Project) pulumi.StringOutput { return v.Visibility }).(pulumi.StringOutput)
 }
