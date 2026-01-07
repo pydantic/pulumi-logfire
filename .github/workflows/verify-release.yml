@@ -40,6 +40,8 @@ env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
+  GOPRIVATE: github.com/pydantic/*
+  GONOSUMDB: github.com/pydantic/*
   PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
   TF_APPEND_USER_AGENT: pulumi
 
@@ -68,6 +70,9 @@ jobs:
       - id: esc-secrets
         name: Map environment to ESC outputs
         uses: ./.github/actions/esc-action
+      - name: Configure git for private modules
+        if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
+        run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
       - name: Setup Python
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:

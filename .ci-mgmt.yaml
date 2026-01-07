@@ -40,3 +40,5 @@ github-app:
 
 env:
     PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+    GOPRIVATE: github.com/pydantic/*
+    GONOSUMDB: github.com/pydantic/*

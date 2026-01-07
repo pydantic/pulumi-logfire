@@ -11,6 +11,8 @@ env:
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
   PULUMI_PROVIDER_AUTOMATION_TOKEN: ${{ secrets.PULUMI_PROVIDER_AUTOMATION_TOKEN }}
   PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+  GOPRIVATE: github.com/pydantic/*
+  GONOSUMDB: github.com/pydantic/*
   PULUMI_PULUMI_ENABLE_JOURNALING: "true"
   TF_APPEND_USER_AGENT: pulumi
 
@@ -30,6 +32,9 @@ jobs:
       - id: esc-secrets
         name: Map environment to ESC outputs
         uses: ./.github/actions/esc-action
+      - name: Configure git for private modules
+        if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
+        run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
       - name: Setup mise
         uses: blampe/mise-action@blampe/plugins
         env:

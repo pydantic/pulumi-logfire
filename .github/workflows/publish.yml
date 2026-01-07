@@ -24,6 +24,8 @@ env:
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
   PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+  GOPRIVATE: github.com/pydantic/*
+  GONOSUMDB: github.com/pydantic/*
   PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
   TF_APPEND_USER_AGENT: pulumi
 
@@ -45,6 +47,9 @@ jobs:
     - id: esc-secrets
       name: Map environment to ESC outputs
       uses: ./.github/actions/esc-action
+    - name: Configure git for private modules
+      if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
+      run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
     - name: Setup mise
       uses: blampe/mise-action@blampe/plugins
       env:
@@ -118,6 +123,9 @@ jobs:
     - id: esc-secrets
       name: Map environment to ESC outputs
       uses: ./.github/actions/esc-action
+    - name: Configure git for private modules
+      if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
+      run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
     - name: Setup mise
       uses: blampe/mise-action@blampe/plugins
       env:
@@ -184,6 +192,9 @@ jobs:
     - id: esc-secrets
       name: Map environment to ESC outputs
       uses: ./.github/actions/esc-action
+    - name: Configure git for private modules
+      if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
+      run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
     - name: Clean up release labels
       uses: pulumi/action-release-by-pr-label@main
       with:
