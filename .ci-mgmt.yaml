@@ -34,3 +34,9 @@ publishRegistry: false
 # Disable ESC - use GitHub secrets directly instead
 esc:
     enabled: false
+
+github-app:
+    enabled: false
+
+env:
+    PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
