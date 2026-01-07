@@ -42,3 +42,5 @@ env:
     PULUMI_BOT_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
     GOPRIVATE: github.com/pydantic/*
     GONOSUMDB: github.com/pydantic/*
+    LOGFIRE_BASE_URL: ${{ secrets.LOGFIRE_BASE_URL }}
+    LOGFIRE_API_KEY: ${{ secrets.LOGFIRE_API_KEY }}
