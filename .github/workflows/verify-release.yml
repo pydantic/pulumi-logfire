@@ -71,8 +71,13 @@ jobs:
         name: Map environment to ESC outputs
         uses: ./.github/actions/esc-action
       - name: Configure git for private modules
-        if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
-        run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        shell: bash
+        env:
+          GIT_AUTH_TOKEN: ${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "$GIT_AUTH_TOKEN" ]; then
+            git config --global url."https://${GIT_AUTH_TOKEN}@github.com/".insteadOf "https://github.com/"
+          fi
       - name: Setup Python
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:

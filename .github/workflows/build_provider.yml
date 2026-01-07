@@ -49,8 +49,13 @@ jobs:
         name: Map environment to ESC outputs
         uses: ./.github/actions/esc-action
       - name: Configure git for private modules
-        if: ${{ secrets.GH_PAT != '' || secrets.PULUMI_BOT_TOKEN != '' }}
-        run: git config --global url."https://${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        shell: bash
+        env:
+          GIT_AUTH_TOKEN: ${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "$GIT_AUTH_TOKEN" ]; then
+            git config --global url."https://${GIT_AUTH_TOKEN}@github.com/".insteadOf "https://github.com/"
+          fi
       # Without ldid cross-compiling Node binaries on a Linux worker intended to work on darwin-arm64 fails to sign the
       # binaries properly and they do not work as expected. See https://github.com/pulumi/pulumi-awsx/issues/1490
       - uses: MOZGIII/install-ldid-action@d5ab465f3a66a4d60a59882b935eb30e18e8d043 # v1
