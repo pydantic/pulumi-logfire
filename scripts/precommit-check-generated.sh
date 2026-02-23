@@ -4,6 +4,11 @@ set -euo pipefail
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
+# Ensure generation uses the repository toolchain, not global binaries.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise env)"
+fi
+
 echo "[pre-commit] Regenerating schema and SDKs to verify generated files are in sync..."
 make schema PULUMI_CONVERT=0
 make generate_sdks PULUMI_CONVERT=0

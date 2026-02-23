@@ -13,7 +13,7 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as logfire from "@pulumi/logfire";
+ * import * as logfire from "@pydantic/pulumi-logfire";
  *
  * const example = new logfire.Channel("example", {
  *     active: true,

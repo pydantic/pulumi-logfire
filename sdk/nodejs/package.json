@@ -1,5 +1,5 @@
 {
-    "name": "@pulumi/logfire",
+    "name": "@pydantic/pulumi-logfire",
     "version": "1.0.0-alpha.0+dev",
     "description": "A Pulumi package for creating and managing logfire cloud resources.",
     "keywords": [

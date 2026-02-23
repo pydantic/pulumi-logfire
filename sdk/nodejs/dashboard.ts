@@ -12,7 +12,7 @@ import * as utilities from "./utilities";
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
  * import * as fs from "fs";
- * import * as logfire from "@pulumi/logfire";
+ * import * as logfire from "@pydantic/pulumi-logfire";
  *
  * const exampleProject = new logfire.Project("exampleProject", {});
  * const exampleDashboard = new logfire.Dashboard("exampleDashboard", {
