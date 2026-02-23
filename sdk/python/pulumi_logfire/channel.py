@@ -27,7 +27,7 @@ class ChannelArgs:
         """
         The set of arguments for constructing a Channel resource.
         :param pulumi.Input[_builtins.bool] active: Whether the channel is active.
-        :param pulumi.Input['ChannelConfigArgs'] config: Channel configuration.
+        :param pulumi.Input['ChannelConfigArgs'] config: Required channel configuration.
         :param pulumi.Input[_builtins.str] name: Channel name.
         """
         if active is not None:
@@ -53,7 +53,7 @@ class ChannelArgs:
     @pulumi.getter
     def config(self) -> Optional[pulumi.Input['ChannelConfigArgs']]:
         """
-        Channel configuration.
+        Required channel configuration.
         """
         return pulumi.get(self, "config")
 
@@ -83,7 +83,7 @@ class _ChannelState:
         """
         Input properties used for looking up and filtering Channel resources.
         :param pulumi.Input[_builtins.bool] active: Whether the channel is active.
-        :param pulumi.Input['ChannelConfigArgs'] config: Channel configuration.
+        :param pulumi.Input['ChannelConfigArgs'] config: Required channel configuration.
         :param pulumi.Input[_builtins.str] name: Channel name.
         """
         if active is not None:
@@ -109,7 +109,7 @@ class _ChannelState:
     @pulumi.getter
     def config(self) -> Optional[pulumi.Input['ChannelConfigArgs']]:
         """
-        Channel configuration.
+        Required channel configuration.
         """
         return pulumi.get(self, "config")
 
@@ -143,10 +143,25 @@ class Channel(pulumi.CustomResource):
         """
         Manages a Logfire alert channel.
 
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example = logfire.Channel("example",
+            active=True,
+            config={
+                "format": "auto",
+                "type": "webhook",
+                "url": "https://example.com/logfire-webhook",
+            })
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the channel is active.
-        :param pulumi.Input[Union['ChannelConfigArgs', 'ChannelConfigArgsDict']] config: Channel configuration.
+        :param pulumi.Input[Union['ChannelConfigArgs', 'ChannelConfigArgsDict']] config: Required channel configuration.
         :param pulumi.Input[_builtins.str] name: Channel name.
         """
         ...
@@ -157,6 +172,21 @@ class Channel(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Manages a Logfire alert channel.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example = logfire.Channel("example",
+            active=True,
+            config={
+                "format": "auto",
+                "type": "webhook",
+                "url": "https://example.com/logfire-webhook",
+            })
+        ```
 
         :param str resource_name: The name of the resource.
         :param ChannelArgs args: The arguments to use to populate this resource's properties.
@@ -209,7 +239,7 @@ class Channel(pulumi.CustomResource):
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the channel is active.
-        :param pulumi.Input[Union['ChannelConfigArgs', 'ChannelConfigArgsDict']] config: Channel configuration.
+        :param pulumi.Input[Union['ChannelConfigArgs', 'ChannelConfigArgsDict']] config: Required channel configuration.
         :param pulumi.Input[_builtins.str] name: Channel name.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
@@ -233,7 +263,7 @@ class Channel(pulumi.CustomResource):
     @pulumi.getter
     def config(self) -> pulumi.Output[Optional['outputs.ChannelConfig']]:
         """
-        Channel configuration.
+        Required channel configuration.
         """
         return pulumi.get(self, "config")
 

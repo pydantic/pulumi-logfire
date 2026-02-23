@@ -6,6 +6,19 @@ import * as utilities from "./utilities";
 
 /**
  * Manages a Logfire read token.
+ *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as logfire from "@pulumi/logfire";
+ *
+ * const exampleProject = new logfire.Project("exampleProject", {});
+ * const exampleReadToken = new logfire.ReadToken("exampleReadToken", {
+ *     projectId: exampleProject.id,
+ *     expiresAt: "2099-12-31T23:59:59Z",
+ * });
+ * ```
  */
 export class ReadToken extends pulumi.CustomResource {
     /**
@@ -48,6 +61,10 @@ export class ReadToken extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly description: pulumi.Output<string>;
     /**
+     * Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+     */
+    declare public readonly expiresAt: pulumi.Output<string | undefined>;
+    /**
      * UUID of the project that owns the token.
      */
     declare public readonly projectId: pulumi.Output<string>;
@@ -80,6 +97,7 @@ export class ReadToken extends pulumi.CustomResource {
             resourceInputs["createdAt"] = state?.createdAt;
             resourceInputs["createdByName"] = state?.createdByName;
             resourceInputs["description"] = state?.description;
+            resourceInputs["expiresAt"] = state?.expiresAt;
             resourceInputs["projectId"] = state?.projectId;
             resourceInputs["projectName"] = state?.projectName;
             resourceInputs["token"] = state?.token;
@@ -89,6 +107,7 @@ export class ReadToken extends pulumi.CustomResource {
             if (args?.projectId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'projectId'");
             }
+            resourceInputs["expiresAt"] = args?.expiresAt;
             resourceInputs["projectId"] = args?.projectId;
             resourceInputs["createdAt"] = undefined /*out*/;
             resourceInputs["createdByName"] = undefined /*out*/;
@@ -121,6 +140,10 @@ export interface ReadTokenState {
      */
     description?: pulumi.Input<string>;
     /**
+     * Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+     */
+    expiresAt?: pulumi.Input<string>;
+    /**
      * UUID of the project that owns the token.
      */
     projectId?: pulumi.Input<string>;
@@ -142,6 +165,10 @@ export interface ReadTokenState {
  * The set of arguments for constructing a ReadToken resource.
  */
 export interface ReadTokenArgs {
+    /**
+     * Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+     */
+    expiresAt?: pulumi.Input<string>;
     /**
      * UUID of the project that owns the token.
      */

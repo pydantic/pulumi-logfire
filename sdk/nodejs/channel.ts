@@ -8,6 +8,22 @@ import * as utilities from "./utilities";
 
 /**
  * Manages a Logfire alert channel.
+ *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as logfire from "@pulumi/logfire";
+ *
+ * const example = new logfire.Channel("example", {
+ *     active: true,
+ *     config: {
+ *         format: "auto",
+ *         type: "webhook",
+ *         url: "https://example.com/logfire-webhook",
+ *     },
+ * });
+ * ```
  */
 export class Channel extends pulumi.CustomResource {
     /**
@@ -42,7 +58,7 @@ export class Channel extends pulumi.CustomResource {
      */
     declare public readonly active: pulumi.Output<boolean>;
     /**
-     * Channel configuration.
+     * Required channel configuration.
      */
     declare public readonly config: pulumi.Output<outputs.ChannelConfig | undefined>;
     /**
@@ -86,7 +102,7 @@ export interface ChannelState {
      */
     active?: pulumi.Input<boolean>;
     /**
-     * Channel configuration.
+     * Required channel configuration.
      */
     config?: pulumi.Input<inputs.ChannelConfig>;
     /**
@@ -104,7 +120,7 @@ export interface ChannelArgs {
      */
     active?: pulumi.Input<boolean>;
     /**
-     * Channel configuration.
+     * Required channel configuration.
      */
     config?: pulumi.Input<inputs.ChannelConfig>;
     /**

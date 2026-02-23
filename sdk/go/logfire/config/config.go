@@ -11,7 +11,7 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
-// Bearer token.
+// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 func GetApiKey(ctx *pulumi.Context) string {
 	return config.Get(ctx, "logfire:apiKey")
 }

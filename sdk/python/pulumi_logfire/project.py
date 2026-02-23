@@ -26,7 +26,7 @@ class ProjectArgs:
         The set of arguments for constructing a Project resource.
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
-        :param pulumi.Input[_builtins.str] visibility: Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         if description is not None:
             pulumi.set(__self__, "description", description)
@@ -63,7 +63,7 @@ class ProjectArgs:
     @pulumi.getter
     def visibility(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        Project visibility (`public` or `private`).
         """
         return pulumi.get(self, "visibility")
 
@@ -84,7 +84,7 @@ class _ProjectState:
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
         :param pulumi.Input[_builtins.str] organization: Organization name. Computed from the API and cannot be set.
-        :param pulumi.Input[_builtins.str] visibility: Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         if description is not None:
             pulumi.set(__self__, "description", description)
@@ -135,7 +135,7 @@ class _ProjectState:
     @pulumi.getter
     def visibility(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        Project visibility (`public` or `private`).
         """
         return pulumi.get(self, "visibility")
 
@@ -157,11 +157,20 @@ class Project(pulumi.CustomResource):
         """
         Manages a Logfire project.
 
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example = logfire.Project("example", description="Managed by Pulumi")
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
-        :param pulumi.Input[_builtins.str] visibility: Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         ...
     @overload
@@ -171,6 +180,15 @@ class Project(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Manages a Logfire project.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example = logfire.Project("example", description="Managed by Pulumi")
+        ```
 
         :param str resource_name: The name of the resource.
         :param ProjectArgs args: The arguments to use to populate this resource's properties.
@@ -227,7 +245,7 @@ class Project(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
         :param pulumi.Input[_builtins.str] organization: Organization name. Computed from the API and cannot be set.
-        :param pulumi.Input[_builtins.str] visibility: Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
 
@@ -267,7 +285,7 @@ class Project(pulumi.CustomResource):
     @pulumi.getter
     def visibility(self) -> pulumi.Output[_builtins.str]:
         """
-        Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+        Project visibility (`public` or `private`).
         """
         return pulumi.get(self, "visibility")
 

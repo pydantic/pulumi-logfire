@@ -19,12 +19,16 @@ __all__ = ['ReadTokenArgs', 'ReadToken']
 @pulumi.input_type
 class ReadTokenArgs:
     def __init__(__self__, *,
-                 project_id: pulumi.Input[_builtins.str]):
+                 project_id: pulumi.Input[_builtins.str],
+                 expires_at: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a ReadToken resource.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the token.
+        :param pulumi.Input[_builtins.str] expires_at: Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
         """
         pulumi.set(__self__, "project_id", project_id)
+        if expires_at is not None:
+            pulumi.set(__self__, "expires_at", expires_at)
 
     @_builtins.property
     @pulumi.getter(name="projectId")
@@ -38,6 +42,18 @@ class ReadTokenArgs:
     def project_id(self, value: pulumi.Input[_builtins.str]):
         pulumi.set(self, "project_id", value)
 
+    @_builtins.property
+    @pulumi.getter(name="expiresAt")
+    def expires_at(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+        """
+        return pulumi.get(self, "expires_at")
+
+    @expires_at.setter
+    def expires_at(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "expires_at", value)
+
 
 @pulumi.input_type
 class _ReadTokenState:
@@ -45,6 +61,7 @@ class _ReadTokenState:
                  created_at: Optional[pulumi.Input[_builtins.str]] = None,
                  created_by_name: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
+                 expires_at: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  project_name: Optional[pulumi.Input[_builtins.str]] = None,
                  token: Optional[pulumi.Input[_builtins.str]] = None,
@@ -54,6 +71,7 @@ class _ReadTokenState:
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the token was created.
         :param pulumi.Input[_builtins.str] created_by_name: Display name of the user that created the token.
         :param pulumi.Input[_builtins.str] description: Description is fixed to "Created by Public API" for provider-managed tokens.
+        :param pulumi.Input[_builtins.str] expires_at: Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the token.
         :param pulumi.Input[_builtins.str] project_name: Name of the project that owns the token.
         :param pulumi.Input[_builtins.str] token: The generated read token. Only returned on creation.
@@ -65,6 +83,8 @@ class _ReadTokenState:
             pulumi.set(__self__, "created_by_name", created_by_name)
         if description is not None:
             pulumi.set(__self__, "description", description)
+        if expires_at is not None:
+            pulumi.set(__self__, "expires_at", expires_at)
         if project_id is not None:
             pulumi.set(__self__, "project_id", project_id)
         if project_name is not None:
@@ -109,6 +129,18 @@ class _ReadTokenState:
     @description.setter
     def description(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "description", value)
+
+    @_builtins.property
+    @pulumi.getter(name="expiresAt")
+    def expires_at(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+        """
+        return pulumi.get(self, "expires_at")
+
+    @expires_at.setter
+    def expires_at(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "expires_at", value)
 
     @_builtins.property
     @pulumi.getter(name="projectId")
@@ -165,13 +197,27 @@ class ReadToken(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 expires_at: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages a Logfire read token.
 
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example_project = logfire.Project("exampleProject")
+        example_read_token = logfire.ReadToken("exampleReadToken",
+            project_id=example_project.id,
+            expires_at="2099-12-31T23:59:59Z")
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[_builtins.str] expires_at: Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the token.
         """
         ...
@@ -182,6 +228,18 @@ class ReadToken(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Manages a Logfire read token.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example_project = logfire.Project("exampleProject")
+        example_read_token = logfire.ReadToken("exampleReadToken",
+            project_id=example_project.id,
+            expires_at="2099-12-31T23:59:59Z")
+        ```
 
         :param str resource_name: The name of the resource.
         :param ReadTokenArgs args: The arguments to use to populate this resource's properties.
@@ -198,6 +256,7 @@ class ReadToken(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 expires_at: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -208,6 +267,7 @@ class ReadToken(pulumi.CustomResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ReadTokenArgs.__new__(ReadTokenArgs)
 
+            __props__.__dict__["expires_at"] = expires_at
             if project_id is None and not opts.urn:
                 raise TypeError("Missing required property 'project_id'")
             __props__.__dict__["project_id"] = project_id
@@ -232,6 +292,7 @@ class ReadToken(pulumi.CustomResource):
             created_at: Optional[pulumi.Input[_builtins.str]] = None,
             created_by_name: Optional[pulumi.Input[_builtins.str]] = None,
             description: Optional[pulumi.Input[_builtins.str]] = None,
+            expires_at: Optional[pulumi.Input[_builtins.str]] = None,
             project_id: Optional[pulumi.Input[_builtins.str]] = None,
             project_name: Optional[pulumi.Input[_builtins.str]] = None,
             token: Optional[pulumi.Input[_builtins.str]] = None,
@@ -246,6 +307,7 @@ class ReadToken(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the token was created.
         :param pulumi.Input[_builtins.str] created_by_name: Display name of the user that created the token.
         :param pulumi.Input[_builtins.str] description: Description is fixed to "Created by Public API" for provider-managed tokens.
+        :param pulumi.Input[_builtins.str] expires_at: Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the token.
         :param pulumi.Input[_builtins.str] project_name: Name of the project that owns the token.
         :param pulumi.Input[_builtins.str] token: The generated read token. Only returned on creation.
@@ -258,6 +320,7 @@ class ReadToken(pulumi.CustomResource):
         __props__.__dict__["created_at"] = created_at
         __props__.__dict__["created_by_name"] = created_by_name
         __props__.__dict__["description"] = description
+        __props__.__dict__["expires_at"] = expires_at
         __props__.__dict__["project_id"] = project_id
         __props__.__dict__["project_name"] = project_name
         __props__.__dict__["token"] = token
@@ -287,6 +350,14 @@ class ReadToken(pulumi.CustomResource):
         Description is fixed to "Created by Public API" for provider-managed tokens.
         """
         return pulumi.get(self, "description")
+
+    @_builtins.property
+    @pulumi.getter(name="expiresAt")
+    def expires_at(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+        """
+        return pulumi.get(self, "expires_at")
 
     @_builtins.property
     @pulumi.getter(name="projectId")

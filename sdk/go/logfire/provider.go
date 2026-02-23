@@ -18,7 +18,7 @@ import (
 type Provider struct {
 	pulumi.ProviderResourceState
 
-	// Bearer token.
+	// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 	ApiKey pulumi.StringPtrOutput `pulumi:"apiKey"`
 	// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
 	BaseUrl pulumi.StringPtrOutput `pulumi:"baseUrl"`
@@ -48,7 +48,7 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
-	// Bearer token.
+	// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 	ApiKey *string `pulumi:"apiKey"`
 	// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
 	BaseUrl *string `pulumi:"baseUrl"`
@@ -56,7 +56,7 @@ type providerArgs struct {
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
-	// Bearer token.
+	// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 	ApiKey pulumi.StringPtrInput
 	// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
 	BaseUrl pulumi.StringPtrInput
@@ -122,7 +122,7 @@ func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) Provide
 	return o
 }
 
-// Bearer token.
+// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 func (o ProviderOutput) ApiKey() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ApiKey }).(pulumi.StringPtrOutput)
 }

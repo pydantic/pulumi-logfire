@@ -20,6 +20,11 @@ export type Dashboard = import("./dashboard").Dashboard;
 export const Dashboard: typeof import("./dashboard").Dashboard = null as any;
 utilities.lazyLoad(exports, ["Dashboard"], () => require("./dashboard"));
 
+export { OrganizationArgs, OrganizationState } from "./organization";
+export type Organization = import("./organization").Organization;
+export const Organization: typeof import("./organization").Organization = null as any;
+utilities.lazyLoad(exports, ["Organization"], () => require("./organization"));
+
 export { ProjectArgs, ProjectState } from "./project";
 export type Project = import("./project").Project;
 export const Project: typeof import("./project").Project = null as any;
@@ -58,6 +63,8 @@ const _module = {
                 return new Channel(name, <any>undefined, { urn })
             case "logfire:index/dashboard:Dashboard":
                 return new Dashboard(name, <any>undefined, { urn })
+            case "logfire:index/organization:Organization":
+                return new Organization(name, <any>undefined, { urn })
             case "logfire:index/project:Project":
                 return new Project(name, <any>undefined, { urn })
             case "logfire:index/readToken:ReadToken":
@@ -72,6 +79,7 @@ const _module = {
 pulumi.runtime.registerResourceModule("logfire", "index/alert", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/channel", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/dashboard", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/writeToken", _module)

@@ -12,12 +12,43 @@ import (
 )
 
 // Manages a Logfire alert channel.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			_, err := logfire.NewChannel(ctx, "example", &logfire.ChannelArgs{
+//				Active: pulumi.Bool(true),
+//				Config: &logfire.ChannelConfigArgs{
+//					Format: pulumi.String("auto"),
+//					Type:   pulumi.String("webhook"),
+//					Url:    pulumi.String("https://example.com/logfire-webhook"),
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 type Channel struct {
 	pulumi.CustomResourceState
 
 	// Whether the channel is active.
 	Active pulumi.BoolOutput `pulumi:"active"`
-	// Channel configuration.
+	// Required channel configuration.
 	Config ChannelConfigPtrOutput `pulumi:"config"`
 	// Channel name.
 	Name pulumi.StringOutput `pulumi:"name"`
@@ -55,7 +86,7 @@ func GetChannel(ctx *pulumi.Context,
 type channelState struct {
 	// Whether the channel is active.
 	Active *bool `pulumi:"active"`
-	// Channel configuration.
+	// Required channel configuration.
 	Config *ChannelConfig `pulumi:"config"`
 	// Channel name.
 	Name *string `pulumi:"name"`
@@ -64,7 +95,7 @@ type channelState struct {
 type ChannelState struct {
 	// Whether the channel is active.
 	Active pulumi.BoolPtrInput
-	// Channel configuration.
+	// Required channel configuration.
 	Config ChannelConfigPtrInput
 	// Channel name.
 	Name pulumi.StringPtrInput
@@ -77,7 +108,7 @@ func (ChannelState) ElementType() reflect.Type {
 type channelArgs struct {
 	// Whether the channel is active.
 	Active *bool `pulumi:"active"`
-	// Channel configuration.
+	// Required channel configuration.
 	Config *ChannelConfig `pulumi:"config"`
 	// Channel name.
 	Name *string `pulumi:"name"`
@@ -87,7 +118,7 @@ type channelArgs struct {
 type ChannelArgs struct {
 	// Whether the channel is active.
 	Active pulumi.BoolPtrInput
-	// Channel configuration.
+	// Required channel configuration.
 	Config ChannelConfigPtrInput
 	// Channel name.
 	Name pulumi.StringPtrInput
@@ -185,7 +216,7 @@ func (o ChannelOutput) Active() pulumi.BoolOutput {
 	return o.ApplyT(func(v *Channel) pulumi.BoolOutput { return v.Active }).(pulumi.BoolOutput)
 }
 
-// Channel configuration.
+// Required channel configuration.
 func (o ChannelOutput) Config() ChannelConfigPtrOutput {
 	return o.ApplyT(func(v *Channel) ChannelConfigPtrOutput { return v.Config }).(ChannelConfigPtrOutput)
 }

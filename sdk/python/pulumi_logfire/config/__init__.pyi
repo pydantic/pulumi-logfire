@@ -16,7 +16,7 @@ from .. import _utilities
 
 apiKey: Optional[str]
 """
-Bearer token.
+Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 """
 
 baseUrl: Optional[str]

@@ -23,7 +23,7 @@ class _ExportableConfig(types.ModuleType):
     @_builtins.property
     def api_key(self) -> Optional[str]:
         """
-        Bearer token.
+        Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         """
         return __config__.get('apiKey')
 

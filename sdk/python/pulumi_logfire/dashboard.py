@@ -171,6 +171,19 @@ class Dashboard(pulumi.CustomResource):
         """
         Manages a Logfire dashboard.
 
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example_project = logfire.Project("exampleProject")
+        example_dashboard = logfire.Dashboard("exampleDashboard",
+            project_id=example_project.id,
+            slug="example-dashboard",
+            definition=(lambda path: open(path).read())(f"{path['module']}/dashboard.json"))
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] definition: Dashboard definition JSON payload.
@@ -186,6 +199,19 @@ class Dashboard(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Manages a Logfire dashboard.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example_project = logfire.Project("exampleProject")
+        example_dashboard = logfire.Dashboard("exampleDashboard",
+            project_id=example_project.id,
+            slug="example-dashboard",
+            definition=(lambda path: open(path).read())(f"{path['module']}/dashboard.json"))
+        ```
 
         :param str resource_name: The name of the resource.
         :param DashboardArgs args: The arguments to use to populate this resource's properties.

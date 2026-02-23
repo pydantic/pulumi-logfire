@@ -6,6 +6,15 @@ import * as utilities from "./utilities";
 
 /**
  * Manages a Logfire project.
+ *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as logfire from "@pulumi/logfire";
+ *
+ * const example = new logfire.Project("example", {description: "Managed by Pulumi"});
+ * ```
  */
 export class Project extends pulumi.CustomResource {
     /**
@@ -48,7 +57,7 @@ export class Project extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly organization: pulumi.Output<string>;
     /**
-     * Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+     * Project visibility (`public` or `private`).
      */
     declare public readonly visibility: pulumi.Output<string>;
 
@@ -98,7 +107,7 @@ export interface ProjectState {
      */
     organization?: pulumi.Input<string>;
     /**
-     * Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+     * Project visibility (`public` or `private`).
      */
     visibility?: pulumi.Input<string>;
 }
@@ -116,7 +125,7 @@ export interface ProjectArgs {
      */
     name?: pulumi.Input<string>;
     /**
-     * Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+     * Project visibility (`public` or `private`).
      */
     visibility?: pulumi.Input<string>;
 }

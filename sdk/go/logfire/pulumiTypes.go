@@ -18,7 +18,7 @@ type ChannelConfig struct {
 	AuthKey *string `pulumi:"authKey"`
 	// Webhook payload format.
 	Format *string `pulumi:"format"`
-	// Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
+	// Channel type (`webhook` or `opsgenie`).
 	Type string `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url *string `pulumi:"url"`
@@ -40,7 +40,7 @@ type ChannelConfigArgs struct {
 	AuthKey pulumi.StringPtrInput `pulumi:"authKey"`
 	// Webhook payload format.
 	Format pulumi.StringPtrInput `pulumi:"format"`
-	// Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
+	// Channel type (`webhook` or `opsgenie`).
 	Type pulumi.StringInput `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url pulumi.StringPtrInput `pulumi:"url"`
@@ -133,7 +133,7 @@ func (o ChannelConfigOutput) Format() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.Format }).(pulumi.StringPtrOutput)
 }
 
-// Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
+// Channel type (`webhook` or `opsgenie`).
 func (o ChannelConfigOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v ChannelConfig) string { return v.Type }).(pulumi.StringOutput)
 }
@@ -187,7 +187,7 @@ func (o ChannelConfigPtrOutput) Format() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
-// Channel type (<span pulumi-lang-nodejs="`webhook`" pulumi-lang-go="`webhook`" pulumi-lang-python="`webhook`" pulumi-lang-yaml="`webhook`">`webhook`</span> or <span pulumi-lang-nodejs="`opsgenie`" pulumi-lang-go="`opsgenie`" pulumi-lang-python="`opsgenie`" pulumi-lang-yaml="`opsgenie`">`opsgenie`</span>).
+// Channel type (`webhook` or `opsgenie`).
 func (o ChannelConfigPtrOutput) Type() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
 		if v == nil {

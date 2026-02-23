@@ -6,6 +6,21 @@ import * as utilities from "./utilities";
 
 /**
  * Manages a Logfire dashboard.
+ *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as fs from "fs";
+ * import * as logfire from "@pulumi/logfire";
+ *
+ * const exampleProject = new logfire.Project("exampleProject", {});
+ * const exampleDashboard = new logfire.Dashboard("exampleDashboard", {
+ *     projectId: exampleProject.id,
+ *     slug: "example-dashboard",
+ *     definition: fs.readFileSync(`${path.module}/dashboard.json`, "utf8"),
+ * });
+ * ```
  */
 export class Dashboard extends pulumi.CustomResource {
     /**

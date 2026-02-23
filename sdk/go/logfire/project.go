@@ -12,6 +12,32 @@ import (
 )
 
 // Manages a Logfire project.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			_, err := logfire.NewProject(ctx, "example", &logfire.ProjectArgs{
+//				Description: pulumi.String("Managed by Pulumi"),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 type Project struct {
 	pulumi.CustomResourceState
 
@@ -21,7 +47,7 @@ type Project struct {
 	Name pulumi.StringOutput `pulumi:"name"`
 	// Organization name. Computed from the API and cannot be set.
 	Organization pulumi.StringOutput `pulumi:"organization"`
-	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+	// Project visibility (`public` or `private`).
 	Visibility pulumi.StringOutput `pulumi:"visibility"`
 }
 
@@ -61,7 +87,7 @@ type projectState struct {
 	Name *string `pulumi:"name"`
 	// Organization name. Computed from the API and cannot be set.
 	Organization *string `pulumi:"organization"`
-	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+	// Project visibility (`public` or `private`).
 	Visibility *string `pulumi:"visibility"`
 }
 
@@ -72,7 +98,7 @@ type ProjectState struct {
 	Name pulumi.StringPtrInput
 	// Organization name. Computed from the API and cannot be set.
 	Organization pulumi.StringPtrInput
-	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+	// Project visibility (`public` or `private`).
 	Visibility pulumi.StringPtrInput
 }
 
@@ -85,7 +111,7 @@ type projectArgs struct {
 	Description *string `pulumi:"description"`
 	// Project name/slug. Must be unique within the organization.
 	Name *string `pulumi:"name"`
-	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+	// Project visibility (`public` or `private`).
 	Visibility *string `pulumi:"visibility"`
 }
 
@@ -95,7 +121,7 @@ type ProjectArgs struct {
 	Description pulumi.StringPtrInput
 	// Project name/slug. Must be unique within the organization.
 	Name pulumi.StringPtrInput
-	// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+	// Project visibility (`public` or `private`).
 	Visibility pulumi.StringPtrInput
 }
 
@@ -201,7 +227,7 @@ func (o ProjectOutput) Organization() pulumi.StringOutput {
 	return o.ApplyT(func(v *Project) pulumi.StringOutput { return v.Organization }).(pulumi.StringOutput)
 }
 
-// Project visibility (<span pulumi-lang-nodejs="`public`" pulumi-lang-go="`public`" pulumi-lang-python="`public`" pulumi-lang-yaml="`public`">`public`</span> or <span pulumi-lang-nodejs="`private`" pulumi-lang-go="`private`" pulumi-lang-python="`private`" pulumi-lang-yaml="`private`">`private`</span>).
+// Project visibility (`public` or `private`).
 func (o ProjectOutput) Visibility() pulumi.StringOutput {
 	return o.ApplyT(func(v *Project) pulumi.StringOutput { return v.Visibility }).(pulumi.StringOutput)
 }

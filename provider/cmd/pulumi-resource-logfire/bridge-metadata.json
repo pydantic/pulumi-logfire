@@ -18,6 +18,10 @@
                 "current": "logfire:index/dashboard:Dashboard",
                 "majorVersion": 1
             },
+            "logfire_organization": {
+                "current": "logfire:index/organization:Organization",
+                "majorVersion": 1
+            },
             "logfire_project": {
                 "current": "logfire:index/project:Project",
                 "majorVersion": 1

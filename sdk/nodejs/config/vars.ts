@@ -8,7 +8,7 @@ declare var exports: any;
 const __config = new pulumi.Config("logfire");
 
 /**
- * Bearer token.
+ * Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
  */
 export declare const apiKey: string | undefined;
 Object.defineProperty(exports, "apiKey", {

@@ -19,6 +19,7 @@
         "config/vars.ts",
         "dashboard.ts",
         "index.ts",
+        "organization.ts",
         "project.ts",
         "provider.ts",
         "readToken.ts",

@@ -6,6 +6,37 @@ import * as utilities from "./utilities";
 
 /**
  * Manages a Logfire alert.
+ *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as logfire from "@pulumi/logfire";
+ *
+ * const exampleProject = new logfire.Project("exampleProject", {});
+ * const exampleChannel = new logfire.Channel("exampleChannel", {config: [{
+ *     type: "webhook",
+ *     format: "auto",
+ *     url: "https://example.com/logfire-webhook",
+ * }]});
+ * const exampleAlert = new logfire.Alert("exampleAlert", {
+ *     projectId: exampleProject.id,
+ *     description: "Alert on exception spans",
+ *     query: `select
+ *   service_name,
+ *   trace_id,
+ *   otel_status_message as exception_message
+ * from records
+ * where level = 'error'
+ * order by start_timestamp desc
+ * `,
+ *     timeWindow: "1h",
+ *     frequency: "15m",
+ *     channelIds: [exampleChannel.id],
+ *     notifyWhen: "has_matches",
+ *     active: true,
+ * });
+ * ```
  */
 export class Alert extends pulumi.CustomResource {
     /**
@@ -48,7 +79,7 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly description: pulumi.Output<string | undefined>;
     /**
-     * Evaluation frequency as Go duration
+     * Evaluation frequency as Go duration.
      */
     declare public readonly frequency: pulumi.Output<string>;
     /**
@@ -68,7 +99,7 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly query: pulumi.Output<string>;
     /**
-     * Lookback window as Go duration
+     * Lookback window as Go duration.
      */
     declare public readonly timeWindow: pulumi.Output<string>;
     /**
@@ -152,7 +183,7 @@ export interface AlertState {
      */
     description?: pulumi.Input<string>;
     /**
-     * Evaluation frequency as Go duration
+     * Evaluation frequency as Go duration.
      */
     frequency?: pulumi.Input<string>;
     /**
@@ -172,7 +203,7 @@ export interface AlertState {
      */
     query?: pulumi.Input<string>;
     /**
-     * Lookback window as Go duration
+     * Lookback window as Go duration.
      */
     timeWindow?: pulumi.Input<string>;
     /**
@@ -198,7 +229,7 @@ export interface AlertArgs {
      */
     description?: pulumi.Input<string>;
     /**
-     * Evaluation frequency as Go duration
+     * Evaluation frequency as Go duration.
      */
     frequency: pulumi.Input<string>;
     /**
@@ -218,7 +249,7 @@ export interface AlertArgs {
      */
     query: pulumi.Input<string>;
     /**
-     * Lookback window as Go duration
+     * Lookback window as Go duration.
      */
     timeWindow: pulumi.Input<string>;
 }

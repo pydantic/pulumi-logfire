@@ -13,6 +13,66 @@ import (
 )
 
 // Manages a Logfire alert.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			exampleProject, err := logfire.NewProject(ctx, "exampleProject", nil)
+//			if err != nil {
+//				return err
+//			}
+//			exampleChannel, err := logfire.NewChannel(ctx, "exampleChannel", &logfire.ChannelArgs{
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":   "webhook",
+//						"format": "auto",
+//						"url":    "https://example.com/logfire-webhook",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewAlert(ctx, "exampleAlert", &logfire.AlertArgs{
+//				ProjectId:   exampleProject.ID(),
+//				Description: pulumi.String("Alert on exception spans"),
+//				Query: pulumi.String(`select
+//	  service_name,
+//	  trace_id,
+//	  otel_status_message as exception_message
+//
+// from records
+// where level = 'error'
+// order by start_timestamp desc
+// `),
+//
+//				TimeWindow: pulumi.String("1h"),
+//				Frequency:  pulumi.String("15m"),
+//				ChannelIds: pulumi.StringArray{
+//					exampleChannel.ID(),
+//				},
+//				NotifyWhen: pulumi.String("has_matches"),
+//				Active:     pulumi.Bool(true),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 type Alert struct {
 	pulumi.CustomResourceState
 
@@ -22,7 +82,7 @@ type Alert struct {
 	ChannelIds pulumi.StringArrayOutput `pulumi:"channelIds"`
 	// Alert description.
 	Description pulumi.StringPtrOutput `pulumi:"description"`
-	// Evaluation frequency as Go duration
+	// Evaluation frequency as Go duration.
 	Frequency pulumi.StringOutput `pulumi:"frequency"`
 	// Alert name (unique per project).
 	Name pulumi.StringOutput `pulumi:"name"`
@@ -32,7 +92,7 @@ type Alert struct {
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
 	// SQL / query string used by the alert.
 	Query pulumi.StringOutput `pulumi:"query"`
-	// Lookback window as Go duration
+	// Lookback window as Go duration.
 	TimeWindow pulumi.StringOutput `pulumi:"timeWindow"`
 	// Provider-managed watermark (lateness tolerance) sent to the API.
 	Watermark pulumi.StringOutput `pulumi:"watermark"`
@@ -92,7 +152,7 @@ type alertState struct {
 	ChannelIds []string `pulumi:"channelIds"`
 	// Alert description.
 	Description *string `pulumi:"description"`
-	// Evaluation frequency as Go duration
+	// Evaluation frequency as Go duration.
 	Frequency *string `pulumi:"frequency"`
 	// Alert name (unique per project).
 	Name *string `pulumi:"name"`
@@ -102,7 +162,7 @@ type alertState struct {
 	ProjectId *string `pulumi:"projectId"`
 	// SQL / query string used by the alert.
 	Query *string `pulumi:"query"`
-	// Lookback window as Go duration
+	// Lookback window as Go duration.
 	TimeWindow *string `pulumi:"timeWindow"`
 	// Provider-managed watermark (lateness tolerance) sent to the API.
 	Watermark *string `pulumi:"watermark"`
@@ -115,7 +175,7 @@ type AlertState struct {
 	ChannelIds pulumi.StringArrayInput
 	// Alert description.
 	Description pulumi.StringPtrInput
-	// Evaluation frequency as Go duration
+	// Evaluation frequency as Go duration.
 	Frequency pulumi.StringPtrInput
 	// Alert name (unique per project).
 	Name pulumi.StringPtrInput
@@ -125,7 +185,7 @@ type AlertState struct {
 	ProjectId pulumi.StringPtrInput
 	// SQL / query string used by the alert.
 	Query pulumi.StringPtrInput
-	// Lookback window as Go duration
+	// Lookback window as Go duration.
 	TimeWindow pulumi.StringPtrInput
 	// Provider-managed watermark (lateness tolerance) sent to the API.
 	Watermark pulumi.StringPtrInput
@@ -142,7 +202,7 @@ type alertArgs struct {
 	ChannelIds []string `pulumi:"channelIds"`
 	// Alert description.
 	Description *string `pulumi:"description"`
-	// Evaluation frequency as Go duration
+	// Evaluation frequency as Go duration.
 	Frequency string `pulumi:"frequency"`
 	// Alert name (unique per project).
 	Name *string `pulumi:"name"`
@@ -152,7 +212,7 @@ type alertArgs struct {
 	ProjectId string `pulumi:"projectId"`
 	// SQL / query string used by the alert.
 	Query string `pulumi:"query"`
-	// Lookback window as Go duration
+	// Lookback window as Go duration.
 	TimeWindow string `pulumi:"timeWindow"`
 }
 
@@ -164,7 +224,7 @@ type AlertArgs struct {
 	ChannelIds pulumi.StringArrayInput
 	// Alert description.
 	Description pulumi.StringPtrInput
-	// Evaluation frequency as Go duration
+	// Evaluation frequency as Go duration.
 	Frequency pulumi.StringInput
 	// Alert name (unique per project).
 	Name pulumi.StringPtrInput
@@ -174,7 +234,7 @@ type AlertArgs struct {
 	ProjectId pulumi.StringInput
 	// SQL / query string used by the alert.
 	Query pulumi.StringInput
-	// Lookback window as Go duration
+	// Lookback window as Go duration.
 	TimeWindow pulumi.StringInput
 }
 
@@ -280,7 +340,7 @@ func (o AlertOutput) Description() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringPtrOutput { return v.Description }).(pulumi.StringPtrOutput)
 }
 
-// Evaluation frequency as Go duration
+// Evaluation frequency as Go duration.
 func (o AlertOutput) Frequency() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.Frequency }).(pulumi.StringOutput)
 }
@@ -305,7 +365,7 @@ func (o AlertOutput) Query() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.Query }).(pulumi.StringOutput)
 }
 
-// Lookback window as Go duration
+// Lookback window as Go duration.
 func (o AlertOutput) TimeWindow() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.TimeWindow }).(pulumi.StringOutput)
 }

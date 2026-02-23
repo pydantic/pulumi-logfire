@@ -26,7 +26,7 @@ export class Provider extends pulumi.ProviderResource {
     }
 
     /**
-     * Bearer token.
+     * Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
      */
     declare public readonly apiKey: pulumi.Output<string | undefined>;
     /**
@@ -69,7 +69,7 @@ export class Provider extends pulumi.ProviderResource {
  */
 export interface ProviderArgs {
     /**
-     * Bearer token.
+     * Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
      */
     apiKey?: pulumi.Input<string>;
     /**

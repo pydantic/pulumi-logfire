@@ -23,7 +23,7 @@ class ProviderArgs:
                  base_url: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Provider resource.
-        :param pulumi.Input[_builtins.str] api_key: Bearer token.
+        :param pulumi.Input[_builtins.str] api_key: Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         :param pulumi.Input[_builtins.str] base_url: Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
         """
         if api_key is not None:
@@ -35,7 +35,7 @@ class ProviderArgs:
     @pulumi.getter(name="apiKey")
     def api_key(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Bearer token.
+        Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         """
         return pulumi.get(self, "api_key")
 
@@ -73,7 +73,7 @@ class Provider(pulumi.ProviderResource):
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[_builtins.str] api_key: Bearer token.
+        :param pulumi.Input[_builtins.str] api_key: Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         :param pulumi.Input[_builtins.str] base_url: Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
         """
         ...
@@ -128,7 +128,7 @@ class Provider(pulumi.ProviderResource):
     @pulumi.getter(name="apiKey")
     def api_key(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        Bearer token.
+        Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         """
         return pulumi.get(self, "api_key")
 

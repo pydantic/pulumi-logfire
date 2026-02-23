@@ -9,6 +9,7 @@ import typing
 from .alert import *
 from .channel import *
 from .dashboard import *
+from .organization import *
 from .project import *
 from .provider import *
 from .read_token import *
@@ -48,6 +49,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/dashboard:Dashboard": "Dashboard"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/organization",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/organization:Organization": "Organization"
   }
  },
  {

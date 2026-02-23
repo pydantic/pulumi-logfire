@@ -13,6 +13,37 @@ import (
 )
 
 // Manages a Logfire write token.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			exampleProject, err := logfire.NewProject(ctx, "exampleProject", nil)
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewWriteToken(ctx, "exampleWriteToken", &logfire.WriteTokenArgs{
+//				ProjectId: exampleProject.ID(),
+//				ExpiresAt: pulumi.String("2099-12-31T23:59:59Z"),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
 type WriteToken struct {
 	pulumi.CustomResourceState
 
@@ -22,6 +53,8 @@ type WriteToken struct {
 	CreatedByName pulumi.StringOutput `pulumi:"createdByName"`
 	// Description is fixed to "Created by Public API" for provider-managed tokens.
 	Description pulumi.StringOutput `pulumi:"description"`
+	// Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+	ExpiresAt pulumi.StringPtrOutput `pulumi:"expiresAt"`
 	// UUID of the project that owns the token.
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
 	// Name of the project that owns the token.
@@ -75,6 +108,8 @@ type writeTokenState struct {
 	CreatedByName *string `pulumi:"createdByName"`
 	// Description is fixed to "Created by Public API" for provider-managed tokens.
 	Description *string `pulumi:"description"`
+	// Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+	ExpiresAt *string `pulumi:"expiresAt"`
 	// UUID of the project that owns the token.
 	ProjectId *string `pulumi:"projectId"`
 	// Name of the project that owns the token.
@@ -92,6 +127,8 @@ type WriteTokenState struct {
 	CreatedByName pulumi.StringPtrInput
 	// Description is fixed to "Created by Public API" for provider-managed tokens.
 	Description pulumi.StringPtrInput
+	// Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+	ExpiresAt pulumi.StringPtrInput
 	// UUID of the project that owns the token.
 	ProjectId pulumi.StringPtrInput
 	// Name of the project that owns the token.
@@ -107,12 +144,16 @@ func (WriteTokenState) ElementType() reflect.Type {
 }
 
 type writeTokenArgs struct {
+	// Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+	ExpiresAt *string `pulumi:"expiresAt"`
 	// UUID of the project that owns the token.
 	ProjectId string `pulumi:"projectId"`
 }
 
 // The set of arguments for constructing a WriteToken resource.
 type WriteTokenArgs struct {
+	// Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+	ExpiresAt pulumi.StringPtrInput
 	// UUID of the project that owns the token.
 	ProjectId pulumi.StringInput
 }
@@ -217,6 +258,11 @@ func (o WriteTokenOutput) CreatedByName() pulumi.StringOutput {
 // Description is fixed to "Created by Public API" for provider-managed tokens.
 func (o WriteTokenOutput) Description() pulumi.StringOutput {
 	return o.ApplyT(func(v *WriteToken) pulumi.StringOutput { return v.Description }).(pulumi.StringOutput)
+}
+
+// Optional RFC3339 expiration timestamp for the token (for example `2026-12-31T23:59:59Z`). If omitted, the token does not expire.
+func (o WriteTokenOutput) ExpiresAt() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *WriteToken) pulumi.StringPtrOutput { return v.ExpiresAt }).(pulumi.StringPtrOutput)
 }
 
 // UUID of the project that owns the token.
