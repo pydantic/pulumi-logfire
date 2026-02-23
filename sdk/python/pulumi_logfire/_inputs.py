@@ -19,23 +19,28 @@ __all__ = [
     'ChannelConfigArgsDict',
 ]
 
-class ChannelConfigArgsDict(TypedDict):
-    type: pulumi.Input[_builtins.str]
-    """
-    Channel type (`webhook` or `opsgenie`).
-    """
-    auth_key: NotRequired[pulumi.Input[_builtins.str]]
-    """
-    Opsgenie API key.
-    """
-    format: NotRequired[pulumi.Input[_builtins.str]]
-    """
-    Webhook payload format.
-    """
-    url: NotRequired[pulumi.Input[_builtins.str]]
-    """
-    Webhook URL endpoint.
-    """
+MYPY = False
+
+if not MYPY:
+    class ChannelConfigArgsDict(TypedDict):
+        type: pulumi.Input[_builtins.str]
+        """
+        Channel type (`webhook` or `opsgenie`).
+        """
+        auth_key: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        Opsgenie API key.
+        """
+        format: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        Webhook payload format.
+        """
+        url: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        Webhook URL endpoint.
+        """
+elif False:
+    ChannelConfigArgsDict: TypeAlias = Mapping[str, Any]
 
 @pulumi.input_type
 class ChannelConfigArgs:

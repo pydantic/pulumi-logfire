@@ -33,7 +33,7 @@ pip install pulumi_logfire
 To use from Go, use `go get` to grab the latest version of the library:
 
 ```bash
-go get github.com/pulumi/pulumi-logfire/sdk/go/...
+go get github.com/pydantic/pulumi-logfire/sdk/go/...
 ```
 
 ## Configuration
@@ -62,3 +62,4 @@ For detailed reference documentation, please visit [the Pulumi registry](https:/
 - Dashboards (`logfire:Dashboard`)
 - Write tokens (`logfire:WriteToken`)
 - Read tokens (`logfire:ReadToken`)
+- Organizations (`logfire:Organization`)

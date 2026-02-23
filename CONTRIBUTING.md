@@ -20,11 +20,16 @@ https://github.com/pulumi/pulumi/blob/master/CONTRIBUTING.md#developing) for det
 
 ## Committing Generated Code
 
-You must generate and check in the SDKs on each pull request containing a code change, e.g. adding a new resource to `resources.go`.
+You must generate and check in the schema and SDKs on each pull request containing provider changes.
 
-1. Run `make build_sdks` from the root of this repository
-1. Open a pull request containing all changes
-1. *Note:* If a large number of seemingly-unrelated diffs are produced by `make build_sdks` (for example, lots of changes to comments unrelated to the change you are making), ensure that the latest dependencies for the provider are installed by running `go mod tidy` in the `provider/` directory of this repository.
+1. Install [pre-commit](https://pre-commit.com/) and run: `pre-commit install`
+1. Regenerate committed artifacts before opening a PR:
+   - `make schema PULUMI_CONVERT=0`
+   - `make generate_sdks PULUMI_CONVERT=0`
+1. Open a pull request containing all generated changes.
+1. If a large number of unrelated diffs are produced, run `go mod tidy` in `provider/` and regenerate.
+
+The local pre-commit hook runs generation checks only when relevant files are staged. Use `SKIP=generated-artifacts git commit ...` to bypass it for one commit.
 
 ## Running Integration Tests
 

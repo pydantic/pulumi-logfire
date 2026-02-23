@@ -90,7 +90,21 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Generate schema
-      run: make schema
+      run: make schema PULUMI_CONVERT=0
+    - name: Check schema worktree clean
+      uses: pulumi/git-status-check-action@v1
+    - name: Regenerate SDKs
+      run: make generate_sdks PULUMI_CONVERT=0
+    - name: Check SDK worktree clean
+      uses: pulumi/git-status-check-action@v1
+      with:
+        # Keep these in sync with build_sdk.yml to avoid false positives on
+        # provider-version derived files.
+        allowed-changes: |
+          sdk/**/pulumi-plugin.json
+          sdk/go/**/pulumiUtilities.go
+          sdk/nodejs/package.json
+          sdk/python/pyproject.toml
     - name: Build provider binary
       run: make provider
     - name: Unit-test provider code

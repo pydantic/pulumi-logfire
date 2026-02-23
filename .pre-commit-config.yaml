@@ -1,0 +1,10 @@
+minimum_pre_commit_version: "3.0.0"
+repos:
+  - repo: local
+    hooks:
+      - id: generated-artifacts
+        name: Ensure generated artifacts are in sync
+        entry: ./scripts/precommit-check-generated.sh
+        language: system
+        pass_filenames: false
+        files: ^(provider/|schema/|sdk/|Makefile|\.ci-mgmt\.yaml|README\.md|examples/)
