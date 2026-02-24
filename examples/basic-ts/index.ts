@@ -1,5 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as logfire from "@pulumi/logfire";
+import * as logfire from "@pydantic/pulumi-logfire";
 
 const config = new pulumi.Config("logfire");
 const baseUrl = config.require("baseUrl");
