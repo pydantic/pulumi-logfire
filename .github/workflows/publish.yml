@@ -158,6 +158,8 @@ jobs:
         sdk: nodejs,python
         version: ${{ inputs.version }}
       env:
+        # Scoped npm packages default to private on first publish unless access is set.
+        NPM_CONFIG_ACCESS: public
         PYPI_USERNAME: __token__
         PYPI_PASSWORD: ${{ steps.esc-secrets.outputs.PYPI_API_TOKEN }}
         NODE_AUTH_TOKEN: ${{ steps.esc-secrets.outputs.NPM_TOKEN }}
