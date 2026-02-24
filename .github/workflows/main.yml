@@ -64,6 +64,7 @@ jobs:
     secrets: inherit
 
   publish:
+    if: ${{ false }}
     name: publish
     permissions:
       contents: write
