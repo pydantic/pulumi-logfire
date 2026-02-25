@@ -14,7 +14,7 @@ func getJSBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	base := getBaseOptions(t)
 	baseJS := base.With(integration.ProgramTestOptions{
 		Dependencies: []string{
-			"@pulumi/logfire",
+			"@pydantic/pulumi-logfire",
 		},
 	})
 

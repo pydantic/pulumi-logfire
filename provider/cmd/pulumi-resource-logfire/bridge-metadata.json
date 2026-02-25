@@ -3,7 +3,6 @@
         "resources": {
             "logfire_alert": {
                 "current": "logfire:index/alert:Alert",
-                "majorVersion": 1,
                 "fields": {
                     "channel_ids": {
                         "maxItemsOne": false
@@ -11,28 +10,22 @@
                 }
             },
             "logfire_channel": {
-                "current": "logfire:index/channel:Channel",
-                "majorVersion": 1
+                "current": "logfire:index/channel:Channel"
             },
             "logfire_dashboard": {
-                "current": "logfire:index/dashboard:Dashboard",
-                "majorVersion": 1
+                "current": "logfire:index/dashboard:Dashboard"
             },
             "logfire_organization": {
-                "current": "logfire:index/organization:Organization",
-                "majorVersion": 1
+                "current": "logfire:index/organization:Organization"
             },
             "logfire_project": {
-                "current": "logfire:index/project:Project",
-                "majorVersion": 1
+                "current": "logfire:index/project:Project"
             },
             "logfire_read_token": {
-                "current": "logfire:index/readToken:ReadToken",
-                "majorVersion": 1
+                "current": "logfire:index/readToken:ReadToken"
             },
             "logfire_write_token": {
-                "current": "logfire:index/writeToken:WriteToken",
-                "majorVersion": 1
+                "current": "logfire:index/writeToken:WriteToken"
             }
         }
     },

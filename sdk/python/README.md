@@ -11,13 +11,13 @@ This package is available for several languages/platforms:
 To use from JavaScript or TypeScript in Node.js, install using either `npm`:
 
 ```bash
-npm install @pulumi/logfire
+npm install @pydantic/pulumi-logfire
 ```
 
 or `yarn`:
 
 ```bash
-yarn add @pulumi/logfire
+yarn add @pydantic/pulumi-logfire
 ```
 
 ### Python
