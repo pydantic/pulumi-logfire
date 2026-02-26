@@ -10,6 +10,7 @@
     "license": "Apache-2.0",
     "attribution": "This Pulumi package is based on the [`logfire` Terraform Provider](https://github.com/pydantic/terraform-provider-logfire).",
     "repository": "https://github.com/pydantic/pulumi-logfire",
+    "logoUrl": "https://avatars.githubusercontent.com/u/110818415?s=200\u0026v=4",
     "pluginDownloadURL": "github://api.github.com/pydantic/pulumi-logfire",
     "publisher": "Pydantic",
     "meta": {
