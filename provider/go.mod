@@ -7,10 +7,13 @@ toolchain go1.25.5
 replace github.com/hashicorp/terraform-plugin-sdk/v2 => github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20250923233607-7f1981c8674a
 
 require (
-	github.com/hashicorp/terraform-plugin-framework v1.17.0
 	github.com/pulumi/pulumi-terraform-bridge/v3 v3.118.0
 	github.com/pulumi/pulumi/pkg/v3 v3.209.0
-	github.com/pydantic/terraform-provider-logfire v0.1.1
+)
+
+require (
+	github.com/hashicorp/terraform-plugin-framework v1.17.0 // indirect
+	github.com/pydantic/terraform-provider-logfire v0.1.1 // indirect
 )
 
 require (
@@ -137,6 +140,7 @@ require (
 	github.com/pulumi/pulumi-yaml v1.19.1 // indirect
 	github.com/pulumi/pulumi/sdk/v3 v3.209.0 // indirect
 	github.com/pulumi/schema-tools v0.1.2 // indirect
+	github.com/pydantic/pulumi-logfire/provider/shim v0.0.0
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
@@ -193,3 +197,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/frand v1.4.2 // indirect
 )
+
+replace github.com/pydantic/pulumi-logfire/provider/shim => ./shim
