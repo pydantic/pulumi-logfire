@@ -24,7 +24,7 @@ class ProviderArgs:
         """
         The set of arguments for constructing a Provider resource.
         :param pulumi.Input[_builtins.str] api_key: Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
-        :param pulumi.Input[_builtins.str] base_url: Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+        :param pulumi.Input[_builtins.str] base_url: Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
         """
         if api_key is not None:
             pulumi.set(__self__, "api_key", api_key)
@@ -47,7 +47,7 @@ class ProviderArgs:
     @pulumi.getter(name="baseUrl")
     def base_url(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+        Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
         """
         return pulumi.get(self, "base_url")
 
@@ -74,7 +74,7 @@ class Provider(pulumi.ProviderResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] api_key: Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
-        :param pulumi.Input[_builtins.str] base_url: Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+        :param pulumi.Input[_builtins.str] base_url: Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
         """
         ...
     @overload
@@ -136,7 +136,7 @@ class Provider(pulumi.ProviderResource):
     @pulumi.getter(name="baseUrl")
     def base_url(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+        Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
         """
         return pulumi.get(self, "base_url")
 

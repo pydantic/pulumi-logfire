@@ -3,12 +3,16 @@ from pulumi_logfire import Provider, Project, Channel, Alert
 from pulumi import Config
 
 cfg = Config('logfire')
-base_url = cfg.require('baseUrl')
+base_url = cfg.get('baseUrl')
 api_key = cfg.require_secret('apiKey')
 stack = pulumi.get_stack()
 stack_suffix = stack[:34]
 
-provider = Provider('logfire', base_url=base_url, api_key=api_key)
+provider_kwargs = {'api_key': api_key}
+if base_url:
+    provider_kwargs['base_url'] = base_url
+
+provider = Provider('logfire', **provider_kwargs)
 
 proj = Project('proj',
                name=f'pulumi-basic-py-{stack_suffix}',

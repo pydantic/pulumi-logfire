@@ -2,13 +2,17 @@ import * as pulumi from "@pulumi/pulumi";
 import * as logfire from "@pydantic/pulumi-logfire";
 
 const config = new pulumi.Config("logfire");
-const baseUrl = config.require("baseUrl");
+const baseUrl = config.get("baseUrl");
 const apiKey = config.requireSecret("apiKey");
 
-const provider = new logfire.Provider("logfire", {
-    baseUrl,
+const providerArgs: logfire.ProviderArgs = {
     apiKey,
-});
+};
+if (baseUrl) {
+    providerArgs.baseUrl = baseUrl;
+}
+
+const provider = new logfire.Provider("logfire", providerArgs);
 
 const stack = pulumi.getStack();
 const stackSuffix = stack.slice(0, 34);

@@ -30,7 +30,7 @@ export class Provider extends pulumi.ProviderResource {
      */
     declare public readonly apiKey: pulumi.Output<string | undefined>;
     /**
-     * Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+     * Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
      */
     declare public readonly baseUrl: pulumi.Output<string | undefined>;
 
@@ -73,7 +73,7 @@ export interface ProviderArgs {
      */
     apiKey?: pulumi.Input<string>;
     /**
-     * Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+     * Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
      */
     baseUrl?: pulumi.Input<string>;
 }

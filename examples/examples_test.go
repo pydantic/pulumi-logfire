@@ -56,10 +56,14 @@ func getCwd(t *testing.T) string {
 
 func getBaseOptions(t *testing.T) integration.ProgramTestOptions {
 	t.Helper()
+	config := map[string]string{
+		"logfire:apiKey": os.Getenv("LOGFIRE_API_KEY"),
+	}
+	if baseURL := os.Getenv("LOGFIRE_BASE_URL"); baseURL != "" {
+		config["logfire:baseUrl"] = baseURL
+	}
+
 	return integration.ProgramTestOptions{
-		Config: map[string]string{
-			"logfire:baseUrl": os.Getenv("LOGFIRE_BASE_URL"),
-			"logfire:apiKey":  os.Getenv("LOGFIRE_API_KEY"),
-		},
+		Config: config,
 	}
 }

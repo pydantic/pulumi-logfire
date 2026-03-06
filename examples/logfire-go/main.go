@@ -9,13 +9,17 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		cfg := config.New(ctx, "logfire")
-		baseURL := cfg.Require("baseUrl")
+		baseURL := cfg.Get("baseUrl")
 		apiKey := cfg.RequireSecret("apiKey")
 
-		provider, err := logfire.NewProvider(ctx, "logfire", &logfire.ProviderArgs{
-			BaseUrl: pulumi.StringPtr(baseURL),
+		providerArgs := &logfire.ProviderArgs{
 			ApiKey:  apiKey.ToStringPtrOutput(),
-		})
+		}
+		if baseURL != "" {
+			providerArgs.BaseUrl = pulumi.StringPtr(baseURL)
+		}
+
+		provider, err := logfire.NewProvider(ctx, "logfire", providerArgs)
 		if err != nil {
 			return err
 		}

@@ -20,7 +20,7 @@ type Provider struct {
 
 	// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 	ApiKey pulumi.StringPtrOutput `pulumi:"apiKey"`
-	// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+	// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 	BaseUrl pulumi.StringPtrOutput `pulumi:"baseUrl"`
 }
 
@@ -50,7 +50,7 @@ func NewProvider(ctx *pulumi.Context,
 type providerArgs struct {
 	// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 	ApiKey *string `pulumi:"apiKey"`
-	// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+	// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 	BaseUrl *string `pulumi:"baseUrl"`
 }
 
@@ -58,7 +58,7 @@ type providerArgs struct {
 type ProviderArgs struct {
 	// Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
 	ApiKey pulumi.StringPtrInput
-	// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+	// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 	BaseUrl pulumi.StringPtrInput
 }
 
@@ -127,7 +127,7 @@ func (o ProviderOutput) ApiKey() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.ApiKey }).(pulumi.StringPtrOutput)
 }
 
-// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 func (o ProviderOutput) BaseUrl() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.BaseUrl }).(pulumi.StringPtrOutput)
 }

@@ -30,7 +30,7 @@ class _ExportableConfig(types.ModuleType):
     @_builtins.property
     def base_url(self) -> Optional[str]:
         """
-        Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+        Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
         """
         return __config__.get('baseUrl')
 

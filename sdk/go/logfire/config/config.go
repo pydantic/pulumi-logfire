@@ -16,7 +16,7 @@ func GetApiKey(ctx *pulumi.Context) string {
 	return config.Get(ctx, "logfire:apiKey")
 }
 
-// Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used.
+// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 func GetBaseUrl(ctx *pulumi.Context) string {
 	return config.Get(ctx, "logfire:baseUrl")
 }

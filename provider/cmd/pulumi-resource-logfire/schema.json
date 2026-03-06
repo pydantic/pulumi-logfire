@@ -50,7 +50,7 @@
             },
             "baseUrl": {
                 "type": "string",
-                "description": "Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used."
+                "description": "Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the\u003cspan pulumi-lang-nodejs=\" apiKey \" pulumi-lang-dotnet=\" ApiKey \" pulumi-lang-go=\" apiKey \" pulumi-lang-python=\" api_key \" pulumi-lang-yaml=\" apiKey \" pulumi-lang-java=\" apiKey \"\u003e api_key \u003c/span\u003eregion. Self-hosted customers should set this explicitly."
             }
         }
     },
@@ -91,7 +91,7 @@
             },
             "baseUrl": {
                 "type": "string",
-                "description": "Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used."
+                "description": "Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the\u003cspan pulumi-lang-nodejs=\" apiKey \" pulumi-lang-dotnet=\" ApiKey \" pulumi-lang-go=\" apiKey \" pulumi-lang-python=\" api_key \" pulumi-lang-yaml=\" apiKey \" pulumi-lang-java=\" apiKey \"\u003e api_key \u003c/span\u003eregion. Self-hosted customers should set this explicitly."
             }
         },
         "inputProperties": {
@@ -102,7 +102,7 @@
             },
             "baseUrl": {
                 "type": "string",
-                "description": "Base URL for Logfire API. If omitted, the LOGFIRE_BASE_URL environment variable is used."
+                "description": "Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the\u003cspan pulumi-lang-nodejs=\" apiKey \" pulumi-lang-dotnet=\" ApiKey \" pulumi-lang-go=\" apiKey \" pulumi-lang-python=\" api_key \" pulumi-lang-yaml=\" apiKey \" pulumi-lang-java=\" apiKey \"\u003e api_key \u003c/span\u003eregion. Self-hosted customers should set this explicitly."
             }
         },
         "methods": {
