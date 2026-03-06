@@ -25,15 +25,17 @@ yarn add @pydantic/pulumi-logfire
 To use from Python, install using `pip`:
 
 ```bash
-pip install pulumi_logfire
+pip install pydantic-pulumi-logfire
 ```
+
+Import it in code as `pulumi_logfire`.
 
 ### Go
 
 To use from Go, use `go get` to grab the latest version of the library:
 
 ```bash
-go get github.com/pydantic/pulumi-logfire/sdk/go/...
+go get github.com/pydantic/pulumi-logfire/sdk
 ```
 
 ## Configuration

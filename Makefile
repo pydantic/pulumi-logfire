@@ -17,6 +17,8 @@ PULUMI_MISSING_DOCS_ERROR := false
 # Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
 # Local & branch builds will just used this fixed default version unless specified
 PROVIDER_VERSION ?= 0.1.0-alpha.0+dev
+PYTHON_IMPORT_PACKAGE := pulumi_logfire
+PYTHON_PYPI_PACKAGE := pydantic-pulumi-logfire
 
 # Check version doesn't start with a "v" - this is a common mistake
 ifeq ($(shell echo $(PROVIDER_VERSION) | cut -c1),v)
@@ -145,6 +147,10 @@ build_python: .make/build_python
 	$(GEN_ENVS) $(WORKING_DIR)/bin/$(CODEGEN) python --out sdk/python/
 	printf "module fake_python_module // Exclude this directory from Go tools\n\ngo 1.17\n" > sdk/python/go.mod
 	cp README.md sdk/python/
+	# Keep the Python import path stable while publishing under a unique PyPI project name.
+	sed -i.bak 's/name = "$(PYTHON_IMPORT_PACKAGE)"/name = "$(PYTHON_PYPI_PACKAGE)"/' sdk/python/pyproject.toml
+	rm sdk/python/pyproject.toml.bak
+	perl -0pi -e 's|    pep440_version_string = importlib.metadata.version\(root_package\)\n|    try:\n        pep440_version_string = importlib.metadata.version(root_package)\n    except importlib.metadata.PackageNotFoundError:\n        pep440_version_string = importlib.metadata.version("$(PYTHON_PYPI_PACKAGE)")\n|' sdk/python/$(PYTHON_IMPORT_PACKAGE)/_utilities.py
 	@touch $@
 .make/build_python: .make/generate_python
 	cd sdk/python/ && \

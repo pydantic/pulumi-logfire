@@ -1,5 +1,5 @@
 [project]
-  name = "pulumi_logfire"
+  name = "pydantic-pulumi-logfire"
   description = "A Pulumi package for creating and managing logfire cloud resources."
   dependencies = ["parver>=0.2.1", "pulumi>=3.165.0,<4.0.0", "semver>=2.8.1", "typing-extensions>=4.11,<5; python_version < \"3.11\""]
   keywords = ["logfire", "category/cloud"]
