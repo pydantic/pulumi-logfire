@@ -8,17 +8,23 @@ layout: package
 
 ## Node.js (TypeScript/JavaScript)
 
+Package page: [npm](https://www.npmjs.com/package/@pydantic/pulumi-logfire)
+
 ```bash
 npm install @pydantic/pulumi-logfire
 ```
 
 ## Python
 
+Package page: [PyPI](https://pypi.org/project/pydantic-pulumi-logfire/)
+
 ```bash
-pip install pulumi_logfire
+pip install pydantic-pulumi-logfire
 ```
 
 ## Go
+
+Package page: [pkg.go.dev](https://pkg.go.dev/github.com/pydantic/pulumi-logfire/sdk/go/logfire)
 
 ```bash
 go get github.com/pydantic/pulumi-logfire/sdk/go/...
