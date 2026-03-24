@@ -25,7 +25,7 @@ import (
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 
-	"github.com/pydantic/pulumi-logfire/provider/pkg/version"
+	providerversion "github.com/pydantic/pulumi-logfire/provider/pkg/version"
 	"github.com/pydantic/pulumi-logfire/provider/shim"
 )
 
@@ -47,10 +47,10 @@ func Provider() tfbridge.ProviderInfo {
 	prov := tfbridge.ProviderInfo{
 		// Instantiate the Terraform provider
 		//nolint:lll
-		P: pfbridge.ShimProvider(shim.New(version.Version)()),
+		P: pfbridge.ShimProvider(shim.New(providerversion.Version)()),
 
 		Name:    "logfire",
-		Version: version.Version,
+		Version: providerversion.Version,
 		// DisplayName is a way to be able to change the casing of the provider name when being
 		// displayed on the Pulumi registry
 		DisplayName: "Logfire",
@@ -98,7 +98,7 @@ func Provider() tfbridge.ProviderInfo {
 			// Set where the SDK is going to be published to.
 			ImportBasePath: path.Join(
 				"github.com/pydantic/pulumi-logfire/sdk/",
-				tfbridge.GetModuleMajorVersion(version.Version),
+				tfbridge.GetModuleMajorVersion(providerversion.Version),
 				"go",
 				mainPkg,
 			),
