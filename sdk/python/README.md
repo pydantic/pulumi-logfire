@@ -35,7 +35,7 @@ Import it in code as `pulumi_logfire`.
 To use from Go, use `go get` to grab the latest version of the library:
 
 ```bash
-go get github.com/pydantic/pulumi-logfire/sdk
+go get github.com/pydantic/pulumi-logfire/sdk/go/logfire
 ```
 
 ## Configuration

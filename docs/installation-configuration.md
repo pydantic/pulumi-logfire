@@ -22,12 +22,14 @@ Package page: [PyPI](https://pypi.org/project/pydantic-pulumi-logfire/)
 pip install pydantic-pulumi-logfire
 ```
 
+Import it in code as `pulumi_logfire`.
+
 ## Go
 
 Package page: [pkg.go.dev](https://pkg.go.dev/github.com/pydantic/pulumi-logfire/sdk/go/logfire)
 
 ```bash
-go get github.com/pydantic/pulumi-logfire/sdk/go/...
+go get github.com/pydantic/pulumi-logfire/sdk/go/logfire
 ```
 
 ## Provider Configuration
