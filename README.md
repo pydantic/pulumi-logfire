@@ -38,6 +38,8 @@ To use from Go, use `go get` to grab the latest version of the library:
 go get github.com/pydantic/pulumi-logfire/sdk
 ```
 
+Import it in code as `github.com/pydantic/pulumi-logfire/sdk/go/logfire`.
+
 ## Configuration
 
 The following configuration points are available for the `logfire` provider:
