@@ -13,7 +13,7 @@ require (
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.17.0 // indirect
-	github.com/pydantic/terraform-provider-logfire v0.1.3 // indirect
+	github.com/pydantic/terraform-provider-logfire v0.1.4 // indirect
 )
 
 require (
