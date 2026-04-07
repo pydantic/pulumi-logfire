@@ -21,7 +21,6 @@ import (
 //
 // import (
 //
-//	"fmt"
 //	"os"
 //
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -46,7 +45,7 @@ import (
 //			_, err = logfire.NewDashboard(ctx, "exampleDashboard", &logfire.DashboardArgs{
 //				ProjectId:  exampleProject.ID(),
 //				Slug:       pulumi.String("example-dashboard"),
-//				Definition: pulumi.String(readFileOrPanic(fmt.Sprintf("%v/dashboard.json", path.Module))),
+//				Definition: pulumi.String(readFileOrPanic("dashboard.json")),
 //			})
 //			if err != nil {
 //				return err

@@ -181,7 +181,7 @@ class Dashboard(pulumi.CustomResource):
         example_dashboard = logfire.Dashboard("exampleDashboard",
             project_id=example_project.id,
             slug="example-dashboard",
-            definition=(lambda path: open(path).read())(f"{path['module']}/dashboard.json"))
+            definition=(lambda path: open(path).read())("dashboard.json"))
         ```
 
         :param str resource_name: The name of the resource.
@@ -210,7 +210,7 @@ class Dashboard(pulumi.CustomResource):
         example_dashboard = logfire.Dashboard("exampleDashboard",
             project_id=example_project.id,
             slug="example-dashboard",
-            definition=(lambda path: open(path).read())(f"{path['module']}/dashboard.json"))
+            definition=(lambda path: open(path).read())("dashboard.json"))
         ```
 
         :param str resource_name: The name of the resource.

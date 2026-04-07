@@ -119,6 +119,7 @@ build_go: .make/build_go
 .make/generate_go: .make/mise_install bin/$(CODEGEN)
 .make/generate_go: | mise_env
 	$(GEN_ENVS) $(WORKING_DIR)/bin/$(CODEGEN) go --out sdk/go/
+	./scripts/fix_dashboard_go_examples.sh sdk/go/logfire/dashboard.go
 	@touch $@
 .make/build_go: .make/generate_go
 	cd sdk && go list "$$(grep -e "^module" go.mod | cut -d ' ' -f 2)/go/..." | xargs -I {} bash -c 'go build {} && go clean -i {}'
@@ -223,6 +224,7 @@ tfgen_no_deps: .make/schema
 .make/schema: bin/$(CODEGEN) .make/mise_install .make/upstream
 .make/schema: | mise_env
 	$(WORKING_DIR)/bin/$(CODEGEN) schema --out provider/cmd/$(PROVIDER)
+	./scripts/fix_dashboard_go_examples.sh provider/cmd/$(PROVIDER)/schema.json
 	(cd provider && VERSION=$(PROVIDER_VERSION) go generate cmd/$(PROVIDER)/main.go)
 	@touch $@
 tfgen_build_only: bin/$(CODEGEN)

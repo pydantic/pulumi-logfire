@@ -18,7 +18,7 @@ import * as utilities from "./utilities";
  * const exampleDashboard = new logfire.Dashboard("exampleDashboard", {
  *     projectId: exampleProject.id,
  *     slug: "example-dashboard",
- *     definition: fs.readFileSync(`${path.module}/dashboard.json`, "utf8"),
+ *     definition: fs.readFileSync("dashboard.json", "utf8"),
  * });
  * ```
  */

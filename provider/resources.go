@@ -15,6 +15,7 @@
 package logfire
 
 import (
+	"bytes"
 	"path"
 
 	// Allow embedding bridge-metadata.json in the provider.
@@ -79,7 +80,21 @@ func Provider() tfbridge.ProviderInfo {
 		// match the TF provider module's require directive, not any replace directives.
 		GitHubOrg:    "pydantic",
 		MetadataInfo: tfbridge.NewProviderMetadata(metadata),
-		Config:       map[string]*tfbridge.SchemaInfo{},
+		DocRules: &tfbridge.DocRuleInfo{
+			EditRules: func(defaults []tfbridge.DocsEdit) []tfbridge.DocsEdit {
+				return append([]tfbridge.DocsEdit{{
+					Path: "dashboard.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						return bytes.ReplaceAll(
+							content,
+							[]byte(`file("${path.module}/dashboard.json")`),
+							[]byte(`file("dashboard.json")`),
+						), nil
+					},
+				}}, defaults...)
+			},
+		},
+		Config: map[string]*tfbridge.SchemaInfo{},
 		// If extra types are needed for configuration, they can be added here.
 		ExtraTypes: map[string]schema.ComplexTypeSpec{},
 		JavaScript: &tfbridge.JavaScriptInfo{
