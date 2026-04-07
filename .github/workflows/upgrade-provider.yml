@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false # Conflicts with app auth token.      
       - id: esc-secrets
@@ -94,7 +94,7 @@ jobs:
       - name: Call upgrade provider action
         id: upgrade_provider
         if: steps.target_version.outputs.version != ''
-        uses: pulumi/pulumi-upgrade-provider-action@e247104aede3eb4641f48c8ad0ea9de9346f2457 # v0.0.18
+        uses: pulumi/pulumi-upgrade-provider-action@12996503de2aaddd72c7426efc43331a8970894f # v0.0.19
         with:
           kind: provider
           email: bot@pulumi.com
