@@ -7,9 +7,6 @@ on:
       version:
         required: true
         type: string
-      setLatestRelease:
-        required: true
-        type: boolean
       isPrerelease:
         required: true
         type: boolean
@@ -105,8 +102,8 @@ jobs:
         prerelease: ${{ inputs.isPrerelease }}
         # We keep pre-releases as drafts so they're not visible until we manually publish them.
         draft: ${{ inputs.isPrerelease }}
-        # Explicitly set make_latest to account for backported releases
-        make_latest: ${{ inputs.setLatestRelease }}
+        # Let GitHub choose latest based on semver/date so older backports do not override newer releases.
+        make_latest: legacy
         body: ${{ steps.schema-summary.outputs.summary }}
         generate_release_notes: true
         files: dist/*
