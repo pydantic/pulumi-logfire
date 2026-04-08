@@ -35,6 +35,22 @@ The local pre-commit hook runs generation checks only when relevant files are st
 
 The examples and integration tests in this repository will create and destroy real
 cloud resources while running. Before running these tests, make sure that you have
-configured access to your cloud provider with Pulumi.
+configured access to Logfire with Pulumi.
 
-*TODO: Add any steps you need to take to run integration tests here*
+For the normal local verification loop:
+
+1. Run `go test ./...` in `provider/shim/`
+1. Run `go test ./...` in `provider/`
+1. If provider schema or examples changed, run:
+   - `make schema PULUMI_CONVERT=0`
+   - `make generate_sdks PULUMI_CONVERT=0`
+
+To exercise a real example end to end:
+
+1. Set `LOGFIRE_API_KEY`
+1. Run `make build`
+1. In `examples/logfire-go/`:
+   - `pulumi stack init dev --secrets-provider=passphrase` once, or select an existing stack
+   - `pulumi config set --secret logfire:apiKey $LOGFIRE_API_KEY`
+   - `pulumi up`
+   - `pulumi destroy`
