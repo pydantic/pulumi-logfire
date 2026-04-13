@@ -4,7 +4,7 @@ description: Restores the SDK asset for a language.
 inputs:
   language:
     required: true
-    description: One of nodejs, python, dotnet, go, java
+    description: One of nodejs, python, go
 
 runs:
   using: "composite"
