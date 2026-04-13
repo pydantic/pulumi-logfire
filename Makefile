@@ -93,7 +93,7 @@ help:
 	@echo "  provider_dist Build and package the provider for all platforms"
 	@echo ""
 	@echo "Tool Targets"
-	@echo "  ci-mgmt     Re-generate CI configuration from .ci-mgmt.yaml"
+	@echo "  ci-mgmt     Disabled; CI workflows are maintained manually"
 	@echo "  debug_tfgen Start a debug server for tfgen"
 	@echo ""
 	@echo "Internal Targets (automatically run as dependencies of other targets)"
@@ -240,13 +240,12 @@ upstream: .make/upstream
 	@touch $@
 .PHONY: upstream
 
-# To make an immediately observable change to .ci-mgmt.yaml:
-#
-# - Edit .ci-mgmt.yaml
-# - Run make ci-mgmt to apply the change locally.
-#
-ci-mgmt: .ci-mgmt.yaml
-	go run github.com/pulumi/ci-mgmt/provider-ci@master generate
+# CI workflows are maintained manually in this repository. The upstream
+# generator is intentionally disabled because it introduces unsupported SDK
+# targets and stale action pins.
+ci-mgmt:
+	@echo "ci-mgmt generation is disabled for this repository; maintain CI workflows manually."
+	@exit 1
 .PHONY: ci-mgmt
 
 # Start debug server for tfgen

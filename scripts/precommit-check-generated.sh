@@ -6,6 +6,7 @@ cd "$REPO_ROOT"
 
 # Ensure generation uses the repository toolchain, not global binaries.
 if command -v mise >/dev/null 2>&1; then
+  mise install >/dev/null
   eval "$(mise env)"
 fi
 
