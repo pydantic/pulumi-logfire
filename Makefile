@@ -243,10 +243,10 @@ upstream: .make/upstream
 # To make an immediately observable change to .ci-mgmt.yaml:
 #
 # - Edit .ci-mgmt.yaml
-# - Run make ci-mgmt to apply the change locally.
+# - Run make ci-mgmt to sync the CI-owned files and reapply repo-specific overrides.
 #
 ci-mgmt: .ci-mgmt.yaml
-	go run github.com/pulumi/ci-mgmt/provider-ci@master generate
+	bash ./scripts/ci-mgmt.sh
 .PHONY: ci-mgmt
 
 # Start debug server for tfgen
