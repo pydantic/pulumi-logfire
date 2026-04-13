@@ -186,38 +186,6 @@ jobs:
         version=$(toml get --toml-path pyproject.toml project.version)
         echo "version=${version}" >> "$GITHUB_OUTPUT"
 
-  clean_up_release_labels:
-    name: Clean up release labels
-    # Only run for non-prerelease, if the publish_go_sdk job was successful or skipped
-    if: inputs.isPrerelease == false
-    
-    needs: publish_sdk
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repo
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      with:
-        persist-credentials: false    
-    - id: esc-secrets
-      name: Map environment to ESC outputs
-      uses: ./.github/actions/esc-action
-    - name: Configure git for private modules
-      shell: bash
-      env:
-        GIT_AUTH_TOKEN: ${{ secrets.GH_PAT || secrets.PULUMI_BOT_TOKEN || secrets.GITHUB_TOKEN }}
-      run: |
-        if [ -n "$GIT_AUTH_TOKEN" ]; then
-          git config --global url."https://${GIT_AUTH_TOKEN}@github.com/".insteadOf "https://github.com/"
-        fi
-    - name: Clean up release labels
-      uses: pulumi/action-release-by-pr-label@main
-      with:
-        command: "clean-up-release-labels"
-        repo: ${{ github.repository }}
-        commit: ${{ github.sha }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   verify_release:
     name: verify_release
     needs: publish_sdk
