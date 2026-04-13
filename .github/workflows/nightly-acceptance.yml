@@ -69,14 +69,15 @@ jobs:
       - build_provider
       - build_sdk
       - test
-    if: ${{ always() && contains(needs.*.result, 'failure') && secrets.SLACK_WEBHOOK_URL != '' }}
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
       - name: Notify Slack on failure
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
         run: |
           payload=$(printf '{"text":"Nightly acceptance tests failed for %s on %s at %s. <https://github.com/%s/actions/runs/%s|View run>"}' \
             "$GITHUB_REPOSITORY" \
