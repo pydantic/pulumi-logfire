@@ -61,3 +61,27 @@ jobs:
     secrets: inherit
     with:
       version: ${{ needs.prerequisites.outputs.version }}
+
+  notify_slack:
+    name: notify_slack
+    needs:
+      - prerequisites
+      - build_provider
+      - build_sdk
+      - test
+    if: ${{ always() && contains(needs.*.result, 'failure') && secrets.SLACK_WEBHOOK_URL != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Notify Slack on failure
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          payload=$(printf '{"text":"Nightly acceptance tests failed for %s on %s at %s. <https://github.com/%s/actions/runs/%s|View run>"}' \
+            "$GITHUB_REPOSITORY" \
+            "$GITHUB_REF_NAME" \
+            "$GITHUB_SHA" \
+            "$GITHUB_REPOSITORY" \
+            "$GITHUB_RUN_ID")
+          curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
