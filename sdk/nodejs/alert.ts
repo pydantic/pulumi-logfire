@@ -79,7 +79,7 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly description: pulumi.Output<string | undefined>;
     /**
-     * Evaluation frequency as Go duration.
+     * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
      */
     declare public readonly frequency: pulumi.Output<string>;
     /**
@@ -99,7 +99,7 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly query: pulumi.Output<string>;
     /**
-     * Lookback window as Go duration.
+     * Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
      */
     declare public readonly timeWindow: pulumi.Output<string>;
     /**
@@ -183,7 +183,7 @@ export interface AlertState {
      */
     description?: pulumi.Input<string>;
     /**
-     * Evaluation frequency as Go duration.
+     * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
      */
     frequency?: pulumi.Input<string>;
     /**
@@ -203,7 +203,7 @@ export interface AlertState {
      */
     query?: pulumi.Input<string>;
     /**
-     * Lookback window as Go duration.
+     * Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
      */
     timeWindow?: pulumi.Input<string>;
     /**
@@ -229,7 +229,7 @@ export interface AlertArgs {
      */
     description?: pulumi.Input<string>;
     /**
-     * Evaluation frequency as Go duration.
+     * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
      */
     frequency: pulumi.Input<string>;
     /**
@@ -249,7 +249,7 @@ export interface AlertArgs {
      */
     query: pulumi.Input<string>;
     /**
-     * Lookback window as Go duration.
+     * Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
      */
     timeWindow: pulumi.Input<string>;
 }

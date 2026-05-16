@@ -31,11 +31,11 @@ class AlertArgs:
         """
         The set of arguments for constructing a Alert resource.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
-        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency as Go duration.
+        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
-        :param pulumi.Input[_builtins.str] time_window: Lookback window as Go duration.
+        :param pulumi.Input[_builtins.str] time_window: Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
@@ -69,7 +69,7 @@ class AlertArgs:
     @pulumi.getter
     def frequency(self) -> pulumi.Input[_builtins.str]:
         """
-        Evaluation frequency as Go duration.
+        Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         """
         return pulumi.get(self, "frequency")
 
@@ -117,7 +117,7 @@ class AlertArgs:
     @pulumi.getter(name="timeWindow")
     def time_window(self) -> pulumi.Input[_builtins.str]:
         """
-        Lookback window as Go duration.
+        Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         """
         return pulumi.get(self, "time_window")
 
@@ -180,12 +180,12 @@ class _AlertState:
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
         :param pulumi.Input[_builtins.str] description: Alert description.
-        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency as Go duration.
+        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
-        :param pulumi.Input[_builtins.str] time_window: Lookback window as Go duration.
+        :param pulumi.Input[_builtins.str] time_window: Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         :param pulumi.Input[_builtins.str] watermark: Provider-managed watermark (lateness tolerance) sent to the API.
         """
         if active is not None:
@@ -249,7 +249,7 @@ class _AlertState:
     @pulumi.getter
     def frequency(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Evaluation frequency as Go duration.
+        Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         """
         return pulumi.get(self, "frequency")
 
@@ -309,7 +309,7 @@ class _AlertState:
     @pulumi.getter(name="timeWindow")
     def time_window(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Lookback window as Go duration.
+        Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         """
         return pulumi.get(self, "time_window")
 
@@ -384,12 +384,12 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
         :param pulumi.Input[_builtins.str] description: Alert description.
-        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency as Go duration.
+        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
-        :param pulumi.Input[_builtins.str] time_window: Lookback window as Go duration.
+        :param pulumi.Input[_builtins.str] time_window: Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         """
         ...
     @overload
@@ -515,12 +515,12 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
         :param pulumi.Input[_builtins.str] description: Alert description.
-        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency as Go duration.
+        :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
-        :param pulumi.Input[_builtins.str] time_window: Lookback window as Go duration.
+        :param pulumi.Input[_builtins.str] time_window: Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         :param pulumi.Input[_builtins.str] watermark: Provider-managed watermark (lateness tolerance) sent to the API.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
@@ -567,7 +567,7 @@ class Alert(pulumi.CustomResource):
     @pulumi.getter
     def frequency(self) -> pulumi.Output[_builtins.str]:
         """
-        Evaluation frequency as Go duration.
+        Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         """
         return pulumi.get(self, "frequency")
 
@@ -607,7 +607,7 @@ class Alert(pulumi.CustomResource):
     @pulumi.getter(name="timeWindow")
     def time_window(self) -> pulumi.Output[_builtins.str]:
         """
-        Lookback window as Go duration.
+        Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         """
         return pulumi.get(self, "time_window")
 
