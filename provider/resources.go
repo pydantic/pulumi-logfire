@@ -37,6 +37,25 @@ const (
 	mainPkg = "logfire"
 	// modules:
 	mainMod = "index" // the logfire module
+
+	projectImportSection = "## Import\n\n" +
+		"Import by organization name and project name:\n\n" +
+		"```console\n" +
+		"$ terraform import logfire_project.example \"acme/example-project\"\n" +
+		"```\n\n" +
+		"Single project UUID/name imports are also supported."
+	alertImportSection = "## Import\n\n" +
+		"Import by project name and alert name:\n\n" +
+		"```console\n" +
+		"$ terraform import logfire_alert.example \"example-project/error-alert\"\n" +
+		"```\n\n" +
+		"Project UUID/alert UUID imports are also supported."
+	dashboardImportSection = "## Import\n\n" +
+		"Import by project name and dashboard slug:\n\n" +
+		"```console\n" +
+		"$ terraform import logfire_dashboard.example \"example-project/example-dashboard\"\n" +
+		"```\n\n" +
+		"Project UUID/dashboard UUID/slug imports are also supported."
 )
 
 //go:embed cmd/pulumi-resource-logfire/bridge-metadata.json
@@ -91,6 +110,21 @@ func Provider() tfbridge.ProviderInfo {
 							[]byte(`file("dashboard.json")`),
 						), nil
 					},
+				}, {
+					Path: "alert.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						return replaceImportSection(content, alertImportSection), nil
+					},
+				}, {
+					Path: "dashboard.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						return replaceImportSection(content, dashboardImportSection), nil
+					},
+				}, {
+					Path: "project.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						return replaceImportSection(content, projectImportSection), nil
+					},
 				}}, defaults...)
 			},
 		},
@@ -138,4 +172,25 @@ func Provider() tfbridge.ProviderInfo {
 	prov.SetAutonaming(255, "-")
 
 	return prov
+}
+
+func replaceImportSection(content []byte, section string) []byte {
+	const heading = "## Import\n"
+
+	start := bytes.Index(content, []byte(heading))
+	if start == -1 {
+		return content
+	}
+
+	end := len(content)
+	searchStart := start + len(heading)
+	if next := bytes.Index(content[searchStart:], []byte("\n## ")); next != -1 {
+		end = searchStart + next
+	}
+
+	out := make([]byte, 0, len(content)-end+start+len(section))
+	out = append(out, content[:start]...)
+	out = append(out, []byte(section)...)
+	out = append(out, content[end:]...)
+	return out
 }

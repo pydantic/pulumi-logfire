@@ -166,6 +166,15 @@ class Project(pulumi.CustomResource):
         example = logfire.Project("example", description="Managed by Pulumi")
         ```
 
+        ## Import
+
+        Import by organization name and project name:
+
+        ```sh
+        $ pulumi import logfire:index/project:Project example "acme/example-project"
+        ```
+        Single project UUID/name imports are also supported.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] description: Project description.
@@ -189,6 +198,15 @@ class Project(pulumi.CustomResource):
 
         example = logfire.Project("example", description="Managed by Pulumi")
         ```
+
+        ## Import
+
+        Import by organization name and project name:
+
+        ```sh
+        $ pulumi import logfire:index/project:Project example "acme/example-project"
+        ```
+        Single project UUID/name imports are also supported.
 
         :param str resource_name: The name of the resource.
         :param ProjectArgs args: The arguments to use to populate this resource's properties.

@@ -55,6 +55,15 @@ import (
 //	}
 //
 // ```
+//
+// ## Import
+//
+// Import by project name and dashboard slug:
+//
+// ```sh
+// $ pulumi import logfire:index/dashboard:Dashboard example "example-project/example-dashboard"
+// ```
+// Project UUID/dashboard UUID/slug imports are also supported.
 type Dashboard struct {
 	pulumi.CustomResourceState
 

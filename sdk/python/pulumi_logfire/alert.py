@@ -379,6 +379,15 @@ class Alert(pulumi.CustomResource):
             active=True)
         ```
 
+        ## Import
+
+        Import by project name and alert name:
+
+        ```sh
+        $ pulumi import logfire:index/alert:Alert example "example-project/error-alert"
+        ```
+        Project UUID/alert UUID imports are also supported.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
@@ -429,6 +438,15 @@ class Alert(pulumi.CustomResource):
             notify_when="has_matches",
             active=True)
         ```
+
+        ## Import
+
+        Import by project name and alert name:
+
+        ```sh
+        $ pulumi import logfire:index/alert:Alert example "example-project/error-alert"
+        ```
+        Project UUID/alert UUID imports are also supported.
 
         :param str resource_name: The name of the resource.
         :param AlertArgs args: The arguments to use to populate this resource's properties.

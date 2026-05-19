@@ -38,6 +38,15 @@ import (
 //	}
 //
 // ```
+//
+// ## Import
+//
+// Import by organization name and project name:
+//
+// ```sh
+// $ pulumi import logfire:index/project:Project example "acme/example-project"
+// ```
+// Single project UUID/name imports are also supported.
 type Project struct {
 	pulumi.CustomResourceState
 

@@ -184,6 +184,15 @@ class Dashboard(pulumi.CustomResource):
             definition=(lambda path: open(path).read())("dashboard.json"))
         ```
 
+        ## Import
+
+        Import by project name and dashboard slug:
+
+        ```sh
+        $ pulumi import logfire:index/dashboard:Dashboard example "example-project/example-dashboard"
+        ```
+        Project UUID/dashboard UUID/slug imports are also supported.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] definition: Dashboard definition JSON payload.
@@ -212,6 +221,15 @@ class Dashboard(pulumi.CustomResource):
             slug="example-dashboard",
             definition=(lambda path: open(path).read())("dashboard.json"))
         ```
+
+        ## Import
+
+        Import by project name and dashboard slug:
+
+        ```sh
+        $ pulumi import logfire:index/dashboard:Dashboard example "example-project/example-dashboard"
+        ```
+        Project UUID/dashboard UUID/slug imports are also supported.
 
         :param str resource_name: The name of the resource.
         :param DashboardArgs args: The arguments to use to populate this resource's properties.

@@ -73,6 +73,15 @@ import (
 //	}
 //
 // ```
+//
+// ## Import
+//
+// Import by project name and alert name:
+//
+// ```sh
+// $ pulumi import logfire:index/alert:Alert example "example-project/error-alert"
+// ```
+// Project UUID/alert UUID imports are also supported.
 type Alert struct {
 	pulumi.CustomResourceState
 

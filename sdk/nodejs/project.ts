@@ -15,6 +15,15 @@ import * as utilities from "./utilities";
  *
  * const example = new logfire.Project("example", {description: "Managed by Pulumi"});
  * ```
+ *
+ * ## Import
+ *
+ * Import by organization name and project name:
+ *
+ * ```sh
+ * $ pulumi import logfire:index/project:Project example "acme/example-project"
+ * ```
+ * Single project UUID/name imports are also supported.
  */
 export class Project extends pulumi.CustomResource {
     /**

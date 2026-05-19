@@ -55,6 +55,18 @@ pulumi config set --secret logfire:apiKey pylf_v2_us_...
 
 For Logfire SaaS, the provider infers `https://logfire-us.pydantic.dev` or `https://logfire-eu.pydantic.dev` from the API key region. If you set `logfire:baseUrl` or `LOGFIRE_BASE_URL`, that value is used instead.
 
+## Importing existing resources
+
+Existing Logfire resources can be imported into Pulumi state with `pulumi import`. For resources that are easy to look up by name or slug, prefer the name-based import IDs:
+
+| Resource | Recommended import ID | Example |
+| --- | --- | --- |
+| `logfire:Project` | `organization/project-name` | `pulumi import logfire:index/project:Project prod "acme/prod-logs"` |
+| `logfire:Alert` | `project-name/alert-name` | `pulumi import logfire:index/alert:Alert errors "prod-logs/error-alert"` |
+| `logfire:Dashboard` | `project-name/dashboard-slug` | `pulumi import logfire:index/dashboard:Dashboard overview "prod-logs/prod-overview"` |
+
+UUID-based import IDs are also supported if you already have the backend IDs. The separators `/`, `,`, and `|` are accepted for multi-part import IDs.
+
 ## Reference
 
 For detailed reference documentation, please visit [the Pulumi registry](https://www.pulumi.com/registry/packages/logfire/api-docs/).

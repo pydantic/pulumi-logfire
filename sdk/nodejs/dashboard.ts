@@ -21,6 +21,15 @@ import * as utilities from "./utilities";
  *     definition: fs.readFileSync("dashboard.json", "utf8"),
  * });
  * ```
+ *
+ * ## Import
+ *
+ * Import by project name and dashboard slug:
+ *
+ * ```sh
+ * $ pulumi import logfire:index/dashboard:Dashboard example "example-project/example-dashboard"
+ * ```
+ * Project UUID/dashboard UUID/slug imports are also supported.
  */
 export class Dashboard extends pulumi.CustomResource {
     /**
