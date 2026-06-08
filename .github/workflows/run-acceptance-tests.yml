@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       with:
         persist-credentials: false
     - id: run-url
@@ -110,7 +110,7 @@ jobs:
     - lint
     runs-on: ubuntu-latest
     steps:
-    - uses: guibranco/github-status-action-v2@631f55ea0251f0fb284525ad86c30e9f7a8dd284 # v1.1.14
+    - uses: guibranco/github-status-action-v2@77639353504055053524efa7a3719aaf0b731ce9 # v1.2.4
       with:
         authToken: ${{ secrets.GITHUB_TOKEN }}
         # Write an explicit status check called "Sentinel" which will only pass if this code really runs.
