@@ -41,7 +41,7 @@ jobs:
       version: ${{ steps.provider-version.outputs.version }}
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         persist-credentials: false    
     - id: esc-secrets
@@ -55,13 +55,13 @@ jobs:
         if [ -n "$GIT_AUTH_TOKEN" ]; then
           git config --global url."https://${GIT_AUTH_TOKEN}@github.com/".insteadOf "https://github.com/"
         fi
-    - uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+    - uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       id: provider-version
       with:
         major-version: 0
         set-env: 'PROVIDER_VERSION'
     - name: Cache examples generation
-      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       with:
         path: |
           .pulumi/examples-cache
@@ -92,11 +92,11 @@ jobs:
     - name: Generate schema
       run: make schema PULUMI_CONVERT=0
     - name: Check schema worktree clean
-      uses: pulumi/git-status-check-action@v1
+      uses: pulumi/git-status-check-action@v2
     - name: Regenerate SDKs
       run: make generate_sdks PULUMI_CONVERT=0
     - name: Check SDK worktree clean
-      uses: pulumi/git-status-check-action@v1
+      uses: pulumi/git-status-check-action@v2
       with:
         # Keep these in sync with build_sdk.yml to avoid false positives on
         # provider-version derived files.
@@ -112,7 +112,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
       env:
         CODECOV_TOKEN: ${{ steps.esc-secrets.outputs.CODECOV_TOKEN }}
     - if: inputs.is_pr
