@@ -1,7 +1,0 @@
-name: logfire-go
-runtime: go
-description: Pulumi Logfire Go example
-config:
-  pulumi:tags:
-    value:
-      pulumi:template: go
