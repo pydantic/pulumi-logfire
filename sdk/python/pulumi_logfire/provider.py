@@ -20,16 +20,20 @@ __all__ = ['ProviderArgs', 'Provider']
 class ProviderArgs:
     def __init__(__self__, *,
                  api_key: Optional[pulumi.Input[_builtins.str]] = None,
-                 base_url: Optional[pulumi.Input[_builtins.str]] = None):
+                 base_url: Optional[pulumi.Input[_builtins.str]] = None,
+                 custom_headers: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None):
         """
         The set of arguments for constructing a Provider resource.
         :param pulumi.Input[_builtins.str] api_key: Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         :param pulumi.Input[_builtins.str] base_url: Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
+        :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] custom_headers: Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
         """
         if api_key is not None:
             pulumi.set(__self__, "api_key", api_key)
         if base_url is not None:
             pulumi.set(__self__, "base_url", base_url)
+        if custom_headers is not None:
+            pulumi.set(__self__, "custom_headers", custom_headers)
 
     @_builtins.property
     @pulumi.getter(name="apiKey")
@@ -55,6 +59,18 @@ class ProviderArgs:
     def base_url(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "base_url", value)
 
+    @_builtins.property
+    @pulumi.getter(name="customHeaders")
+    def custom_headers(self) -> Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]:
+        """
+        Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+        """
+        return pulumi.get(self, "custom_headers")
+
+    @custom_headers.setter
+    def custom_headers(self, value: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]):
+        pulumi.set(self, "custom_headers", value)
+
 
 @pulumi.type_token("pulumi:providers:logfire")
 class Provider(pulumi.ProviderResource):
@@ -64,6 +80,7 @@ class Provider(pulumi.ProviderResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  api_key: Optional[pulumi.Input[_builtins.str]] = None,
                  base_url: Optional[pulumi.Input[_builtins.str]] = None,
+                 custom_headers: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  __props__=None):
         """
         The provider type for the logfire package. By default, resources use package-wide configuration
@@ -75,6 +92,7 @@ class Provider(pulumi.ProviderResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] api_key: Bearer token. If omitted, the LOGFIRE_API_KEY environment variable is used.
         :param pulumi.Input[_builtins.str] base_url: Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
+        :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] custom_headers: Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
         """
         ...
     @overload
@@ -105,6 +123,7 @@ class Provider(pulumi.ProviderResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  api_key: Optional[pulumi.Input[_builtins.str]] = None,
                  base_url: Optional[pulumi.Input[_builtins.str]] = None,
+                 custom_headers: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -116,6 +135,7 @@ class Provider(pulumi.ProviderResource):
 
             __props__.__dict__["api_key"] = None if api_key is None else pulumi.Output.secret(api_key)
             __props__.__dict__["base_url"] = base_url
+            __props__.__dict__["custom_headers"] = pulumi.Output.secret(custom_headers).apply(pulumi.runtime.to_json) if custom_headers is not None else None
         secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["apiKey"])
         opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(

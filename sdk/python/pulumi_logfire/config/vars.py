@@ -34,3 +34,10 @@ class _ExportableConfig(types.ModuleType):
         """
         return __config__.get('baseUrl')
 
+    @_builtins.property
+    def custom_headers(self) -> Optional[str]:
+        """
+        Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+        """
+        return __config__.get('customHeaders')
+

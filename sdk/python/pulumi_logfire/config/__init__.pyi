@@ -24,3 +24,8 @@ baseUrl: Optional[str]
 Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the api_key region. Self-hosted customers should set this explicitly.
 """
 
+customHeaders: Optional[str]
+"""
+Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+"""
+

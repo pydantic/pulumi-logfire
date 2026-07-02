@@ -29,3 +29,14 @@ Object.defineProperty(exports, "baseUrl", {
     enumerable: true,
 });
 
+/**
+ * Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+ */
+export declare const customHeaders: {[key: string]: string} | undefined;
+Object.defineProperty(exports, "customHeaders", {
+    get() {
+        return __config.getObject<{[key: string]: string}>("customHeaders");
+    },
+    enumerable: true,
+});
+

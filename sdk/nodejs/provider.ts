@@ -47,6 +47,7 @@ export class Provider extends pulumi.ProviderResource {
         {
             resourceInputs["apiKey"] = args?.apiKey ? pulumi.secret(args.apiKey) : undefined;
             resourceInputs["baseUrl"] = args?.baseUrl;
+            resourceInputs["customHeaders"] = pulumi.output(args?.customHeaders ? pulumi.secret(args.customHeaders) : undefined).apply(JSON.stringify);
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         const secretOpts = { additionalSecretOutputs: ["apiKey"] };
@@ -76,6 +77,10 @@ export interface ProviderArgs {
      * Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
      */
     baseUrl?: pulumi.Input<string>;
+    /**
+     * Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+     */
+    customHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
 }
 
 export namespace Provider {

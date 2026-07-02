@@ -34,6 +34,9 @@ func NewProvider(ctx *pulumi.Context,
 	if args.ApiKey != nil {
 		args.ApiKey = pulumi.ToSecret(args.ApiKey).(pulumi.StringPtrInput)
 	}
+	if args.CustomHeaders != nil {
+		args.CustomHeaders = pulumi.ToSecret(args.CustomHeaders).(pulumi.StringMapInput)
+	}
 	secrets := pulumi.AdditionalSecretOutputs([]string{
 		"apiKey",
 	})
@@ -52,6 +55,8 @@ type providerArgs struct {
 	ApiKey *string `pulumi:"apiKey"`
 	// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 	BaseUrl *string `pulumi:"baseUrl"`
+	// Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+	CustomHeaders map[string]string `pulumi:"customHeaders"`
 }
 
 // The set of arguments for constructing a Provider resource.
@@ -60,6 +65,8 @@ type ProviderArgs struct {
 	ApiKey pulumi.StringPtrInput
 	// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 	BaseUrl pulumi.StringPtrInput
+	// Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+	CustomHeaders pulumi.StringMapInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {

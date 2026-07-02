@@ -20,3 +20,8 @@ func GetApiKey(ctx *pulumi.Context) string {
 func GetBaseUrl(ctx *pulumi.Context) string {
 	return config.Get(ctx, "logfire:baseUrl")
 }
+
+// Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
+func GetCustomHeaders(ctx *pulumi.Context) string {
+	return config.Get(ctx, "logfire:customHeaders")
+}
