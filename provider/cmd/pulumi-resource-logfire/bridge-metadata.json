@@ -24,6 +24,14 @@
             "logfire_read_token": {
                 "current": "logfire:index/readToken:ReadToken"
             },
+            "logfire_slo": {
+                "current": "logfire:index/slo:Slo",
+                "fields": {
+                    "environments": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
             "logfire_write_token": {
                 "current": "logfire:index/writeToken:WriteToken"
             }

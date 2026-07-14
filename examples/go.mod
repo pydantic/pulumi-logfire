@@ -4,10 +4,7 @@ go 1.24.7
 
 toolchain go1.24.10
 
-require (
-	github.com/pulumi/pulumi/pkg/v3 v3.209.0
-	github.com/stretchr/testify v1.10.0
-)
+require github.com/pulumi/pulumi/pkg/v3 v3.209.0
 
 require (
 	cloud.google.com/go v0.112.1 // indirect
@@ -138,6 +135,7 @@ require (
 	github.com/skeema/knownhosts v1.3.0 // indirect
 	github.com/spf13/cobra v1.10.1 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/texttheater/golang-levenshtein v1.0.1 // indirect
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
