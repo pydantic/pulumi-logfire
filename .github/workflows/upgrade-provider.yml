@@ -104,3 +104,5 @@ jobs:
           allow-missing-docs: true
         env:
           GH_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_TOKEN || steps.esc-secrets.outputs.PULUMI_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          # upgrade-provider invokes make without command-line overrides.
+          PULUMI_CONVERT: "0"
