@@ -741,6 +741,166 @@
                 "type": "object"
             }
         },
+        "logfire:index/slo:Slo": {
+            "description": "Manages a Logfire SLO (Service Level Objective).\n\n\u003e **Experimental:** this resource is backed by a Logfire API that is not yet stable. Its schema and behavior may change in backwards-incompatible ways in future releases. SLOs also require a Logfire plan that includes them.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst exampleProject = new logfire.Project(\"exampleProject\", {});\nconst exampleSlo = new logfire.Slo(\"exampleSlo\", {\n    projectId: exampleProject.id,\n    serviceName: \"payments-api\",\n    description: \"Successful request ratio for the payments API\",\n    totalQuery: \"parent_span_id IS NULL\",\n    badQuery: \"otel_status_code = 'ERROR'\",\n    targetPercent: \"99.9\",\n    rollingWindow: \"30d\",\n    environments: [\"prod\"],\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample_project = logfire.Project(\"exampleProject\")\nexample_slo = logfire.Slo(\"exampleSlo\",\n    project_id=example_project.id,\n    service_name=\"payments-api\",\n    description=\"Successful request ratio for the payments API\",\n    total_query=\"parent_span_id IS NULL\",\n    bad_query=\"otel_status_code = 'ERROR'\",\n    target_percent=\"99.9\",\n    rolling_window=\"30d\",\n    environments=[\"prod\"])\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var exampleProject = new Logfire.Project(\"exampleProject\");\n\n    var exampleSlo = new Logfire.Slo(\"exampleSlo\", new()\n    {\n        ProjectId = exampleProject.Id,\n        ServiceName = \"payments-api\",\n        Description = \"Successful request ratio for the payments API\",\n        TotalQuery = \"parent_span_id IS NULL\",\n        BadQuery = \"otel_status_code = 'ERROR'\",\n        TargetPercent = \"99.9\",\n        RollingWindow = \"30d\",\n        Environments = new[]\n        {\n            \"prod\",\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\texampleProject, err := logfire.NewProject(ctx, \"exampleProject\", nil)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t_, err = logfire.NewSlo(ctx, \"exampleSlo\", \u0026logfire.SloArgs{\n\t\t\tProjectId:     exampleProject.ID(),\n\t\t\tServiceName:   pulumi.String(\"payments-api\"),\n\t\t\tDescription:   pulumi.String(\"Successful request ratio for the payments API\"),\n\t\t\tTotalQuery:    pulumi.String(\"parent_span_id IS NULL\"),\n\t\t\tBadQuery:      pulumi.String(\"otel_status_code = 'ERROR'\"),\n\t\t\tTargetPercent: pulumi.String(\"99.9\"),\n\t\t\tRollingWindow: pulumi.String(\"30d\"),\n\t\t\tEnvironments: pulumi.StringArray{\n\t\t\t\tpulumi.String(\"prod\"),\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Project;\nimport com.pulumi.logfire.Slo;\nimport com.pulumi.logfire.SloArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var exampleProject = new Project(\"exampleProject\");\n\n        var exampleSlo = new Slo(\"exampleSlo\", SloArgs.builder()\n            .projectId(exampleProject.id())\n            .serviceName(\"payments-api\")\n            .description(\"Successful request ratio for the payments API\")\n            .totalQuery(\"parent_span_id IS NULL\")\n            .badQuery(\"otel_status_code = 'ERROR'\")\n            .targetPercent(\"99.9\")\n            .rollingWindow(\"30d\")\n            .environments(\"prod\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  exampleProject:\n    type: logfire:Project\n  exampleSlo:\n    type: logfire:Slo\n    properties:\n      projectId: ${exampleProject.id}\n      serviceName: payments-api\n      description: Successful request ratio for the payments API\n      totalQuery: parent_span_id IS NULL\n      badQuery: otel_status_code = 'ERROR'\n      targetPercent: '99.9'\n      rollingWindow: 30d\n      environments:\n        - prod\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nIn Terraform v1.5.0 and later, the `import` block can be used with the `id` attribute, for example:\n\nterraform\n\nimport {\n\n  to = logfire_slo.example\n\n  id = \"example-project/payments-availability\"\n\n}\n\nThe `pulumi import` command can be used, for example:\n\nImport by project name and SLO name.\n\n```sh\n$ pulumi import logfire:index/slo:Slo example \"example-project/payments-availability\"\n```\n\n",
+            "properties": {
+                "badQuery": {
+                    "type": "string",
+                    "description": "SQL boolean expression selecting the bad events counted by the SLO.\n"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "SLO description.\n"
+                },
+                "environments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Deployment environments the SLO is scoped to. Omit to cover all environments.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "SLO name (unique per project).\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "Project ID (UUID) used for SLO API paths.\n"
+                },
+                "rollingWindow": {
+                    "type": "string",
+                    "description": "Rolling evaluation window as a duration string (e.g. `\"24h\"`, `\"30d\"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (\u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`metrics`\" pulumi-lang-dotnet=\"`Metrics`\" pulumi-lang-go=\"`metrics`\" pulumi-lang-python=\"`metrics`\" pulumi-lang-yaml=\"`metrics`\" pulumi-lang-java=\"`metrics`\"\u003e`metrics`\u003c/span\u003e) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.\n"
+                },
+                "serviceName": {
+                    "type": "string",
+                    "description": "Service the SLO measures. Changing it forces a new SLO.\n"
+                },
+                "source": {
+                    "type": "string",
+                    "description": "Whether the SLO ratio is computed over span events (\u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e) or metric values (\u003cspan pulumi-lang-nodejs=\"`metrics`\" pulumi-lang-dotnet=\"`Metrics`\" pulumi-lang-go=\"`metrics`\" pulumi-lang-python=\"`metrics`\" pulumi-lang-yaml=\"`metrics`\" pulumi-lang-java=\"`metrics`\"\u003e`metrics`\u003c/span\u003e). Defaults to \u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e.\n"
+                },
+                "targetPercent": {
+                    "type": "string",
+                    "description": "Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `\"99.9\"`).\n"
+                },
+                "totalQuery": {
+                    "type": "string",
+                    "description": "SQL boolean expression selecting all events counted by the SLO.\n"
+                }
+            },
+            "required": [
+                "badQuery",
+                "name",
+                "projectId",
+                "rollingWindow",
+                "serviceName",
+                "source",
+                "targetPercent",
+                "totalQuery"
+            ],
+            "inputProperties": {
+                "badQuery": {
+                    "type": "string",
+                    "description": "SQL boolean expression selecting the bad events counted by the SLO.\n"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "SLO description.\n"
+                },
+                "environments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Deployment environments the SLO is scoped to. Omit to cover all environments.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "SLO name (unique per project).\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "Project ID (UUID) used for SLO API paths.\n"
+                },
+                "rollingWindow": {
+                    "type": "string",
+                    "description": "Rolling evaluation window as a duration string (e.g. `\"24h\"`, `\"30d\"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (\u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`metrics`\" pulumi-lang-dotnet=\"`Metrics`\" pulumi-lang-go=\"`metrics`\" pulumi-lang-python=\"`metrics`\" pulumi-lang-yaml=\"`metrics`\" pulumi-lang-java=\"`metrics`\"\u003e`metrics`\u003c/span\u003e) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.\n"
+                },
+                "serviceName": {
+                    "type": "string",
+                    "description": "Service the SLO measures. Changing it forces a new SLO.\n"
+                },
+                "source": {
+                    "type": "string",
+                    "description": "Whether the SLO ratio is computed over span events (\u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e) or metric values (\u003cspan pulumi-lang-nodejs=\"`metrics`\" pulumi-lang-dotnet=\"`Metrics`\" pulumi-lang-go=\"`metrics`\" pulumi-lang-python=\"`metrics`\" pulumi-lang-yaml=\"`metrics`\" pulumi-lang-java=\"`metrics`\"\u003e`metrics`\u003c/span\u003e). Defaults to \u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e.\n"
+                },
+                "targetPercent": {
+                    "type": "string",
+                    "description": "Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `\"99.9\"`).\n"
+                },
+                "totalQuery": {
+                    "type": "string",
+                    "description": "SQL boolean expression selecting all events counted by the SLO.\n"
+                }
+            },
+            "requiredInputs": [
+                "badQuery",
+                "projectId",
+                "rollingWindow",
+                "serviceName",
+                "targetPercent",
+                "totalQuery"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Slo resources.\n",
+                "properties": {
+                    "badQuery": {
+                        "type": "string",
+                        "description": "SQL boolean expression selecting the bad events counted by the SLO.\n"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "SLO description.\n"
+                    },
+                    "environments": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Deployment environments the SLO is scoped to. Omit to cover all environments.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "SLO name (unique per project).\n"
+                    },
+                    "projectId": {
+                        "type": "string",
+                        "description": "Project ID (UUID) used for SLO API paths.\n"
+                    },
+                    "rollingWindow": {
+                        "type": "string",
+                        "description": "Rolling evaluation window as a duration string (e.g. `\"24h\"`, `\"30d\"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (\u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`metrics`\" pulumi-lang-dotnet=\"`Metrics`\" pulumi-lang-go=\"`metrics`\" pulumi-lang-python=\"`metrics`\" pulumi-lang-yaml=\"`metrics`\" pulumi-lang-java=\"`metrics`\"\u003e`metrics`\u003c/span\u003e) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.\n"
+                    },
+                    "serviceName": {
+                        "type": "string",
+                        "description": "Service the SLO measures. Changing it forces a new SLO.\n"
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Whether the SLO ratio is computed over span events (\u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e) or metric values (\u003cspan pulumi-lang-nodejs=\"`metrics`\" pulumi-lang-dotnet=\"`Metrics`\" pulumi-lang-go=\"`metrics`\" pulumi-lang-python=\"`metrics`\" pulumi-lang-yaml=\"`metrics`\" pulumi-lang-java=\"`metrics`\"\u003e`metrics`\u003c/span\u003e). Defaults to \u003cspan pulumi-lang-nodejs=\"`records`\" pulumi-lang-dotnet=\"`Records`\" pulumi-lang-go=\"`records`\" pulumi-lang-python=\"`records`\" pulumi-lang-yaml=\"`records`\" pulumi-lang-java=\"`records`\"\u003e`records`\u003c/span\u003e.\n"
+                    },
+                    "targetPercent": {
+                        "type": "string",
+                        "description": "Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `\"99.9\"`).\n"
+                    },
+                    "totalQuery": {
+                        "type": "string",
+                        "description": "SQL boolean expression selecting all events counted by the SLO.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "logfire:index/writeToken:WriteToken": {
             "description": "Manages a Logfire write token.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst exampleProject = new logfire.Project(\"exampleProject\", {});\nconst exampleWriteToken = new logfire.WriteToken(\"exampleWriteToken\", {\n    projectId: exampleProject.id,\n    expiresAt: \"2099-12-31T23:59:59Z\",\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample_project = logfire.Project(\"exampleProject\")\nexample_write_token = logfire.WriteToken(\"exampleWriteToken\",\n    project_id=example_project.id,\n    expires_at=\"2099-12-31T23:59:59Z\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var exampleProject = new Logfire.Project(\"exampleProject\");\n\n    var exampleWriteToken = new Logfire.WriteToken(\"exampleWriteToken\", new()\n    {\n        ProjectId = exampleProject.Id,\n        ExpiresAt = \"2099-12-31T23:59:59Z\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\texampleProject, err := logfire.NewProject(ctx, \"exampleProject\", nil)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t_, err = logfire.NewWriteToken(ctx, \"exampleWriteToken\", \u0026logfire.WriteTokenArgs{\n\t\t\tProjectId: exampleProject.ID(),\n\t\t\tExpiresAt: pulumi.String(\"2099-12-31T23:59:59Z\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Project;\nimport com.pulumi.logfire.WriteToken;\nimport com.pulumi.logfire.WriteTokenArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var exampleProject = new Project(\"exampleProject\");\n\n        var exampleWriteToken = new WriteToken(\"exampleWriteToken\", WriteTokenArgs.builder()\n            .projectId(exampleProject.id())\n            .expiresAt(\"2099-12-31T23:59:59Z\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  exampleProject:\n    type: logfire:Project\n  exampleWriteToken:\n    type: logfire:WriteToken\n    properties:\n      projectId: ${exampleProject.id}\n      expiresAt: 2099-12-31T23:59:59Z\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
             "properties": {

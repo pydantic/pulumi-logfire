@@ -13,6 +13,7 @@ from .organization import *
 from .project import *
 from .provider import *
 from .read_token import *
+from .slo import *
 from .write_token import *
 from ._inputs import *
 from . import outputs
@@ -73,6 +74,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/readToken:ReadToken": "ReadToken"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/slo",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/slo:Slo": "Slo"
   }
  },
  {

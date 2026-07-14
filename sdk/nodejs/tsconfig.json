@@ -23,6 +23,7 @@
         "project.ts",
         "provider.ts",
         "readToken.ts",
+        "slo.ts",
         "types/index.ts",
         "types/input.ts",
         "types/output.ts",

@@ -38,6 +38,11 @@ export type ReadToken = import("./readToken").ReadToken;
 export const ReadToken: typeof import("./readToken").ReadToken = null as any;
 utilities.lazyLoad(exports, ["ReadToken"], () => require("./readToken"));
 
+export { SloArgs, SloState } from "./slo";
+export type Slo = import("./slo").Slo;
+export const Slo: typeof import("./slo").Slo = null as any;
+utilities.lazyLoad(exports, ["Slo"], () => require("./slo"));
+
 export { WriteTokenArgs, WriteTokenState } from "./writeToken";
 export type WriteToken = import("./writeToken").WriteToken;
 export const WriteToken: typeof import("./writeToken").WriteToken = null as any;
@@ -69,6 +74,8 @@ const _module = {
                 return new Project(name, <any>undefined, { urn })
             case "logfire:index/readToken:ReadToken":
                 return new ReadToken(name, <any>undefined, { urn })
+            case "logfire:index/slo:Slo":
+                return new Slo(name, <any>undefined, { urn })
             case "logfire:index/writeToken:WriteToken":
                 return new WriteToken(name, <any>undefined, { urn })
             default:
@@ -82,6 +89,7 @@ pulumi.runtime.registerResourceModule("logfire", "index/dashboard", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/slo", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/writeToken", _module)
 pulumi.runtime.registerResourcePackage("logfire", {
     version: utilities.getVersion(),
