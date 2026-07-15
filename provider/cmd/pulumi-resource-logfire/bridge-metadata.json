@@ -6,6 +6,9 @@
                 "fields": {
                     "channel_ids": {
                         "maxItemsOne": false
+                    },
+                    "environments": {
+                        "maxItemsOne": false
                     }
                 }
             },
