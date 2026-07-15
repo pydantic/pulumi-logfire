@@ -18,7 +18,7 @@ import * as utilities from "./utilities";
  * const exampleProject = new logfire.Project("exampleProject", {});
  * const exampleSlo = new logfire.Slo("exampleSlo", {
  *     projectId: exampleProject.id,
- *     serviceName: "payments-api",
+ *     scopeValue: "payments-api",
  *     description: "Successful request ratio for the payments API",
  *     totalQuery: "parent_span_id IS NULL",
  *     badQuery: "otel_status_code = 'ERROR'",
@@ -91,6 +91,10 @@ export class Slo extends pulumi.CustomResource {
      */
     declare public readonly environments: pulumi.Output<string[] | undefined>;
     /**
+     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+     */
+    declare public readonly metricAggregation: pulumi.Output<string>;
+    /**
      * SLO name (unique per project).
      */
     declare public readonly name: pulumi.Output<string>;
@@ -103,9 +107,13 @@ export class Slo extends pulumi.CustomResource {
      */
     declare public readonly rollingWindow: pulumi.Output<string>;
     /**
-     * Service the SLO measures. Changing it forces a new SLO.
+     * What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
      */
-    declare public readonly serviceName: pulumi.Output<string>;
+    declare public readonly scopeKind: pulumi.Output<string>;
+    /**
+     * The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+     */
+    declare public readonly scopeValue: pulumi.Output<string>;
     /**
      * Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
      */
@@ -135,10 +143,12 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["badQuery"] = state?.badQuery;
             resourceInputs["description"] = state?.description;
             resourceInputs["environments"] = state?.environments;
+            resourceInputs["metricAggregation"] = state?.metricAggregation;
             resourceInputs["name"] = state?.name;
             resourceInputs["projectId"] = state?.projectId;
             resourceInputs["rollingWindow"] = state?.rollingWindow;
-            resourceInputs["serviceName"] = state?.serviceName;
+            resourceInputs["scopeKind"] = state?.scopeKind;
+            resourceInputs["scopeValue"] = state?.scopeValue;
             resourceInputs["source"] = state?.source;
             resourceInputs["targetPercent"] = state?.targetPercent;
             resourceInputs["totalQuery"] = state?.totalQuery;
@@ -153,8 +163,8 @@ export class Slo extends pulumi.CustomResource {
             if (args?.rollingWindow === undefined && !opts.urn) {
                 throw new Error("Missing required property 'rollingWindow'");
             }
-            if (args?.serviceName === undefined && !opts.urn) {
-                throw new Error("Missing required property 'serviceName'");
+            if (args?.scopeValue === undefined && !opts.urn) {
+                throw new Error("Missing required property 'scopeValue'");
             }
             if (args?.targetPercent === undefined && !opts.urn) {
                 throw new Error("Missing required property 'targetPercent'");
@@ -165,10 +175,12 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["badQuery"] = args?.badQuery;
             resourceInputs["description"] = args?.description;
             resourceInputs["environments"] = args?.environments;
+            resourceInputs["metricAggregation"] = args?.metricAggregation;
             resourceInputs["name"] = args?.name;
             resourceInputs["projectId"] = args?.projectId;
             resourceInputs["rollingWindow"] = args?.rollingWindow;
-            resourceInputs["serviceName"] = args?.serviceName;
+            resourceInputs["scopeKind"] = args?.scopeKind;
+            resourceInputs["scopeValue"] = args?.scopeValue;
             resourceInputs["source"] = args?.source;
             resourceInputs["targetPercent"] = args?.targetPercent;
             resourceInputs["totalQuery"] = args?.totalQuery;
@@ -195,6 +207,10 @@ export interface SloState {
      */
     environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
+     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+     */
+    metricAggregation?: pulumi.Input<string>;
+    /**
      * SLO name (unique per project).
      */
     name?: pulumi.Input<string>;
@@ -207,9 +223,13 @@ export interface SloState {
      */
     rollingWindow?: pulumi.Input<string>;
     /**
-     * Service the SLO measures. Changing it forces a new SLO.
+     * What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
      */
-    serviceName?: pulumi.Input<string>;
+    scopeKind?: pulumi.Input<string>;
+    /**
+     * The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+     */
+    scopeValue?: pulumi.Input<string>;
     /**
      * Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
      */
@@ -241,6 +261,10 @@ export interface SloArgs {
      */
     environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
+     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+     */
+    metricAggregation?: pulumi.Input<string>;
+    /**
      * SLO name (unique per project).
      */
     name?: pulumi.Input<string>;
@@ -253,9 +277,13 @@ export interface SloArgs {
      */
     rollingWindow: pulumi.Input<string>;
     /**
-     * Service the SLO measures. Changing it forces a new SLO.
+     * What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
      */
-    serviceName: pulumi.Input<string>;
+    scopeKind?: pulumi.Input<string>;
+    /**
+     * The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+     */
+    scopeValue: pulumi.Input<string>;
     /**
      * Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
      */

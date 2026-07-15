@@ -36,7 +36,7 @@ import (
 //			}
 //			_, err = logfire.NewSlo(ctx, "exampleSlo", &logfire.SloArgs{
 //				ProjectId:     exampleProject.ID(),
-//				ServiceName:   pulumi.String("payments-api"),
+//				ScopeValue:    pulumi.String("payments-api"),
 //				Description:   pulumi.String("Successful request ratio for the payments API"),
 //				TotalQuery:    pulumi.String("parent_span_id IS NULL"),
 //				BadQuery:      pulumi.String("otel_status_code = 'ERROR'"),
@@ -85,14 +85,18 @@ type Slo struct {
 	Description pulumi.StringPtrOutput `pulumi:"description"`
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments pulumi.StringArrayOutput `pulumi:"environments"`
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	MetricAggregation pulumi.StringOutput `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
 	Name pulumi.StringOutput `pulumi:"name"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
 	RollingWindow pulumi.StringOutput `pulumi:"rollingWindow"`
-	// Service the SLO measures. Changing it forces a new SLO.
-	ServiceName pulumi.StringOutput `pulumi:"serviceName"`
+	// What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+	ScopeKind pulumi.StringOutput `pulumi:"scopeKind"`
+	// The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+	ScopeValue pulumi.StringOutput `pulumi:"scopeValue"`
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringOutput `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
@@ -117,8 +121,8 @@ func NewSlo(ctx *pulumi.Context,
 	if args.RollingWindow == nil {
 		return nil, errors.New("invalid value for required argument 'RollingWindow'")
 	}
-	if args.ServiceName == nil {
-		return nil, errors.New("invalid value for required argument 'ServiceName'")
+	if args.ScopeValue == nil {
+		return nil, errors.New("invalid value for required argument 'ScopeValue'")
 	}
 	if args.TargetPercent == nil {
 		return nil, errors.New("invalid value for required argument 'TargetPercent'")
@@ -155,14 +159,18 @@ type sloState struct {
 	Description *string `pulumi:"description"`
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments []string `pulumi:"environments"`
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
 	Name *string `pulumi:"name"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId *string `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
 	RollingWindow *string `pulumi:"rollingWindow"`
-	// Service the SLO measures. Changing it forces a new SLO.
-	ServiceName *string `pulumi:"serviceName"`
+	// What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+	ScopeKind *string `pulumi:"scopeKind"`
+	// The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+	ScopeValue *string `pulumi:"scopeValue"`
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source *string `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
@@ -178,14 +186,18 @@ type SloState struct {
 	Description pulumi.StringPtrInput
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments pulumi.StringArrayInput
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
 	Name pulumi.StringPtrInput
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringPtrInput
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
 	RollingWindow pulumi.StringPtrInput
-	// Service the SLO measures. Changing it forces a new SLO.
-	ServiceName pulumi.StringPtrInput
+	// What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+	ScopeKind pulumi.StringPtrInput
+	// The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+	ScopeValue pulumi.StringPtrInput
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringPtrInput
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
@@ -205,14 +217,18 @@ type sloArgs struct {
 	Description *string `pulumi:"description"`
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments []string `pulumi:"environments"`
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
 	Name *string `pulumi:"name"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId string `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
 	RollingWindow string `pulumi:"rollingWindow"`
-	// Service the SLO measures. Changing it forces a new SLO.
-	ServiceName string `pulumi:"serviceName"`
+	// What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+	ScopeKind *string `pulumi:"scopeKind"`
+	// The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+	ScopeValue string `pulumi:"scopeValue"`
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source *string `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
@@ -229,14 +245,18 @@ type SloArgs struct {
 	Description pulumi.StringPtrInput
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments pulumi.StringArrayInput
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
 	Name pulumi.StringPtrInput
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringInput
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
 	RollingWindow pulumi.StringInput
-	// Service the SLO measures. Changing it forces a new SLO.
-	ServiceName pulumi.StringInput
+	// What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+	ScopeKind pulumi.StringPtrInput
+	// The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+	ScopeValue pulumi.StringInput
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringPtrInput
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
@@ -347,6 +367,11 @@ func (o SloOutput) Environments() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringArrayOutput { return v.Environments }).(pulumi.StringArrayOutput)
 }
 
+// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+func (o SloOutput) MetricAggregation() pulumi.StringOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.MetricAggregation }).(pulumi.StringOutput)
+}
+
 // SLO name (unique per project).
 func (o SloOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
@@ -362,9 +387,14 @@ func (o SloOutput) RollingWindow() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.RollingWindow }).(pulumi.StringOutput)
 }
 
-// Service the SLO measures. Changing it forces a new SLO.
-func (o SloOutput) ServiceName() pulumi.StringOutput {
-	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.ServiceName }).(pulumi.StringOutput)
+// What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+func (o SloOutput) ScopeKind() pulumi.StringOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.ScopeKind }).(pulumi.StringOutput)
+}
+
+// The service name (`scopeKind = "service"`) or provider slug like `openai` (`scopeKind = "provider"`). Changing it forces a new SLO.
+func (o SloOutput) ScopeValue() pulumi.StringOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.ScopeValue }).(pulumi.StringOutput)
 }
 
 // Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.

@@ -59,6 +59,9 @@ import (
 //
 //				TimeWindow: pulumi.String("1h"),
 //				Frequency:  pulumi.String("15m"),
+//				Environments: pulumi.StringArray{
+//					pulumi.String("production"),
+//				},
 //				ChannelIds: pulumi.StringArray{
 //					exampleChannel.ID(),
 //				},
@@ -91,6 +94,8 @@ type Alert struct {
 	ChannelIds pulumi.StringArrayOutput `pulumi:"channelIds"`
 	// Alert description.
 	Description pulumi.StringPtrOutput `pulumi:"description"`
+	// Deployment environments to scope the query to. Empty = all environments (no filter).
+	Environments pulumi.StringArrayOutput `pulumi:"environments"`
 	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
 	Frequency pulumi.StringOutput `pulumi:"frequency"`
 	// Alert name (unique per project).
@@ -161,6 +166,8 @@ type alertState struct {
 	ChannelIds []string `pulumi:"channelIds"`
 	// Alert description.
 	Description *string `pulumi:"description"`
+	// Deployment environments to scope the query to. Empty = all environments (no filter).
+	Environments []string `pulumi:"environments"`
 	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
 	Frequency *string `pulumi:"frequency"`
 	// Alert name (unique per project).
@@ -184,6 +191,8 @@ type AlertState struct {
 	ChannelIds pulumi.StringArrayInput
 	// Alert description.
 	Description pulumi.StringPtrInput
+	// Deployment environments to scope the query to. Empty = all environments (no filter).
+	Environments pulumi.StringArrayInput
 	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
 	Frequency pulumi.StringPtrInput
 	// Alert name (unique per project).
@@ -211,6 +220,8 @@ type alertArgs struct {
 	ChannelIds []string `pulumi:"channelIds"`
 	// Alert description.
 	Description *string `pulumi:"description"`
+	// Deployment environments to scope the query to. Empty = all environments (no filter).
+	Environments []string `pulumi:"environments"`
 	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
 	Frequency string `pulumi:"frequency"`
 	// Alert name (unique per project).
@@ -233,6 +244,8 @@ type AlertArgs struct {
 	ChannelIds pulumi.StringArrayInput
 	// Alert description.
 	Description pulumi.StringPtrInput
+	// Deployment environments to scope the query to. Empty = all environments (no filter).
+	Environments pulumi.StringArrayInput
 	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
 	Frequency pulumi.StringInput
 	// Alert name (unique per project).
@@ -347,6 +360,11 @@ func (o AlertOutput) ChannelIds() pulumi.StringArrayOutput {
 // Alert description.
 func (o AlertOutput) Description() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringPtrOutput { return v.Description }).(pulumi.StringPtrOutput)
+}
+
+// Deployment environments to scope the query to. Empty = all environments (no filter).
+func (o AlertOutput) Environments() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *Alert) pulumi.StringArrayOutput { return v.Environments }).(pulumi.StringArrayOutput)
 }
 
 // Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.

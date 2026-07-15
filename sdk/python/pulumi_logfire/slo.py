@@ -22,38 +22,46 @@ class SloArgs:
                  bad_query: pulumi.Input[_builtins.str],
                  project_id: pulumi.Input[_builtins.str],
                  rolling_window: pulumi.Input[_builtins.str],
-                 service_name: pulumi.Input[_builtins.str],
+                 scope_value: pulumi.Input[_builtins.str],
                  target_percent: pulumi.Input[_builtins.str],
                  total_query: pulumi.Input[_builtins.str],
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Slo resource.
         :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
-        :param pulumi.Input[_builtins.str] service_name: Service the SLO measures. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
+        :param pulumi.Input[_builtins.str] scope_kind: What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         """
         pulumi.set(__self__, "bad_query", bad_query)
         pulumi.set(__self__, "project_id", project_id)
         pulumi.set(__self__, "rolling_window", rolling_window)
-        pulumi.set(__self__, "service_name", service_name)
+        pulumi.set(__self__, "scope_value", scope_value)
         pulumi.set(__self__, "target_percent", target_percent)
         pulumi.set(__self__, "total_query", total_query)
         if description is not None:
             pulumi.set(__self__, "description", description)
         if environments is not None:
             pulumi.set(__self__, "environments", environments)
+        if metric_aggregation is not None:
+            pulumi.set(__self__, "metric_aggregation", metric_aggregation)
         if name is not None:
             pulumi.set(__self__, "name", name)
+        if scope_kind is not None:
+            pulumi.set(__self__, "scope_kind", scope_kind)
         if source is not None:
             pulumi.set(__self__, "source", source)
 
@@ -94,16 +102,16 @@ class SloArgs:
         pulumi.set(self, "rolling_window", value)
 
     @_builtins.property
-    @pulumi.getter(name="serviceName")
-    def service_name(self) -> pulumi.Input[_builtins.str]:
+    @pulumi.getter(name="scopeValue")
+    def scope_value(self) -> pulumi.Input[_builtins.str]:
         """
-        Service the SLO measures. Changing it forces a new SLO.
+        The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         """
-        return pulumi.get(self, "service_name")
+        return pulumi.get(self, "scope_value")
 
-    @service_name.setter
-    def service_name(self, value: pulumi.Input[_builtins.str]):
-        pulumi.set(self, "service_name", value)
+    @scope_value.setter
+    def scope_value(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "scope_value", value)
 
     @_builtins.property
     @pulumi.getter(name="targetPercent")
@@ -154,6 +162,18 @@ class SloArgs:
         pulumi.set(self, "environments", value)
 
     @_builtins.property
+    @pulumi.getter(name="metricAggregation")
+    def metric_aggregation(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        """
+        return pulumi.get(self, "metric_aggregation")
+
+    @metric_aggregation.setter
+    def metric_aggregation(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "metric_aggregation", value)
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -164,6 +184,18 @@ class SloArgs:
     @name.setter
     def name(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "name", value)
+
+    @_builtins.property
+    @pulumi.getter(name="scopeKind")
+    def scope_kind(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+        """
+        return pulumi.get(self, "scope_kind")
+
+    @scope_kind.setter
+    def scope_kind(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "scope_kind", value)
 
     @_builtins.property
     @pulumi.getter
@@ -184,10 +216,12 @@ class _SloState:
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
-                 service_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_value: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None):
@@ -196,10 +230,12 @@ class _SloState:
         :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
-        :param pulumi.Input[_builtins.str] service_name: Service the SLO measures. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_kind: What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
@@ -210,14 +246,18 @@ class _SloState:
             pulumi.set(__self__, "description", description)
         if environments is not None:
             pulumi.set(__self__, "environments", environments)
+        if metric_aggregation is not None:
+            pulumi.set(__self__, "metric_aggregation", metric_aggregation)
         if name is not None:
             pulumi.set(__self__, "name", name)
         if project_id is not None:
             pulumi.set(__self__, "project_id", project_id)
         if rolling_window is not None:
             pulumi.set(__self__, "rolling_window", rolling_window)
-        if service_name is not None:
-            pulumi.set(__self__, "service_name", service_name)
+        if scope_kind is not None:
+            pulumi.set(__self__, "scope_kind", scope_kind)
+        if scope_value is not None:
+            pulumi.set(__self__, "scope_value", scope_value)
         if source is not None:
             pulumi.set(__self__, "source", source)
         if target_percent is not None:
@@ -262,6 +302,18 @@ class _SloState:
         pulumi.set(self, "environments", value)
 
     @_builtins.property
+    @pulumi.getter(name="metricAggregation")
+    def metric_aggregation(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        """
+        return pulumi.get(self, "metric_aggregation")
+
+    @metric_aggregation.setter
+    def metric_aggregation(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "metric_aggregation", value)
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -298,16 +350,28 @@ class _SloState:
         pulumi.set(self, "rolling_window", value)
 
     @_builtins.property
-    @pulumi.getter(name="serviceName")
-    def service_name(self) -> Optional[pulumi.Input[_builtins.str]]:
+    @pulumi.getter(name="scopeKind")
+    def scope_kind(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Service the SLO measures. Changing it forces a new SLO.
+        What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
         """
-        return pulumi.get(self, "service_name")
+        return pulumi.get(self, "scope_kind")
 
-    @service_name.setter
-    def service_name(self, value: Optional[pulumi.Input[_builtins.str]]):
-        pulumi.set(self, "service_name", value)
+    @scope_kind.setter
+    def scope_kind(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "scope_kind", value)
+
+    @_builtins.property
+    @pulumi.getter(name="scopeValue")
+    def scope_value(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
+        """
+        return pulumi.get(self, "scope_value")
+
+    @scope_value.setter
+    def scope_value(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "scope_value", value)
 
     @_builtins.property
     @pulumi.getter
@@ -355,10 +419,12 @@ class Slo(pulumi.CustomResource):
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
-                 service_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_value: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None,
@@ -377,7 +443,7 @@ class Slo(pulumi.CustomResource):
         example_project = logfire.Project("exampleProject")
         example_slo = logfire.Slo("exampleSlo",
             project_id=example_project.id,
-            service_name="payments-api",
+            scope_value="payments-api",
             description="Successful request ratio for the payments API",
             total_query="parent_span_id IS NULL",
             bad_query="otel_status_code = 'ERROR'",
@@ -413,10 +479,12 @@ class Slo(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
-        :param pulumi.Input[_builtins.str] service_name: Service the SLO measures. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_kind: What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
@@ -441,7 +509,7 @@ class Slo(pulumi.CustomResource):
         example_project = logfire.Project("exampleProject")
         example_slo = logfire.Slo("exampleSlo",
             project_id=example_project.id,
-            service_name="payments-api",
+            scope_value="payments-api",
             description="Successful request ratio for the payments API",
             total_query="parent_span_id IS NULL",
             bad_query="otel_status_code = 'ERROR'",
@@ -490,10 +558,12 @@ class Slo(pulumi.CustomResource):
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
-                 service_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
+                 scope_value: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None,
@@ -511,6 +581,7 @@ class Slo(pulumi.CustomResource):
             __props__.__dict__["bad_query"] = bad_query
             __props__.__dict__["description"] = description
             __props__.__dict__["environments"] = environments
+            __props__.__dict__["metric_aggregation"] = metric_aggregation
             __props__.__dict__["name"] = name
             if project_id is None and not opts.urn:
                 raise TypeError("Missing required property 'project_id'")
@@ -518,9 +589,10 @@ class Slo(pulumi.CustomResource):
             if rolling_window is None and not opts.urn:
                 raise TypeError("Missing required property 'rolling_window'")
             __props__.__dict__["rolling_window"] = rolling_window
-            if service_name is None and not opts.urn:
-                raise TypeError("Missing required property 'service_name'")
-            __props__.__dict__["service_name"] = service_name
+            __props__.__dict__["scope_kind"] = scope_kind
+            if scope_value is None and not opts.urn:
+                raise TypeError("Missing required property 'scope_value'")
+            __props__.__dict__["scope_value"] = scope_value
             __props__.__dict__["source"] = source
             if target_percent is None and not opts.urn:
                 raise TypeError("Missing required property 'target_percent'")
@@ -541,10 +613,12 @@ class Slo(pulumi.CustomResource):
             bad_query: Optional[pulumi.Input[_builtins.str]] = None,
             description: Optional[pulumi.Input[_builtins.str]] = None,
             environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+            metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
             project_id: Optional[pulumi.Input[_builtins.str]] = None,
             rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
-            service_name: Optional[pulumi.Input[_builtins.str]] = None,
+            scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
+            scope_value: Optional[pulumi.Input[_builtins.str]] = None,
             source: Optional[pulumi.Input[_builtins.str]] = None,
             target_percent: Optional[pulumi.Input[_builtins.str]] = None,
             total_query: Optional[pulumi.Input[_builtins.str]] = None) -> 'Slo':
@@ -558,10 +632,12 @@ class Slo(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
-        :param pulumi.Input[_builtins.str] service_name: Service the SLO measures. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_kind: What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
+        :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
@@ -573,10 +649,12 @@ class Slo(pulumi.CustomResource):
         __props__.__dict__["bad_query"] = bad_query
         __props__.__dict__["description"] = description
         __props__.__dict__["environments"] = environments
+        __props__.__dict__["metric_aggregation"] = metric_aggregation
         __props__.__dict__["name"] = name
         __props__.__dict__["project_id"] = project_id
         __props__.__dict__["rolling_window"] = rolling_window
-        __props__.__dict__["service_name"] = service_name
+        __props__.__dict__["scope_kind"] = scope_kind
+        __props__.__dict__["scope_value"] = scope_value
         __props__.__dict__["source"] = source
         __props__.__dict__["target_percent"] = target_percent
         __props__.__dict__["total_query"] = total_query
@@ -607,6 +685,14 @@ class Slo(pulumi.CustomResource):
         return pulumi.get(self, "environments")
 
     @_builtins.property
+    @pulumi.getter(name="metricAggregation")
+    def metric_aggregation(self) -> pulumi.Output[_builtins.str]:
+        """
+        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        """
+        return pulumi.get(self, "metric_aggregation")
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> pulumi.Output[_builtins.str]:
         """
@@ -631,12 +717,20 @@ class Slo(pulumi.CustomResource):
         return pulumi.get(self, "rolling_window")
 
     @_builtins.property
-    @pulumi.getter(name="serviceName")
-    def service_name(self) -> pulumi.Output[_builtins.str]:
+    @pulumi.getter(name="scopeKind")
+    def scope_kind(self) -> pulumi.Output[_builtins.str]:
         """
-        Service the SLO measures. Changing it forces a new SLO.
+        What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
         """
-        return pulumi.get(self, "service_name")
+        return pulumi.get(self, "scope_kind")
+
+    @_builtins.property
+    @pulumi.getter(name="scopeValue")
+    def scope_value(self) -> pulumi.Output[_builtins.str]:
+        """
+        The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
+        """
+        return pulumi.get(self, "scope_value")
 
     @_builtins.property
     @pulumi.getter
