@@ -32,6 +32,7 @@ import * as utilities from "./utilities";
  * `,
  *     timeWindow: "1h",
  *     frequency: "15m",
+ *     environments: ["production"],
  *     channelIds: [exampleChannel.id],
  *     notifyWhen: "has_matches",
  *     active: true,
@@ -88,6 +89,10 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly description: pulumi.Output<string | undefined>;
     /**
+     * Deployment environments to scope the query to. Empty = all environments (no filter).
+     */
+    declare public readonly environments: pulumi.Output<string[] | undefined>;
+    /**
      * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
      */
     declare public readonly frequency: pulumi.Output<string>;
@@ -132,6 +137,7 @@ export class Alert extends pulumi.CustomResource {
             resourceInputs["active"] = state?.active;
             resourceInputs["channelIds"] = state?.channelIds;
             resourceInputs["description"] = state?.description;
+            resourceInputs["environments"] = state?.environments;
             resourceInputs["frequency"] = state?.frequency;
             resourceInputs["name"] = state?.name;
             resourceInputs["notifyWhen"] = state?.notifyWhen;
@@ -162,6 +168,7 @@ export class Alert extends pulumi.CustomResource {
             resourceInputs["active"] = args?.active;
             resourceInputs["channelIds"] = args?.channelIds;
             resourceInputs["description"] = args?.description;
+            resourceInputs["environments"] = args?.environments;
             resourceInputs["frequency"] = args?.frequency;
             resourceInputs["name"] = args?.name;
             resourceInputs["notifyWhen"] = args?.notifyWhen;
@@ -191,6 +198,10 @@ export interface AlertState {
      * Alert description.
      */
     description?: pulumi.Input<string>;
+    /**
+     * Deployment environments to scope the query to. Empty = all environments (no filter).
+     */
+    environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
      */
@@ -237,6 +248,10 @@ export interface AlertArgs {
      * Alert description.
      */
     description?: pulumi.Input<string>;
+    /**
+     * Deployment environments to scope the query to. Empty = all environments (no filter).
+     */
+    environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
      */

@@ -27,6 +27,7 @@ class AlertArgs:
                  time_window: pulumi.Input[_builtins.str],
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
+                 environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Alert resource.
@@ -38,6 +39,7 @@ class AlertArgs:
         :param pulumi.Input[_builtins.str] time_window: Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[_builtins.str] description: Alert description.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         """
         pulumi.set(__self__, "channel_ids", channel_ids)
@@ -50,6 +52,8 @@ class AlertArgs:
             pulumi.set(__self__, "active", active)
         if description is not None:
             pulumi.set(__self__, "description", description)
+        if environments is not None:
+            pulumi.set(__self__, "environments", environments)
         if name is not None:
             pulumi.set(__self__, "name", name)
 
@@ -151,6 +155,18 @@ class AlertArgs:
 
     @_builtins.property
     @pulumi.getter
+    def environments(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
+        """
+        Deployment environments to scope the query to. Empty = all environments (no filter).
+        """
+        return pulumi.get(self, "environments")
+
+    @environments.setter
+    def environments(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
+        pulumi.set(self, "environments", value)
+
+    @_builtins.property
+    @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         Alert name (unique per project).
@@ -168,6 +184,7 @@ class _AlertState:
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
                  channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
+                 environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  notify_when: Optional[pulumi.Input[_builtins.str]] = None,
@@ -180,6 +197,7 @@ class _AlertState:
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
         :param pulumi.Input[_builtins.str] description: Alert description.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
@@ -194,6 +212,8 @@ class _AlertState:
             pulumi.set(__self__, "channel_ids", channel_ids)
         if description is not None:
             pulumi.set(__self__, "description", description)
+        if environments is not None:
+            pulumi.set(__self__, "environments", environments)
         if frequency is not None:
             pulumi.set(__self__, "frequency", frequency)
         if name is not None:
@@ -244,6 +264,18 @@ class _AlertState:
     @description.setter
     def description(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "description", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def environments(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
+        """
+        Deployment environments to scope the query to. Empty = all environments (no filter).
+        """
+        return pulumi.get(self, "environments")
+
+    @environments.setter
+    def environments(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
+        pulumi.set(self, "environments", value)
 
     @_builtins.property
     @pulumi.getter
@@ -339,6 +371,7 @@ class Alert(pulumi.CustomResource):
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
                  channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
+                 environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  notify_when: Optional[pulumi.Input[_builtins.str]] = None,
@@ -374,6 +407,7 @@ class Alert(pulumi.CustomResource):
         \"\"\",
             time_window="1h",
             frequency="15m",
+            environments=["production"],
             channel_ids=[example_channel.id],
             notify_when="has_matches",
             active=True)
@@ -393,6 +427,7 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
         :param pulumi.Input[_builtins.str] description: Alert description.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
@@ -434,6 +469,7 @@ class Alert(pulumi.CustomResource):
         \"\"\",
             time_window="1h",
             frequency="15m",
+            environments=["production"],
             channel_ids=[example_channel.id],
             notify_when="has_matches",
             active=True)
@@ -466,6 +502,7 @@ class Alert(pulumi.CustomResource):
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
                  channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
+                 environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  notify_when: Optional[pulumi.Input[_builtins.str]] = None,
@@ -486,6 +523,7 @@ class Alert(pulumi.CustomResource):
                 raise TypeError("Missing required property 'channel_ids'")
             __props__.__dict__["channel_ids"] = channel_ids
             __props__.__dict__["description"] = description
+            __props__.__dict__["environments"] = environments
             if frequency is None and not opts.urn:
                 raise TypeError("Missing required property 'frequency'")
             __props__.__dict__["frequency"] = frequency
@@ -516,6 +554,7 @@ class Alert(pulumi.CustomResource):
             active: Optional[pulumi.Input[_builtins.bool]] = None,
             channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             description: Optional[pulumi.Input[_builtins.str]] = None,
+            environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             frequency: Optional[pulumi.Input[_builtins.str]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
             notify_when: Optional[pulumi.Input[_builtins.str]] = None,
@@ -533,6 +572,7 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
         :param pulumi.Input[_builtins.str] description: Alert description.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
@@ -548,6 +588,7 @@ class Alert(pulumi.CustomResource):
         __props__.__dict__["active"] = active
         __props__.__dict__["channel_ids"] = channel_ids
         __props__.__dict__["description"] = description
+        __props__.__dict__["environments"] = environments
         __props__.__dict__["frequency"] = frequency
         __props__.__dict__["name"] = name
         __props__.__dict__["notify_when"] = notify_when
@@ -580,6 +621,14 @@ class Alert(pulumi.CustomResource):
         Alert description.
         """
         return pulumi.get(self, "description")
+
+    @_builtins.property
+    @pulumi.getter
+    def environments(self) -> pulumi.Output[Optional[Sequence[_builtins.str]]]:
+        """
+        Deployment environments to scope the query to. Empty = all environments (no filter).
+        """
+        return pulumi.get(self, "environments")
 
     @_builtins.property
     @pulumi.getter
