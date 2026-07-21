@@ -34,6 +34,18 @@ import (
 //			if err != nil {
 //				return err
 //			}
+//			oncall, err := logfire.NewChannel(ctx, "oncall", &logfire.ChannelArgs{
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":   "webhook",
+//						"format": "auto",
+//						"url":    "https://hooks.example.com/oncall",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
 //			_, err = logfire.NewSlo(ctx, "exampleSlo", &logfire.SloArgs{
 //				ProjectId:     exampleProject.ID(),
 //				ScopeValue:    pulumi.String("payments-api"),
@@ -44,6 +56,12 @@ import (
 //				RollingWindow: pulumi.String("30d"),
 //				Environments: pulumi.StringArray{
 //					pulumi.String("prod"),
+//				},
+//				PageChannelIds: pulumi.StringArray{
+//					oncall.ID(),
+//				},
+//				TicketChannelIds: pulumi.StringArray{
+//					oncall.ID(),
 //				},
 //			})
 //			if err != nil {
@@ -88,7 +106,8 @@ type Slo struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringOutput `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
-	Name pulumi.StringOutput `pulumi:"name"`
+	Name           pulumi.StringOutput      `pulumi:"name"`
+	PageChannelIds pulumi.StringArrayOutput `pulumi:"pageChannelIds"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -100,7 +119,8 @@ type Slo struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringOutput `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent pulumi.StringOutput `pulumi:"targetPercent"`
+	TargetPercent    pulumi.StringOutput      `pulumi:"targetPercent"`
+	TicketChannelIds pulumi.StringArrayOutput `pulumi:"ticketChannelIds"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringOutput `pulumi:"totalQuery"`
 }
@@ -162,7 +182,8 @@ type sloState struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
-	Name *string `pulumi:"name"`
+	Name           *string  `pulumi:"name"`
+	PageChannelIds []string `pulumi:"pageChannelIds"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId *string `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -174,7 +195,8 @@ type sloState struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source *string `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent *string `pulumi:"targetPercent"`
+	TargetPercent    *string  `pulumi:"targetPercent"`
+	TicketChannelIds []string `pulumi:"ticketChannelIds"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery *string `pulumi:"totalQuery"`
 }
@@ -189,7 +211,8 @@ type SloState struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
-	Name pulumi.StringPtrInput
+	Name           pulumi.StringPtrInput
+	PageChannelIds pulumi.StringArrayInput
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringPtrInput
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -201,7 +224,8 @@ type SloState struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringPtrInput
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent pulumi.StringPtrInput
+	TargetPercent    pulumi.StringPtrInput
+	TicketChannelIds pulumi.StringArrayInput
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringPtrInput
 }
@@ -220,7 +244,8 @@ type sloArgs struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
-	Name *string `pulumi:"name"`
+	Name           *string  `pulumi:"name"`
+	PageChannelIds []string `pulumi:"pageChannelIds"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId string `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -232,7 +257,8 @@ type sloArgs struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source *string `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent string `pulumi:"targetPercent"`
+	TargetPercent    string   `pulumi:"targetPercent"`
+	TicketChannelIds []string `pulumi:"ticketChannelIds"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery string `pulumi:"totalQuery"`
 }
@@ -248,7 +274,8 @@ type SloArgs struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
-	Name pulumi.StringPtrInput
+	Name           pulumi.StringPtrInput
+	PageChannelIds pulumi.StringArrayInput
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringInput
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -260,7 +287,8 @@ type SloArgs struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringPtrInput
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent pulumi.StringInput
+	TargetPercent    pulumi.StringInput
+	TicketChannelIds pulumi.StringArrayInput
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringInput
 }
@@ -377,6 +405,10 @@ func (o SloOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
 }
 
+func (o SloOutput) PageChannelIds() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringArrayOutput { return v.PageChannelIds }).(pulumi.StringArrayOutput)
+}
+
 // Project ID (UUID) used for SLO API paths.
 func (o SloOutput) ProjectId() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.ProjectId }).(pulumi.StringOutput)
@@ -405,6 +437,10 @@ func (o SloOutput) Source() pulumi.StringOutput {
 // Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 func (o SloOutput) TargetPercent() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.TargetPercent }).(pulumi.StringOutput)
+}
+
+func (o SloOutput) TicketChannelIds() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringArrayOutput { return v.TicketChannelIds }).(pulumi.StringArrayOutput)
 }
 
 // SQL boolean expression selecting all events counted by the SLO.

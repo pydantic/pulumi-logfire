@@ -16,6 +16,11 @@ import * as utilities from "./utilities";
  * import * as logfire from "@pydantic/pulumi-logfire";
  *
  * const exampleProject = new logfire.Project("exampleProject", {});
+ * const oncall = new logfire.Channel("oncall", {config: [{
+ *     type: "webhook",
+ *     format: "auto",
+ *     url: "https://hooks.example.com/oncall",
+ * }]});
  * const exampleSlo = new logfire.Slo("exampleSlo", {
  *     projectId: exampleProject.id,
  *     scopeValue: "payments-api",
@@ -25,6 +30,8 @@ import * as utilities from "./utilities";
  *     targetPercent: "99.9",
  *     rollingWindow: "30d",
  *     environments: ["prod"],
+ *     pageChannelIds: [oncall.id],
+ *     ticketChannelIds: [oncall.id],
  * });
  * ```
  *
@@ -98,6 +105,7 @@ export class Slo extends pulumi.CustomResource {
      * SLO name (unique per project).
      */
     declare public readonly name: pulumi.Output<string>;
+    declare public readonly pageChannelIds: pulumi.Output<string[] | undefined>;
     /**
      * Project ID (UUID) used for SLO API paths.
      */
@@ -122,6 +130,7 @@ export class Slo extends pulumi.CustomResource {
      * Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
      */
     declare public readonly targetPercent: pulumi.Output<string>;
+    declare public readonly ticketChannelIds: pulumi.Output<string[] | undefined>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
      */
@@ -145,12 +154,14 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["environments"] = state?.environments;
             resourceInputs["metricAggregation"] = state?.metricAggregation;
             resourceInputs["name"] = state?.name;
+            resourceInputs["pageChannelIds"] = state?.pageChannelIds;
             resourceInputs["projectId"] = state?.projectId;
             resourceInputs["rollingWindow"] = state?.rollingWindow;
             resourceInputs["scopeKind"] = state?.scopeKind;
             resourceInputs["scopeValue"] = state?.scopeValue;
             resourceInputs["source"] = state?.source;
             resourceInputs["targetPercent"] = state?.targetPercent;
+            resourceInputs["ticketChannelIds"] = state?.ticketChannelIds;
             resourceInputs["totalQuery"] = state?.totalQuery;
         } else {
             const args = argsOrState as SloArgs | undefined;
@@ -177,12 +188,14 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["environments"] = args?.environments;
             resourceInputs["metricAggregation"] = args?.metricAggregation;
             resourceInputs["name"] = args?.name;
+            resourceInputs["pageChannelIds"] = args?.pageChannelIds;
             resourceInputs["projectId"] = args?.projectId;
             resourceInputs["rollingWindow"] = args?.rollingWindow;
             resourceInputs["scopeKind"] = args?.scopeKind;
             resourceInputs["scopeValue"] = args?.scopeValue;
             resourceInputs["source"] = args?.source;
             resourceInputs["targetPercent"] = args?.targetPercent;
+            resourceInputs["ticketChannelIds"] = args?.ticketChannelIds;
             resourceInputs["totalQuery"] = args?.totalQuery;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -214,6 +227,7 @@ export interface SloState {
      * SLO name (unique per project).
      */
     name?: pulumi.Input<string>;
+    pageChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Project ID (UUID) used for SLO API paths.
      */
@@ -238,6 +252,7 @@ export interface SloState {
      * Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
      */
     targetPercent?: pulumi.Input<string>;
+    ticketChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
      */
@@ -268,6 +283,7 @@ export interface SloArgs {
      * SLO name (unique per project).
      */
     name?: pulumi.Input<string>;
+    pageChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Project ID (UUID) used for SLO API paths.
      */
@@ -292,6 +308,7 @@ export interface SloArgs {
      * Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
      */
     targetPercent: pulumi.Input<string>;
+    ticketChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
      */
