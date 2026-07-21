@@ -32,6 +32,12 @@
                 "fields": {
                     "environments": {
                         "maxItemsOne": false
+                    },
+                    "page_channel_ids": {
+                        "maxItemsOne": false
+                    },
+                    "ticket_channel_ids": {
+                        "maxItemsOne": false
                     }
                 }
             },
