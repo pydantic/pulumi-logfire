@@ -15,13 +15,23 @@ import * as utilities from "./utilities";
  * import * as pulumi from "@pulumi/pulumi";
  * import * as logfire from "@pydantic/pulumi-logfire";
  *
+ * const config = new pulumi.Config();
+ * const pagerdutyRoutingKey = config.require("pagerdutyRoutingKey");
  * const example = new logfire.Channel("example", {
  *     active: true,
- *     config: {
- *         format: "auto",
+ *     config: [{
  *         type: "webhook",
+ *         format: "auto",
  *         url: "https://example.com/logfire-webhook",
- *     },
+ *     }],
+ * });
+ * const pagerduty = new logfire.Channel("pagerduty", {
+ *     active: true,
+ *     config: [{
+ *         type: "pagerduty",
+ *         routingKey: pagerdutyRoutingKey,
+ *         region: "us",
+ *     }],
  * });
  * ```
  */

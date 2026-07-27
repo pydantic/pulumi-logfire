@@ -18,7 +18,11 @@ type ChannelConfig struct {
 	AuthKey *string `pulumi:"authKey"`
 	// Webhook payload format.
 	Format *string `pulumi:"format"`
-	// Channel type (`webhook` or `opsgenie`).
+	// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+	Region *string `pulumi:"region"`
+	// PagerDuty Events API v2 integration routing key.
+	RoutingKey *string `pulumi:"routingKey"`
+	// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
 	Type string `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url *string `pulumi:"url"`
@@ -40,7 +44,11 @@ type ChannelConfigArgs struct {
 	AuthKey pulumi.StringPtrInput `pulumi:"authKey"`
 	// Webhook payload format.
 	Format pulumi.StringPtrInput `pulumi:"format"`
-	// Channel type (`webhook` or `opsgenie`).
+	// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+	Region pulumi.StringPtrInput `pulumi:"region"`
+	// PagerDuty Events API v2 integration routing key.
+	RoutingKey pulumi.StringPtrInput `pulumi:"routingKey"`
+	// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
 	Type pulumi.StringInput `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url pulumi.StringPtrInput `pulumi:"url"`
@@ -133,7 +141,17 @@ func (o ChannelConfigOutput) Format() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.Format }).(pulumi.StringPtrOutput)
 }
 
-// Channel type (`webhook` or `opsgenie`).
+// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+func (o ChannelConfigOutput) Region() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ChannelConfig) *string { return v.Region }).(pulumi.StringPtrOutput)
+}
+
+// PagerDuty Events API v2 integration routing key.
+func (o ChannelConfigOutput) RoutingKey() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ChannelConfig) *string { return v.RoutingKey }).(pulumi.StringPtrOutput)
+}
+
+// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
 func (o ChannelConfigOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v ChannelConfig) string { return v.Type }).(pulumi.StringOutput)
 }
@@ -187,7 +205,27 @@ func (o ChannelConfigPtrOutput) Format() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
-// Channel type (`webhook` or `opsgenie`).
+// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+func (o ChannelConfigPtrOutput) Region() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ChannelConfig) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Region
+	}).(pulumi.StringPtrOutput)
+}
+
+// PagerDuty Events API v2 integration routing key.
+func (o ChannelConfigPtrOutput) RoutingKey() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ChannelConfig) *string {
+		if v == nil {
+			return nil
+		}
+		return v.RoutingKey
+	}).(pulumi.StringPtrOutput)
+}
+
+// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
 func (o ChannelConfigPtrOutput) Type() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
 		if v == nil {

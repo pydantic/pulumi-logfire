@@ -15,7 +15,15 @@ export interface ChannelConfig {
      */
     format?: pulumi.Input<string>;
     /**
-     * Channel type (`webhook` or `opsgenie`).
+     * PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+     */
+    region?: pulumi.Input<string>;
+    /**
+     * PagerDuty Events API v2 integration routing key.
+     */
+    routingKey?: pulumi.Input<string>;
+    /**
+     * Channel type (`webhook`, `opsgenie`, or `pagerduty`).
      */
     type: pulumi.Input<string>;
     /**

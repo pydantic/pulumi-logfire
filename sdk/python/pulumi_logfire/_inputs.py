@@ -25,7 +25,7 @@ if not MYPY:
     class ChannelConfigArgsDict(TypedDict):
         type: pulumi.Input[_builtins.str]
         """
-        Channel type (`webhook` or `opsgenie`).
+        Channel type (`webhook`, `opsgenie`, or `pagerduty`).
         """
         auth_key: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -34,6 +34,14 @@ if not MYPY:
         format: NotRequired[pulumi.Input[_builtins.str]]
         """
         Webhook payload format.
+        """
+        region: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+        """
+        routing_key: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        PagerDuty Events API v2 integration routing key.
         """
         url: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -48,11 +56,15 @@ class ChannelConfigArgs:
                  type: pulumi.Input[_builtins.str],
                  auth_key: Optional[pulumi.Input[_builtins.str]] = None,
                  format: Optional[pulumi.Input[_builtins.str]] = None,
+                 region: Optional[pulumi.Input[_builtins.str]] = None,
+                 routing_key: Optional[pulumi.Input[_builtins.str]] = None,
                  url: Optional[pulumi.Input[_builtins.str]] = None):
         """
-        :param pulumi.Input[_builtins.str] type: Channel type (`webhook` or `opsgenie`).
+        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `opsgenie`, or `pagerduty`).
         :param pulumi.Input[_builtins.str] auth_key: Opsgenie API key.
         :param pulumi.Input[_builtins.str] format: Webhook payload format.
+        :param pulumi.Input[_builtins.str] region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+        :param pulumi.Input[_builtins.str] routing_key: PagerDuty Events API v2 integration routing key.
         :param pulumi.Input[_builtins.str] url: Webhook URL endpoint.
         """
         pulumi.set(__self__, "type", type)
@@ -60,6 +72,10 @@ class ChannelConfigArgs:
             pulumi.set(__self__, "auth_key", auth_key)
         if format is not None:
             pulumi.set(__self__, "format", format)
+        if region is not None:
+            pulumi.set(__self__, "region", region)
+        if routing_key is not None:
+            pulumi.set(__self__, "routing_key", routing_key)
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -67,7 +83,7 @@ class ChannelConfigArgs:
     @pulumi.getter
     def type(self) -> pulumi.Input[_builtins.str]:
         """
-        Channel type (`webhook` or `opsgenie`).
+        Channel type (`webhook`, `opsgenie`, or `pagerduty`).
         """
         return pulumi.get(self, "type")
 
@@ -98,6 +114,30 @@ class ChannelConfigArgs:
     @format.setter
     def format(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "format", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def region(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+        """
+        return pulumi.get(self, "region")
+
+    @region.setter
+    def region(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "region", value)
+
+    @_builtins.property
+    @pulumi.getter(name="routingKey")
+    def routing_key(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        PagerDuty Events API v2 integration routing key.
+        """
+        return pulumi.get(self, "routing_key")
+
+    @routing_key.setter
+    def routing_key(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "routing_key", value)
 
     @_builtins.property
     @pulumi.getter
