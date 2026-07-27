@@ -149,13 +149,22 @@ class Channel(pulumi.CustomResource):
         import pulumi
         import pulumi_logfire as logfire
 
+        config = pulumi.Config()
+        pagerduty_routing_key = config.require("pagerdutyRoutingKey")
         example = logfire.Channel("example",
             active=True,
-            config={
-                "format": "auto",
+            config=[{
                 "type": "webhook",
+                "format": "auto",
                 "url": "https://example.com/logfire-webhook",
-            })
+            }])
+        pagerduty = logfire.Channel("pagerduty",
+            active=True,
+            config=[{
+                "type": "pagerduty",
+                "routingKey": pagerduty_routing_key,
+                "region": "us",
+            }])
         ```
 
         :param str resource_name: The name of the resource.
@@ -179,13 +188,22 @@ class Channel(pulumi.CustomResource):
         import pulumi
         import pulumi_logfire as logfire
 
+        config = pulumi.Config()
+        pagerduty_routing_key = config.require("pagerdutyRoutingKey")
         example = logfire.Channel("example",
             active=True,
-            config={
-                "format": "auto",
+            config=[{
                 "type": "webhook",
+                "format": "auto",
                 "url": "https://example.com/logfire-webhook",
-            })
+            }])
+        pagerduty = logfire.Channel("pagerduty",
+            active=True,
+            config=[{
+                "type": "pagerduty",
+                "routingKey": pagerduty_routing_key,
+                "region": "us",
+            }])
         ```
 
         :param str resource_name: The name of the resource.

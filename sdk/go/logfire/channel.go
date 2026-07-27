@@ -21,18 +21,36 @@ import (
 // import (
 //
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 //	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
 //
 // )
 //
 //	func main() {
 //		pulumi.Run(func(ctx *pulumi.Context) error {
+//			cfg := config.New(ctx, "")
+//			pagerdutyRoutingKey := cfg.Require("pagerdutyRoutingKey")
 //			_, err := logfire.NewChannel(ctx, "example", &logfire.ChannelArgs{
 //				Active: pulumi.Bool(true),
-//				Config: &logfire.ChannelConfigArgs{
-//					Format: pulumi.String("auto"),
-//					Type:   pulumi.String("webhook"),
-//					Url:    pulumi.String("https://example.com/logfire-webhook"),
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":   "webhook",
+//						"format": "auto",
+//						"url":    "https://example.com/logfire-webhook",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewChannel(ctx, "pagerduty", &logfire.ChannelArgs{
+//				Active: pulumi.Bool(true),
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":       "pagerduty",
+//						"routingKey": pagerdutyRoutingKey,
+//						"region":     "us",
+//					},
 //				},
 //			})
 //			if err != nil {

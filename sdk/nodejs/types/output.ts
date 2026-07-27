@@ -15,7 +15,15 @@ export interface ChannelConfig {
      */
     format?: string;
     /**
-     * Channel type (`webhook` or `opsgenie`).
+     * PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+     */
+    region?: string;
+    /**
+     * PagerDuty Events API v2 integration routing key.
+     */
+    routingKey?: string;
+    /**
+     * Channel type (`webhook`, `opsgenie`, or `pagerduty`).
      */
     type: string;
     /**
