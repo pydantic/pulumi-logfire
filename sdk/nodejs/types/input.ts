@@ -11,9 +11,21 @@ export interface ChannelConfig {
      */
     authKey?: pulumi.Input<string>;
     /**
+     * Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+     */
+    channelId?: pulumi.Input<string>;
+    /**
      * Webhook payload format.
      */
     format?: pulumi.Input<string>;
+    /**
+     * Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+     */
+    includeAgentPrompt?: pulumi.Input<boolean>;
+    /**
+     * ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+     */
+    installId?: pulumi.Input<string>;
     /**
      * PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
      */
@@ -23,7 +35,7 @@ export interface ChannelConfig {
      */
     routingKey?: pulumi.Input<string>;
     /**
-     * Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+     * Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
      */
     type: pulumi.Input<string>;
     /**

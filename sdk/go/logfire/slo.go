@@ -67,6 +67,23 @@ import (
 //			if err != nil {
 //				return err
 //			}
+//			// A histogram-threshold metric SLI: "95% of queue-latency observations under
+//			// 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
+//			// `source = "metrics"`.
+//			_, err = logfire.NewSlo(ctx, "queueLatency", &logfire.SloArgs{
+//				ProjectId:         exampleProject.ID(),
+//				ScopeValue:        pulumi.String("ingest"),
+//				Source:            pulumi.String("metrics"),
+//				MetricAggregation: pulumi.String("histogram_threshold"),
+//				TotalQuery:        pulumi.String("metric_name = 'queue.latency'"),
+//				Threshold:         pulumi.String("60000"),
+//				Comparison:        pulumi.String("less_than"),
+//				TargetPercent:     pulumi.String("95"),
+//				RollingWindow:     pulumi.String("30d"),
+//			})
+//			if err != nil {
+//				return err
+//			}
 //			return nil
 //		})
 //	}
@@ -97,13 +114,15 @@ import (
 type Slo struct {
 	pulumi.CustomResourceState
 
-	// SQL boolean expression selecting the bad events counted by the SLO.
-	BadQuery pulumi.StringOutput `pulumi:"badQuery"`
+	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
+	BadQuery pulumi.StringPtrOutput `pulumi:"badQuery"`
+	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+	Comparison pulumi.StringPtrOutput `pulumi:"comparison"`
 	// SLO description.
 	Description pulumi.StringPtrOutput `pulumi:"description"`
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments pulumi.StringArrayOutput `pulumi:"environments"`
-	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringOutput `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
 	Name           pulumi.StringOutput      `pulumi:"name"`
@@ -119,7 +138,9 @@ type Slo struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringOutput `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent    pulumi.StringOutput      `pulumi:"targetPercent"`
+	TargetPercent pulumi.StringOutput `pulumi:"targetPercent"`
+	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+	Threshold        pulumi.StringPtrOutput   `pulumi:"threshold"`
 	TicketChannelIds pulumi.StringArrayOutput `pulumi:"ticketChannelIds"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringOutput `pulumi:"totalQuery"`
@@ -132,9 +153,6 @@ func NewSlo(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
-	if args.BadQuery == nil {
-		return nil, errors.New("invalid value for required argument 'BadQuery'")
-	}
 	if args.ProjectId == nil {
 		return nil, errors.New("invalid value for required argument 'ProjectId'")
 	}
@@ -173,13 +191,15 @@ func GetSlo(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering Slo resources.
 type sloState struct {
-	// SQL boolean expression selecting the bad events counted by the SLO.
+	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery *string `pulumi:"badQuery"`
+	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+	Comparison *string `pulumi:"comparison"`
 	// SLO description.
 	Description *string `pulumi:"description"`
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments []string `pulumi:"environments"`
-	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
 	Name           *string  `pulumi:"name"`
@@ -195,20 +215,24 @@ type sloState struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source *string `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent    *string  `pulumi:"targetPercent"`
+	TargetPercent *string `pulumi:"targetPercent"`
+	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+	Threshold        *string  `pulumi:"threshold"`
 	TicketChannelIds []string `pulumi:"ticketChannelIds"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery *string `pulumi:"totalQuery"`
 }
 
 type SloState struct {
-	// SQL boolean expression selecting the bad events counted by the SLO.
+	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery pulumi.StringPtrInput
+	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+	Comparison pulumi.StringPtrInput
 	// SLO description.
 	Description pulumi.StringPtrInput
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments pulumi.StringArrayInput
-	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
 	Name           pulumi.StringPtrInput
@@ -224,7 +248,9 @@ type SloState struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringPtrInput
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent    pulumi.StringPtrInput
+	TargetPercent pulumi.StringPtrInput
+	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+	Threshold        pulumi.StringPtrInput
 	TicketChannelIds pulumi.StringArrayInput
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringPtrInput
@@ -235,13 +261,15 @@ func (SloState) ElementType() reflect.Type {
 }
 
 type sloArgs struct {
-	// SQL boolean expression selecting the bad events counted by the SLO.
-	BadQuery string `pulumi:"badQuery"`
+	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
+	BadQuery *string `pulumi:"badQuery"`
+	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+	Comparison *string `pulumi:"comparison"`
 	// SLO description.
 	Description *string `pulumi:"description"`
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments []string `pulumi:"environments"`
-	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
 	Name           *string  `pulumi:"name"`
@@ -257,7 +285,9 @@ type sloArgs struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source *string `pulumi:"source"`
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent    string   `pulumi:"targetPercent"`
+	TargetPercent string `pulumi:"targetPercent"`
+	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+	Threshold        *string  `pulumi:"threshold"`
 	TicketChannelIds []string `pulumi:"ticketChannelIds"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery string `pulumi:"totalQuery"`
@@ -265,13 +295,15 @@ type sloArgs struct {
 
 // The set of arguments for constructing a Slo resource.
 type SloArgs struct {
-	// SQL boolean expression selecting the bad events counted by the SLO.
-	BadQuery pulumi.StringInput
+	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
+	BadQuery pulumi.StringPtrInput
+	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+	Comparison pulumi.StringPtrInput
 	// SLO description.
 	Description pulumi.StringPtrInput
 	// Deployment environments the SLO is scoped to. Omit to cover all environments.
 	Environments pulumi.StringArrayInput
-	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
 	Name           pulumi.StringPtrInput
@@ -287,7 +319,9 @@ type SloArgs struct {
 	// Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
 	Source pulumi.StringPtrInput
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
-	TargetPercent    pulumi.StringInput
+	TargetPercent pulumi.StringInput
+	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+	Threshold        pulumi.StringPtrInput
 	TicketChannelIds pulumi.StringArrayInput
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringInput
@@ -380,9 +414,14 @@ func (o SloOutput) ToSloOutputWithContext(ctx context.Context) SloOutput {
 	return o
 }
 
-// SQL boolean expression selecting the bad events counted by the SLO.
-func (o SloOutput) BadQuery() pulumi.StringOutput {
-	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.BadQuery }).(pulumi.StringOutput)
+// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
+func (o SloOutput) BadQuery() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringPtrOutput { return v.BadQuery }).(pulumi.StringPtrOutput)
+}
+
+// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+func (o SloOutput) Comparison() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringPtrOutput { return v.Comparison }).(pulumi.StringPtrOutput)
 }
 
 // SLO description.
@@ -395,7 +434,7 @@ func (o SloOutput) Environments() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringArrayOutput { return v.Environments }).(pulumi.StringArrayOutput)
 }
 
-// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 func (o SloOutput) MetricAggregation() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.MetricAggregation }).(pulumi.StringOutput)
 }
@@ -437,6 +476,11 @@ func (o SloOutput) Source() pulumi.StringOutput {
 // Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 func (o SloOutput) TargetPercent() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.TargetPercent }).(pulumi.StringOutput)
+}
+
+// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+func (o SloOutput) Threshold() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Slo) pulumi.StringPtrOutput { return v.Threshold }).(pulumi.StringPtrOutput)
 }
 
 func (o SloOutput) TicketChannelIds() pulumi.StringArrayOutput {

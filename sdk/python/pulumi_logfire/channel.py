@@ -165,6 +165,13 @@ class Channel(pulumi.CustomResource):
                 "routingKey": pagerduty_routing_key,
                 "region": "us",
             }])
+        slack_app = logfire.Channel("slackApp",
+            active=True,
+            config=[{
+                "type": "slack-integration",
+                "installId": "018f9a6a-1234-7890-abcd-ef0123456789",
+                "channelId": "C0123456789",
+            }])
         ```
 
         :param str resource_name: The name of the resource.
@@ -203,6 +210,13 @@ class Channel(pulumi.CustomResource):
                 "type": "pagerduty",
                 "routingKey": pagerduty_routing_key,
                 "region": "us",
+            }])
+        slack_app = logfire.Channel("slackApp",
+            active=True,
+            config=[{
+                "type": "slack-integration",
+                "installId": "018f9a6a-1234-7890-abcd-ef0123456789",
+                "channelId": "C0123456789",
             }])
         ```
 

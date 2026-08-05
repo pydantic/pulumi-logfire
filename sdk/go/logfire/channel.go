@@ -56,6 +56,19 @@ import (
 //			if err != nil {
 //				return err
 //			}
+//			_, err = logfire.NewChannel(ctx, "slackApp", &logfire.ChannelArgs{
+//				Active: pulumi.Bool(true),
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":      "slack-integration",
+//						"installId": "018f9a6a-1234-7890-abcd-ef0123456789",
+//						"channelId": "C0123456789",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
 //			return nil
 //		})
 //	}
