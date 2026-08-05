@@ -25,15 +25,27 @@ if not MYPY:
     class ChannelConfigArgsDict(TypedDict):
         type: pulumi.Input[_builtins.str]
         """
-        Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+        Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
         """
         auth_key: NotRequired[pulumi.Input[_builtins.str]]
         """
         Opsgenie API key.
         """
+        channel_id: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+        """
         format: NotRequired[pulumi.Input[_builtins.str]]
         """
         Webhook payload format.
+        """
+        include_agent_prompt: NotRequired[pulumi.Input[_builtins.bool]]
+        """
+        Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+        """
+        install_id: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
         """
         region: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -55,14 +67,20 @@ class ChannelConfigArgs:
     def __init__(__self__, *,
                  type: pulumi.Input[_builtins.str],
                  auth_key: Optional[pulumi.Input[_builtins.str]] = None,
+                 channel_id: Optional[pulumi.Input[_builtins.str]] = None,
                  format: Optional[pulumi.Input[_builtins.str]] = None,
+                 include_agent_prompt: Optional[pulumi.Input[_builtins.bool]] = None,
+                 install_id: Optional[pulumi.Input[_builtins.str]] = None,
                  region: Optional[pulumi.Input[_builtins.str]] = None,
                  routing_key: Optional[pulumi.Input[_builtins.str]] = None,
                  url: Optional[pulumi.Input[_builtins.str]] = None):
         """
-        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
         :param pulumi.Input[_builtins.str] auth_key: Opsgenie API key.
+        :param pulumi.Input[_builtins.str] channel_id: Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
         :param pulumi.Input[_builtins.str] format: Webhook payload format.
+        :param pulumi.Input[_builtins.bool] include_agent_prompt: Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+        :param pulumi.Input[_builtins.str] install_id: ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
         :param pulumi.Input[_builtins.str] region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
         :param pulumi.Input[_builtins.str] routing_key: PagerDuty Events API v2 integration routing key.
         :param pulumi.Input[_builtins.str] url: Webhook URL endpoint.
@@ -70,8 +88,14 @@ class ChannelConfigArgs:
         pulumi.set(__self__, "type", type)
         if auth_key is not None:
             pulumi.set(__self__, "auth_key", auth_key)
+        if channel_id is not None:
+            pulumi.set(__self__, "channel_id", channel_id)
         if format is not None:
             pulumi.set(__self__, "format", format)
+        if include_agent_prompt is not None:
+            pulumi.set(__self__, "include_agent_prompt", include_agent_prompt)
+        if install_id is not None:
+            pulumi.set(__self__, "install_id", install_id)
         if region is not None:
             pulumi.set(__self__, "region", region)
         if routing_key is not None:
@@ -83,7 +107,7 @@ class ChannelConfigArgs:
     @pulumi.getter
     def type(self) -> pulumi.Input[_builtins.str]:
         """
-        Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+        Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
         """
         return pulumi.get(self, "type")
 
@@ -104,6 +128,18 @@ class ChannelConfigArgs:
         pulumi.set(self, "auth_key", value)
 
     @_builtins.property
+    @pulumi.getter(name="channelId")
+    def channel_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+        """
+        return pulumi.get(self, "channel_id")
+
+    @channel_id.setter
+    def channel_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "channel_id", value)
+
+    @_builtins.property
     @pulumi.getter
     def format(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -114,6 +150,30 @@ class ChannelConfigArgs:
     @format.setter
     def format(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "format", value)
+
+    @_builtins.property
+    @pulumi.getter(name="includeAgentPrompt")
+    def include_agent_prompt(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+        """
+        return pulumi.get(self, "include_agent_prompt")
+
+    @include_agent_prompt.setter
+    def include_agent_prompt(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "include_agent_prompt", value)
+
+    @_builtins.property
+    @pulumi.getter(name="installId")
+    def install_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+        """
+        return pulumi.get(self, "install_id")
+
+    @install_id.setter
+    def install_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "install_id", value)
 
     @_builtins.property
     @pulumi.getter

@@ -19,12 +19,13 @@ __all__ = ['SloArgs', 'Slo']
 @pulumi.input_type
 class SloArgs:
     def __init__(__self__, *,
-                 bad_query: pulumi.Input[_builtins.str],
                  project_id: pulumi.Input[_builtins.str],
                  rolling_window: pulumi.Input[_builtins.str],
                  scope_value: pulumi.Input[_builtins.str],
                  target_percent: pulumi.Input[_builtins.str],
                  total_query: pulumi.Input[_builtins.str],
+                 bad_query: Optional[pulumi.Input[_builtins.str]] = None,
+                 comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
@@ -32,28 +33,34 @@ class SloArgs:
                  page_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
+                 threshold: Optional[pulumi.Input[_builtins.str]] = None,
                  ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None):
         """
         The set of arguments for constructing a Slo resource.
-        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
         :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
+        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
+        :param pulumi.Input[_builtins.str] comparison: For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
-        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] scope_kind: What the SLO is anchored to: a service (`service`) or an LLM provider (`provider`). Defaults to `service`. Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
+        :param pulumi.Input[_builtins.str] threshold: For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
         """
-        pulumi.set(__self__, "bad_query", bad_query)
         pulumi.set(__self__, "project_id", project_id)
         pulumi.set(__self__, "rolling_window", rolling_window)
         pulumi.set(__self__, "scope_value", scope_value)
         pulumi.set(__self__, "target_percent", target_percent)
         pulumi.set(__self__, "total_query", total_query)
+        if bad_query is not None:
+            pulumi.set(__self__, "bad_query", bad_query)
+        if comparison is not None:
+            pulumi.set(__self__, "comparison", comparison)
         if description is not None:
             pulumi.set(__self__, "description", description)
         if environments is not None:
@@ -68,20 +75,10 @@ class SloArgs:
             pulumi.set(__self__, "scope_kind", scope_kind)
         if source is not None:
             pulumi.set(__self__, "source", source)
+        if threshold is not None:
+            pulumi.set(__self__, "threshold", threshold)
         if ticket_channel_ids is not None:
             pulumi.set(__self__, "ticket_channel_ids", ticket_channel_ids)
-
-    @_builtins.property
-    @pulumi.getter(name="badQuery")
-    def bad_query(self) -> pulumi.Input[_builtins.str]:
-        """
-        SQL boolean expression selecting the bad events counted by the SLO.
-        """
-        return pulumi.get(self, "bad_query")
-
-    @bad_query.setter
-    def bad_query(self, value: pulumi.Input[_builtins.str]):
-        pulumi.set(self, "bad_query", value)
 
     @_builtins.property
     @pulumi.getter(name="projectId")
@@ -144,6 +141,30 @@ class SloArgs:
         pulumi.set(self, "total_query", value)
 
     @_builtins.property
+    @pulumi.getter(name="badQuery")
+    def bad_query(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
+        """
+        return pulumi.get(self, "bad_query")
+
+    @bad_query.setter
+    def bad_query(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "bad_query", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def comparison(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
+        """
+        return pulumi.get(self, "comparison")
+
+    @comparison.setter
+    def comparison(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "comparison", value)
+
+    @_builtins.property
     @pulumi.getter
     def description(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -171,7 +192,7 @@ class SloArgs:
     @pulumi.getter(name="metricAggregation")
     def metric_aggregation(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         """
         return pulumi.get(self, "metric_aggregation")
 
@@ -225,6 +246,18 @@ class SloArgs:
         pulumi.set(self, "source", value)
 
     @_builtins.property
+    @pulumi.getter
+    def threshold(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+        """
+        return pulumi.get(self, "threshold")
+
+    @threshold.setter
+    def threshold(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "threshold", value)
+
+    @_builtins.property
     @pulumi.getter(name="ticketChannelIds")
     def ticket_channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
         return pulumi.get(self, "ticket_channel_ids")
@@ -238,6 +271,7 @@ class SloArgs:
 class _SloState:
     def __init__(__self__, *,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
+                 comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
@@ -249,14 +283,16 @@ class _SloState:
                  scope_value: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
+                 threshold: Optional[pulumi.Input[_builtins.str]] = None,
                  ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None):
         """
         Input properties used for looking up and filtering Slo resources.
-        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
+        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
+        :param pulumi.Input[_builtins.str] comparison: For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
-        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -264,10 +300,13 @@ class _SloState:
         :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
+        :param pulumi.Input[_builtins.str] threshold: For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
         """
         if bad_query is not None:
             pulumi.set(__self__, "bad_query", bad_query)
+        if comparison is not None:
+            pulumi.set(__self__, "comparison", comparison)
         if description is not None:
             pulumi.set(__self__, "description", description)
         if environments is not None:
@@ -290,6 +329,8 @@ class _SloState:
             pulumi.set(__self__, "source", source)
         if target_percent is not None:
             pulumi.set(__self__, "target_percent", target_percent)
+        if threshold is not None:
+            pulumi.set(__self__, "threshold", threshold)
         if ticket_channel_ids is not None:
             pulumi.set(__self__, "ticket_channel_ids", ticket_channel_ids)
         if total_query is not None:
@@ -299,13 +340,25 @@ class _SloState:
     @pulumi.getter(name="badQuery")
     def bad_query(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        SQL boolean expression selecting the bad events counted by the SLO.
+        SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
         """
         return pulumi.get(self, "bad_query")
 
     @bad_query.setter
     def bad_query(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "bad_query", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def comparison(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
+        """
+        return pulumi.get(self, "comparison")
+
+    @comparison.setter
+    def comparison(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "comparison", value)
 
     @_builtins.property
     @pulumi.getter
@@ -335,7 +388,7 @@ class _SloState:
     @pulumi.getter(name="metricAggregation")
     def metric_aggregation(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         """
         return pulumi.get(self, "metric_aggregation")
 
@@ -437,6 +490,18 @@ class _SloState:
         pulumi.set(self, "target_percent", value)
 
     @_builtins.property
+    @pulumi.getter
+    def threshold(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+        """
+        return pulumi.get(self, "threshold")
+
+    @threshold.setter
+    def threshold(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "threshold", value)
+
+    @_builtins.property
     @pulumi.getter(name="ticketChannelIds")
     def ticket_channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
         return pulumi.get(self, "ticket_channel_ids")
@@ -465,6 +530,7 @@ class Slo(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
+                 comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
@@ -476,6 +542,7 @@ class Slo(pulumi.CustomResource):
                  scope_value: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
+                 threshold: Optional[pulumi.Input[_builtins.str]] = None,
                  ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
@@ -507,6 +574,19 @@ class Slo(pulumi.CustomResource):
             environments=["prod"],
             page_channel_ids=[oncall.id],
             ticket_channel_ids=[oncall.id])
+        # A histogram-threshold metric SLI: "95% of queue-latency observations under
+        # 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
+        # `source = "metrics"`.
+        queue_latency = logfire.Slo("queueLatency",
+            project_id=example_project.id,
+            scope_value="ingest",
+            source="metrics",
+            metric_aggregation="histogram_threshold",
+            total_query="metric_name = 'queue.latency'",
+            threshold="60000",
+            comparison="less_than",
+            target_percent="95",
+            rolling_window="30d")
         ```
 
         ## Import
@@ -533,10 +613,11 @@ class Slo(pulumi.CustomResource):
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
+        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
+        :param pulumi.Input[_builtins.str] comparison: For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
-        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -544,6 +625,7 @@ class Slo(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
+        :param pulumi.Input[_builtins.str] threshold: For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
         """
         ...
@@ -580,6 +662,19 @@ class Slo(pulumi.CustomResource):
             environments=["prod"],
             page_channel_ids=[oncall.id],
             ticket_channel_ids=[oncall.id])
+        # A histogram-threshold metric SLI: "95% of queue-latency observations under
+        # 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
+        # `source = "metrics"`.
+        queue_latency = logfire.Slo("queueLatency",
+            project_id=example_project.id,
+            scope_value="ingest",
+            source="metrics",
+            metric_aggregation="histogram_threshold",
+            total_query="metric_name = 'queue.latency'",
+            threshold="60000",
+            comparison="less_than",
+            target_percent="95",
+            rolling_window="30d")
         ```
 
         ## Import
@@ -620,6 +715,7 @@ class Slo(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
+                 comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
@@ -631,6 +727,7 @@ class Slo(pulumi.CustomResource):
                  scope_value: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
+                 threshold: Optional[pulumi.Input[_builtins.str]] = None,
                  ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
@@ -642,9 +739,8 @@ class Slo(pulumi.CustomResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = SloArgs.__new__(SloArgs)
 
-            if bad_query is None and not opts.urn:
-                raise TypeError("Missing required property 'bad_query'")
             __props__.__dict__["bad_query"] = bad_query
+            __props__.__dict__["comparison"] = comparison
             __props__.__dict__["description"] = description
             __props__.__dict__["environments"] = environments
             __props__.__dict__["metric_aggregation"] = metric_aggregation
@@ -664,6 +760,7 @@ class Slo(pulumi.CustomResource):
             if target_percent is None and not opts.urn:
                 raise TypeError("Missing required property 'target_percent'")
             __props__.__dict__["target_percent"] = target_percent
+            __props__.__dict__["threshold"] = threshold
             __props__.__dict__["ticket_channel_ids"] = ticket_channel_ids
             if total_query is None and not opts.urn:
                 raise TypeError("Missing required property 'total_query'")
@@ -679,6 +776,7 @@ class Slo(pulumi.CustomResource):
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
             bad_query: Optional[pulumi.Input[_builtins.str]] = None,
+            comparison: Optional[pulumi.Input[_builtins.str]] = None,
             description: Optional[pulumi.Input[_builtins.str]] = None,
             environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
@@ -690,6 +788,7 @@ class Slo(pulumi.CustomResource):
             scope_value: Optional[pulumi.Input[_builtins.str]] = None,
             source: Optional[pulumi.Input[_builtins.str]] = None,
             target_percent: Optional[pulumi.Input[_builtins.str]] = None,
+            threshold: Optional[pulumi.Input[_builtins.str]] = None,
             ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             total_query: Optional[pulumi.Input[_builtins.str]] = None) -> 'Slo':
         """
@@ -699,10 +798,11 @@ class Slo(pulumi.CustomResource):
         :param str resource_name: The unique name of the resulting resource.
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO.
+        :param pulumi.Input[_builtins.str] bad_query: SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
+        :param pulumi.Input[_builtins.str] comparison: For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] description: SLO description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments the SLO is scoped to. Omit to cover all environments.
-        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        :param pulumi.Input[_builtins.str] metric_aggregation: How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         :param pulumi.Input[_builtins.str] name: SLO name (unique per project).
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
         :param pulumi.Input[_builtins.str] rolling_window: Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -710,6 +810,7 @@ class Slo(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] scope_value: The service name (`scope_kind = "service"`) or provider slug like `openai` (`scope_kind = "provider"`). Changing it forces a new SLO.
         :param pulumi.Input[_builtins.str] source: Whether the SLO ratio is computed over span events (`records`) or metric values (`metrics`). Defaults to `records`.
         :param pulumi.Input[_builtins.str] target_percent: Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
+        :param pulumi.Input[_builtins.str] threshold: For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
@@ -717,6 +818,7 @@ class Slo(pulumi.CustomResource):
         __props__ = _SloState.__new__(_SloState)
 
         __props__.__dict__["bad_query"] = bad_query
+        __props__.__dict__["comparison"] = comparison
         __props__.__dict__["description"] = description
         __props__.__dict__["environments"] = environments
         __props__.__dict__["metric_aggregation"] = metric_aggregation
@@ -728,17 +830,26 @@ class Slo(pulumi.CustomResource):
         __props__.__dict__["scope_value"] = scope_value
         __props__.__dict__["source"] = source
         __props__.__dict__["target_percent"] = target_percent
+        __props__.__dict__["threshold"] = threshold
         __props__.__dict__["ticket_channel_ids"] = ticket_channel_ids
         __props__.__dict__["total_query"] = total_query
         return Slo(resource_name, opts=opts, __props__=__props__)
 
     @_builtins.property
     @pulumi.getter(name="badQuery")
-    def bad_query(self) -> pulumi.Output[_builtins.str]:
+    def bad_query(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        SQL boolean expression selecting the bad events counted by the SLO.
+        SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metric_aggregation = "histogram_threshold"`, which uses `threshold` and `comparison` instead.
         """
         return pulumi.get(self, "bad_query")
+
+    @_builtins.property
+    @pulumi.getter
+    def comparison(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        For `metric_aggregation = "histogram_threshold"`: the good side of the `threshold`. `less_than` (good is below the threshold, the latency case) or `greater_than`. Required for that mode, and must be omitted otherwise.
+        """
+        return pulumi.get(self, "comparison")
 
     @_builtins.property
     @pulumi.getter
@@ -760,7 +871,7 @@ class Slo(pulumi.CustomResource):
     @pulumi.getter(name="metricAggregation")
     def metric_aggregation(self) -> pulumi.Output[_builtins.str]:
         """
-        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), or `counter_rate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+        How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gauge_fraction` (fraction of samples meeting the condition, for gauges), `counter_rate` (sum of per-series increases, for cumulative counters), or `histogram_threshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `bad_query`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
         """
         return pulumi.get(self, "metric_aggregation")
 
@@ -824,6 +935,14 @@ class Slo(pulumi.CustomResource):
         Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
         """
         return pulumi.get(self, "target_percent")
+
+    @_builtins.property
+    @pulumi.getter
+    def threshold(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+        """
+        return pulumi.get(self, "threshold")
 
     @_builtins.property
     @pulumi.getter(name="ticketChannelIds")

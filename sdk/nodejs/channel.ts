@@ -33,6 +33,14 @@ import * as utilities from "./utilities";
  *         region: "us",
  *     }],
  * });
+ * const slackApp = new logfire.Channel("slackApp", {
+ *     active: true,
+ *     config: [{
+ *         type: "slack-integration",
+ *         installId: "018f9a6a-1234-7890-abcd-ef0123456789",
+ *         channelId: "C0123456789",
+ *     }],
+ * });
  * ```
  */
 export class Channel extends pulumi.CustomResource {

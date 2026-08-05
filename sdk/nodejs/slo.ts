@@ -33,6 +33,20 @@ import * as utilities from "./utilities";
  *     pageChannelIds: [oncall.id],
  *     ticketChannelIds: [oncall.id],
  * });
+ * // A histogram-threshold metric SLI: "95% of queue-latency observations under
+ * // 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
+ * // `source = "metrics"`.
+ * const queueLatency = new logfire.Slo("queueLatency", {
+ *     projectId: exampleProject.id,
+ *     scopeValue: "ingest",
+ *     source: "metrics",
+ *     metricAggregation: "histogram_threshold",
+ *     totalQuery: "metric_name = 'queue.latency'",
+ *     threshold: "60000",
+ *     comparison: "less_than",
+ *     targetPercent: "95",
+ *     rollingWindow: "30d",
+ * });
  * ```
  *
  * ## Import
@@ -86,9 +100,13 @@ export class Slo extends pulumi.CustomResource {
     }
 
     /**
-     * SQL boolean expression selecting the bad events counted by the SLO.
+     * SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
      */
-    declare public readonly badQuery: pulumi.Output<string>;
+    declare public readonly badQuery: pulumi.Output<string | undefined>;
+    /**
+     * For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+     */
+    declare public readonly comparison: pulumi.Output<string | undefined>;
     /**
      * SLO description.
      */
@@ -98,7 +116,7 @@ export class Slo extends pulumi.CustomResource {
      */
     declare public readonly environments: pulumi.Output<string[] | undefined>;
     /**
-     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
      */
     declare public readonly metricAggregation: pulumi.Output<string>;
     /**
@@ -130,6 +148,10 @@ export class Slo extends pulumi.CustomResource {
      * Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
      */
     declare public readonly targetPercent: pulumi.Output<string>;
+    /**
+     * For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+     */
+    declare public readonly threshold: pulumi.Output<string | undefined>;
     declare public readonly ticketChannelIds: pulumi.Output<string[] | undefined>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
@@ -150,6 +172,7 @@ export class Slo extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as SloState | undefined;
             resourceInputs["badQuery"] = state?.badQuery;
+            resourceInputs["comparison"] = state?.comparison;
             resourceInputs["description"] = state?.description;
             resourceInputs["environments"] = state?.environments;
             resourceInputs["metricAggregation"] = state?.metricAggregation;
@@ -161,13 +184,11 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["scopeValue"] = state?.scopeValue;
             resourceInputs["source"] = state?.source;
             resourceInputs["targetPercent"] = state?.targetPercent;
+            resourceInputs["threshold"] = state?.threshold;
             resourceInputs["ticketChannelIds"] = state?.ticketChannelIds;
             resourceInputs["totalQuery"] = state?.totalQuery;
         } else {
             const args = argsOrState as SloArgs | undefined;
-            if (args?.badQuery === undefined && !opts.urn) {
-                throw new Error("Missing required property 'badQuery'");
-            }
             if (args?.projectId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'projectId'");
             }
@@ -184,6 +205,7 @@ export class Slo extends pulumi.CustomResource {
                 throw new Error("Missing required property 'totalQuery'");
             }
             resourceInputs["badQuery"] = args?.badQuery;
+            resourceInputs["comparison"] = args?.comparison;
             resourceInputs["description"] = args?.description;
             resourceInputs["environments"] = args?.environments;
             resourceInputs["metricAggregation"] = args?.metricAggregation;
@@ -195,6 +217,7 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["scopeValue"] = args?.scopeValue;
             resourceInputs["source"] = args?.source;
             resourceInputs["targetPercent"] = args?.targetPercent;
+            resourceInputs["threshold"] = args?.threshold;
             resourceInputs["ticketChannelIds"] = args?.ticketChannelIds;
             resourceInputs["totalQuery"] = args?.totalQuery;
         }
@@ -208,9 +231,13 @@ export class Slo extends pulumi.CustomResource {
  */
 export interface SloState {
     /**
-     * SQL boolean expression selecting the bad events counted by the SLO.
+     * SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
      */
     badQuery?: pulumi.Input<string>;
+    /**
+     * For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+     */
+    comparison?: pulumi.Input<string>;
     /**
      * SLO description.
      */
@@ -220,7 +247,7 @@ export interface SloState {
      */
     environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
      */
     metricAggregation?: pulumi.Input<string>;
     /**
@@ -252,6 +279,10 @@ export interface SloState {
      * Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
      */
     targetPercent?: pulumi.Input<string>;
+    /**
+     * For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+     */
+    threshold?: pulumi.Input<string>;
     ticketChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
@@ -264,9 +295,13 @@ export interface SloState {
  */
 export interface SloArgs {
     /**
-     * SQL boolean expression selecting the bad events counted by the SLO.
+     * SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
      */
-    badQuery: pulumi.Input<string>;
+    badQuery?: pulumi.Input<string>;
+    /**
+     * For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
+     */
+    comparison?: pulumi.Input<string>;
     /**
      * SLO description.
      */
@@ -276,7 +311,7 @@ export interface SloArgs {
      */
     environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), or `counterRate` (sum of per-series increases, for cumulative counters). Ignored when `source = "records"`. Defaults to `additive`.
+     * How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
      */
     metricAggregation?: pulumi.Input<string>;
     /**
@@ -308,6 +343,10 @@ export interface SloArgs {
      * Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
      */
     targetPercent: pulumi.Input<string>;
+    /**
+     * For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
+     */
+    threshold?: pulumi.Input<string>;
     ticketChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.

@@ -16,13 +16,19 @@ var _ = internal.GetEnvOrDefault
 type ChannelConfig struct {
 	// Opsgenie API key.
 	AuthKey *string `pulumi:"authKey"`
+	// Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+	ChannelId *string `pulumi:"channelId"`
 	// Webhook payload format.
 	Format *string `pulumi:"format"`
+	// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+	IncludeAgentPrompt *bool `pulumi:"includeAgentPrompt"`
+	// ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+	InstallId *string `pulumi:"installId"`
 	// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
 	Region *string `pulumi:"region"`
 	// PagerDuty Events API v2 integration routing key.
 	RoutingKey *string `pulumi:"routingKey"`
-	// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+	// Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
 	Type string `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url *string `pulumi:"url"`
@@ -42,13 +48,19 @@ type ChannelConfigInput interface {
 type ChannelConfigArgs struct {
 	// Opsgenie API key.
 	AuthKey pulumi.StringPtrInput `pulumi:"authKey"`
+	// Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+	ChannelId pulumi.StringPtrInput `pulumi:"channelId"`
 	// Webhook payload format.
 	Format pulumi.StringPtrInput `pulumi:"format"`
+	// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+	IncludeAgentPrompt pulumi.BoolPtrInput `pulumi:"includeAgentPrompt"`
+	// ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+	InstallId pulumi.StringPtrInput `pulumi:"installId"`
 	// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
 	Region pulumi.StringPtrInput `pulumi:"region"`
 	// PagerDuty Events API v2 integration routing key.
 	RoutingKey pulumi.StringPtrInput `pulumi:"routingKey"`
-	// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+	// Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
 	Type pulumi.StringInput `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url pulumi.StringPtrInput `pulumi:"url"`
@@ -136,9 +148,24 @@ func (o ChannelConfigOutput) AuthKey() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.AuthKey }).(pulumi.StringPtrOutput)
 }
 
+// Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+func (o ChannelConfigOutput) ChannelId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ChannelConfig) *string { return v.ChannelId }).(pulumi.StringPtrOutput)
+}
+
 // Webhook payload format.
 func (o ChannelConfigOutput) Format() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.Format }).(pulumi.StringPtrOutput)
+}
+
+// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+func (o ChannelConfigOutput) IncludeAgentPrompt() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v ChannelConfig) *bool { return v.IncludeAgentPrompt }).(pulumi.BoolPtrOutput)
+}
+
+// ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+func (o ChannelConfigOutput) InstallId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ChannelConfig) *string { return v.InstallId }).(pulumi.StringPtrOutput)
 }
 
 // PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
@@ -151,7 +178,7 @@ func (o ChannelConfigOutput) RoutingKey() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.RoutingKey }).(pulumi.StringPtrOutput)
 }
 
-// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+// Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
 func (o ChannelConfigOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v ChannelConfig) string { return v.Type }).(pulumi.StringOutput)
 }
@@ -195,6 +222,16 @@ func (o ChannelConfigPtrOutput) AuthKey() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+// Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
+func (o ChannelConfigPtrOutput) ChannelId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ChannelConfig) *string {
+		if v == nil {
+			return nil
+		}
+		return v.ChannelId
+	}).(pulumi.StringPtrOutput)
+}
+
 // Webhook payload format.
 func (o ChannelConfigPtrOutput) Format() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
@@ -202,6 +239,26 @@ func (o ChannelConfigPtrOutput) Format() pulumi.StringPtrOutput {
 			return nil
 		}
 		return v.Format
+	}).(pulumi.StringPtrOutput)
+}
+
+// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+func (o ChannelConfigPtrOutput) IncludeAgentPrompt() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *ChannelConfig) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.IncludeAgentPrompt
+	}).(pulumi.BoolPtrOutput)
+}
+
+// ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+func (o ChannelConfigPtrOutput) InstallId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ChannelConfig) *string {
+		if v == nil {
+			return nil
+		}
+		return v.InstallId
 	}).(pulumi.StringPtrOutput)
 }
 
@@ -225,7 +282,7 @@ func (o ChannelConfigPtrOutput) RoutingKey() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
-// Channel type (`webhook`, `opsgenie`, or `pagerduty`).
+// Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
 func (o ChannelConfigPtrOutput) Type() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
 		if v == nil {
