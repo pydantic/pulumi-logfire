@@ -458,6 +458,223 @@
                 "type": "object"
             }
         },
+        "logfire:index/frontendApplication:FrontendApplication": {
+            "description": "Experimental: the backing management API is currently enabled only in Logfire staging environments. Manages an immutable Logfire frontend application identity and exposes one active restricted browser token. Use \u003cspan pulumi-lang-nodejs=\"`logfire.FrontendApplicationToken`\" pulumi-lang-dotnet=\"`logfire.FrontendApplicationToken`\" pulumi-lang-go=\"`FrontendApplicationToken`\" pulumi-lang-python=\"`FrontendApplicationToken`\" pulumi-lang-yaml=\"`logfire.FrontendApplicationToken`\" pulumi-lang-java=\"`logfire.FrontendApplicationToken`\"\u003e`logfire.FrontendApplicationToken`\u003c/span\u003e for two-phase rotation. Creation is not retried automatically because the operation is not idempotent; after an uncertain failure, list the applications and import the matching identity instead of applying again.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst example = new logfire.Project(\"example\", {});\nconst browser = new logfire.FrontendApplication(\"browser\", {\n    projectId: example.id,\n    serviceNamespace: \"storefront\",\n    environment: \"production\",\n});\nexport const browserWriteToken = browser.token;\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample = logfire.Project(\"example\")\nbrowser = logfire.FrontendApplication(\"browser\",\n    project_id=example.id,\n    service_namespace=\"storefront\",\n    environment=\"production\")\npulumi.export(\"browserWriteToken\", browser.token)\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Logfire.Project(\"example\");\n\n    var browser = new Logfire.FrontendApplication(\"browser\", new()\n    {\n        ProjectId = example.Id,\n        ServiceNamespace = \"storefront\",\n        Environment = \"production\",\n    });\n\n    return new Dictionary\u003cstring, object?\u003e\n    {\n        [\"browserWriteToken\"] = browser.Token,\n    };\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\texample, err := logfire.NewProject(ctx, \"example\", nil)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tbrowser, err := logfire.NewFrontendApplication(ctx, \"browser\", \u0026logfire.FrontendApplicationArgs{\n\t\t\tProjectId:        example.ID(),\n\t\t\tServiceNamespace: pulumi.String(\"storefront\"),\n\t\t\tEnvironment:      pulumi.String(\"production\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tctx.Export(\"browserWriteToken\", browser.Token)\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Project;\nimport com.pulumi.logfire.FrontendApplication;\nimport com.pulumi.logfire.FrontendApplicationArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Project(\"example\");\n\n        var browser = new FrontendApplication(\"browser\", FrontendApplicationArgs.builder()\n            .projectId(example.id())\n            .serviceNamespace(\"storefront\")\n            .environment(\"production\")\n            .build());\n\n        ctx.export(\"browserWriteToken\", browser.token());\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: logfire:Project\n  browser:\n    type: logfire:FrontendApplication\n    properties:\n      projectId: ${example.id}\n      serviceNamespace: storefront\n      environment: production\noutputs:\n  browserWriteToken: ${browser.token}\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\n```sh\n$ pulumi import logfire:index/frontendApplication:FrontendApplication browser \"project-id/application-id\"\n```\n\n",
+            "properties": {
+                "adoptExistingServiceName": {
+                    "type": "boolean",
+                    "description": "Allow creation when telemetry already reports under \u003cspan pulumi-lang-nodejs=\"`name`\" pulumi-lang-dotnet=\"`Name`\" pulumi-lang-go=\"`name`\" pulumi-lang-python=\"`name`\" pulumi-lang-yaml=\"`name`\" pulumi-lang-java=\"`name`\"\u003e`name`\u003c/span\u003e. Set this before replacing \u003cspan pulumi-lang-nodejs=\"`serviceNamespace`\" pulumi-lang-dotnet=\"`ServiceNamespace`\" pulumi-lang-go=\"`serviceNamespace`\" pulumi-lang-python=\"`service_namespace`\" pulumi-lang-yaml=\"`serviceNamespace`\" pulumi-lang-java=\"`serviceNamespace`\"\u003e`service_namespace`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`environment`\" pulumi-lang-dotnet=\"`Environment`\" pulumi-lang-go=\"`environment`\" pulumi-lang-python=\"`environment`\" pulumi-lang-yaml=\"`environment`\" pulumi-lang-java=\"`environment`\"\u003e`environment`\u003c/span\u003e without changing \u003cspan pulumi-lang-nodejs=\"`name`\" pulumi-lang-dotnet=\"`Name`\" pulumi-lang-go=\"`name`\" pulumi-lang-python=\"`name`\" pulumi-lang-yaml=\"`name`\" pulumi-lang-java=\"`name`\"\u003e`name`\u003c/span\u003e.\n"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "description": "Timestamp when the application was created.\n"
+                },
+                "environment": {
+                    "type": "string",
+                    "description": "Immutable value used to overwrite `deployment.environment.name` when set.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Immutable application name. Logfire overwrites `service.name` with this value.\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "UUID of the project that owns the application.\n"
+                },
+                "serviceNamespace": {
+                    "type": "string",
+                    "description": "Immutable value used to overwrite `service.namespace` when set.\n"
+                },
+                "token": {
+                    "type": "string",
+                    "description": "An active restricted browser token. The provider recovers this value on refresh and import.\n",
+                    "secret": true
+                },
+                "tokenId": {
+                    "type": "string",
+                    "description": "Identifier of an active restricted browser token.\n"
+                }
+            },
+            "required": [
+                "createdAt",
+                "name",
+                "projectId",
+                "token",
+                "tokenId"
+            ],
+            "inputProperties": {
+                "adoptExistingServiceName": {
+                    "type": "boolean",
+                    "description": "Allow creation when telemetry already reports under \u003cspan pulumi-lang-nodejs=\"`name`\" pulumi-lang-dotnet=\"`Name`\" pulumi-lang-go=\"`name`\" pulumi-lang-python=\"`name`\" pulumi-lang-yaml=\"`name`\" pulumi-lang-java=\"`name`\"\u003e`name`\u003c/span\u003e. Set this before replacing \u003cspan pulumi-lang-nodejs=\"`serviceNamespace`\" pulumi-lang-dotnet=\"`ServiceNamespace`\" pulumi-lang-go=\"`serviceNamespace`\" pulumi-lang-python=\"`service_namespace`\" pulumi-lang-yaml=\"`serviceNamespace`\" pulumi-lang-java=\"`serviceNamespace`\"\u003e`service_namespace`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`environment`\" pulumi-lang-dotnet=\"`Environment`\" pulumi-lang-go=\"`environment`\" pulumi-lang-python=\"`environment`\" pulumi-lang-yaml=\"`environment`\" pulumi-lang-java=\"`environment`\"\u003e`environment`\u003c/span\u003e without changing \u003cspan pulumi-lang-nodejs=\"`name`\" pulumi-lang-dotnet=\"`Name`\" pulumi-lang-go=\"`name`\" pulumi-lang-python=\"`name`\" pulumi-lang-yaml=\"`name`\" pulumi-lang-java=\"`name`\"\u003e`name`\u003c/span\u003e.\n"
+                },
+                "environment": {
+                    "type": "string",
+                    "description": "Immutable value used to overwrite `deployment.environment.name` when set.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Immutable application name. Logfire overwrites `service.name` with this value.\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "UUID of the project that owns the application.\n"
+                },
+                "serviceNamespace": {
+                    "type": "string",
+                    "description": "Immutable value used to overwrite `service.namespace` when set.\n"
+                }
+            },
+            "requiredInputs": [
+                "projectId"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering FrontendApplication resources.\n",
+                "properties": {
+                    "adoptExistingServiceName": {
+                        "type": "boolean",
+                        "description": "Allow creation when telemetry already reports under \u003cspan pulumi-lang-nodejs=\"`name`\" pulumi-lang-dotnet=\"`Name`\" pulumi-lang-go=\"`name`\" pulumi-lang-python=\"`name`\" pulumi-lang-yaml=\"`name`\" pulumi-lang-java=\"`name`\"\u003e`name`\u003c/span\u003e. Set this before replacing \u003cspan pulumi-lang-nodejs=\"`serviceNamespace`\" pulumi-lang-dotnet=\"`ServiceNamespace`\" pulumi-lang-go=\"`serviceNamespace`\" pulumi-lang-python=\"`service_namespace`\" pulumi-lang-yaml=\"`serviceNamespace`\" pulumi-lang-java=\"`serviceNamespace`\"\u003e`service_namespace`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`environment`\" pulumi-lang-dotnet=\"`Environment`\" pulumi-lang-go=\"`environment`\" pulumi-lang-python=\"`environment`\" pulumi-lang-yaml=\"`environment`\" pulumi-lang-java=\"`environment`\"\u003e`environment`\u003c/span\u003e without changing \u003cspan pulumi-lang-nodejs=\"`name`\" pulumi-lang-dotnet=\"`Name`\" pulumi-lang-go=\"`name`\" pulumi-lang-python=\"`name`\" pulumi-lang-yaml=\"`name`\" pulumi-lang-java=\"`name`\"\u003e`name`\u003c/span\u003e.\n"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "Timestamp when the application was created.\n"
+                    },
+                    "environment": {
+                        "type": "string",
+                        "description": "Immutable value used to overwrite `deployment.environment.name` when set.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Immutable application name. Logfire overwrites `service.name` with this value.\n"
+                    },
+                    "projectId": {
+                        "type": "string",
+                        "description": "UUID of the project that owns the application.\n"
+                    },
+                    "serviceNamespace": {
+                        "type": "string",
+                        "description": "Immutable value used to overwrite `service.namespace` when set.\n"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "An active restricted browser token. The provider recovers this value on refresh and import.\n",
+                        "secret": true
+                    },
+                    "tokenId": {
+                        "type": "string",
+                        "description": "Identifier of an active restricted browser token.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "logfire:index/frontendApplicationToken:FrontendApplicationToken": {
+            "description": "Experimental: the backing management API is currently enabled only in Logfire staging environments. Manages one active token for a Logfire frontend application. Rotate in two applies with two resource blocks: add the replacement and deploy its \u003cspan pulumi-lang-nodejs=\"`token`\" pulumi-lang-dotnet=\"`Token`\" pulumi-lang-go=\"`token`\" pulumi-lang-python=\"`token`\" pulumi-lang-yaml=\"`token`\" pulumi-lang-java=\"`token`\"\u003e`token`\u003c/span\u003e, then remove the old resource to revoke it. The provider never revokes an old token while creating a new one. Token issuance is not retried automatically because the operation is not idempotent; after an uncertain failure, list the application's tokens and adopt the one unambiguous new active token. Before destroying the whole application tree, set the last token's \u003cspan pulumi-lang-nodejs=\"`revokeOnDestroy`\" pulumi-lang-dotnet=\"`RevokeOnDestroy`\" pulumi-lang-go=\"`revokeOnDestroy`\" pulumi-lang-python=\"`revoke_on_destroy`\" pulumi-lang-yaml=\"`revokeOnDestroy`\" pulumi-lang-java=\"`revokeOnDestroy`\"\u003e`revoke_on_destroy`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\"\u003e`false`\u003c/span\u003e in a separate apply; application deletion then revokes every attached token.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst current = new logfire.FrontendApplicationToken(\"current\", {\n    projectId: logfire_frontend_application.browser.project_id,\n    applicationId: logfire_frontend_application.browser.id,\n    adoptTokenId: logfire_frontend_application.browser.token_id,\n});\n// First apply with both resources. Deploy the replacement output everywhere.\n// Then remove `current` and apply again to revoke the previous token.\nconst replacement = new logfire.FrontendApplicationToken(\"replacement\", {\n    projectId: logfire_frontend_application.browser.project_id,\n    applicationId: logfire_frontend_application.browser.id,\n    revokeOnDestroy: true,\n});\nexport const rotatedBrowserWriteToken = replacement.token;\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\ncurrent = logfire.FrontendApplicationToken(\"current\",\n    project_id=logfire_frontend_application[\"browser\"][\"project_id\"],\n    application_id=logfire_frontend_application[\"browser\"][\"id\"],\n    adopt_token_id=logfire_frontend_application[\"browser\"][\"token_id\"])\n# First apply with both resources. Deploy the replacement output everywhere.\n# Then remove `current` and apply again to revoke the previous token.\nreplacement = logfire.FrontendApplicationToken(\"replacement\",\n    project_id=logfire_frontend_application[\"browser\"][\"project_id\"],\n    application_id=logfire_frontend_application[\"browser\"][\"id\"],\n    revoke_on_destroy=True)\npulumi.export(\"rotatedBrowserWriteToken\", replacement.token)\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var current = new Logfire.FrontendApplicationToken(\"current\", new()\n    {\n        ProjectId = logfire_frontend_application.Browser.Project_id,\n        ApplicationId = logfire_frontend_application.Browser.Id,\n        AdoptTokenId = logfire_frontend_application.Browser.Token_id,\n    });\n\n    // First apply with both resources. Deploy the replacement output everywhere.\n    // Then remove `current` and apply again to revoke the previous token.\n    var replacement = new Logfire.FrontendApplicationToken(\"replacement\", new()\n    {\n        ProjectId = logfire_frontend_application.Browser.Project_id,\n        ApplicationId = logfire_frontend_application.Browser.Id,\n        RevokeOnDestroy = true,\n    });\n\n    return new Dictionary\u003cstring, object?\u003e\n    {\n        [\"rotatedBrowserWriteToken\"] = replacement.Token,\n    };\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewFrontendApplicationToken(ctx, \"current\", \u0026logfire.FrontendApplicationTokenArgs{\n\t\t\tProjectId:     pulumi.Any(logfire_frontend_application.Browser.Project_id),\n\t\t\tApplicationId: pulumi.Any(logfire_frontend_application.Browser.Id),\n\t\t\tAdoptTokenId:  pulumi.Any(logfire_frontend_application.Browser.Token_id),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\t// First apply with both resources. Deploy the replacement output everywhere.\n\t\t// Then remove `current` and apply again to revoke the previous token.\n\t\treplacement, err := logfire.NewFrontendApplicationToken(ctx, \"replacement\", \u0026logfire.FrontendApplicationTokenArgs{\n\t\t\tProjectId:       pulumi.Any(logfire_frontend_application.Browser.Project_id),\n\t\t\tApplicationId:   pulumi.Any(logfire_frontend_application.Browser.Id),\n\t\t\tRevokeOnDestroy: pulumi.Bool(true),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tctx.Export(\"rotatedBrowserWriteToken\", replacement.Token)\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.FrontendApplicationToken;\nimport com.pulumi.logfire.FrontendApplicationTokenArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var current = new FrontendApplicationToken(\"current\", FrontendApplicationTokenArgs.builder()\n            .projectId(logfire_frontend_application.browser().project_id())\n            .applicationId(logfire_frontend_application.browser().id())\n            .adoptTokenId(logfire_frontend_application.browser().token_id())\n            .build());\n\n        // First apply with both resources. Deploy the replacement output everywhere.\n        // Then remove `current` and apply again to revoke the previous token.\n        var replacement = new FrontendApplicationToken(\"replacement\", FrontendApplicationTokenArgs.builder()\n            .projectId(logfire_frontend_application.browser().project_id())\n            .applicationId(logfire_frontend_application.browser().id())\n            .revokeOnDestroy(true)\n            .build());\n\n        ctx.export(\"rotatedBrowserWriteToken\", replacement.token());\n    }\n}\n```\n```yaml\nresources:\n  current:\n    type: logfire:FrontendApplicationToken\n    properties:\n      projectId: ${logfire_frontend_application.browser.project_id}\n      applicationId: ${logfire_frontend_application.browser.id}\n      adoptTokenId: ${logfire_frontend_application.browser.token_id}\n  # First apply with both resources. Deploy the replacement output everywhere.\n  # Then remove `current` and apply again to revoke the previous token.\n  replacement:\n    type: logfire:FrontendApplicationToken\n    properties:\n      projectId: ${logfire_frontend_application.browser.project_id}\n      applicationId: ${logfire_frontend_application.browser.id}\n      # Before destroying the whole application tree, set this to false and apply.\n      #   # The following destroy can then let application deletion revoke this last token.\n      revokeOnDestroy: true\noutputs:\n  rotatedBrowserWriteToken: ${replacement.token}\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\n```sh\n$ pulumi import logfire:index/frontendApplicationToken:FrontendApplicationToken current \"project-id/application-id/token-id\"\n```\n\n",
+            "properties": {
+                "adoptTokenId": {
+                    "type": "string",
+                    "description": "Existing active token to adopt instead of issuing another. Use the application's \u003cspan pulumi-lang-nodejs=\"`tokenId`\" pulumi-lang-dotnet=\"`TokenId`\" pulumi-lang-go=\"`tokenId`\" pulumi-lang-python=\"`token_id`\" pulumi-lang-yaml=\"`tokenId`\" pulumi-lang-java=\"`tokenId`\"\u003e`token_id`\u003c/span\u003e for the initial handoff, then remove this resource only after a separately managed replacement has been deployed.\n"
+                },
+                "applicationId": {
+                    "type": "string",
+                    "description": "UUID of the frontend application.\n"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "description": "Timestamp when the token was created.\n"
+                },
+                "lastUsedAt": {
+                    "type": "string",
+                    "description": "Timestamp when the token was last used, when known.\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "UUID of the project that owns the application.\n"
+                },
+                "revokeOnDestroy": {
+                    "type": "boolean",
+                    "description": "Revoke this token when its resource is destroyed. Before destroying the entire application tree, set this to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\"\u003e`false`\u003c/span\u003e in a separate apply for the last token so application deletion can revoke all attached tokens.\n"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Token status. A managed token remains in state only while active.\n"
+                },
+                "token": {
+                    "type": "string",
+                    "description": "Active restricted browser token. The provider recovers this value on refresh and import.\n",
+                    "secret": true
+                }
+            },
+            "required": [
+                "applicationId",
+                "createdAt",
+                "lastUsedAt",
+                "projectId",
+                "revokeOnDestroy",
+                "status",
+                "token"
+            ],
+            "inputProperties": {
+                "adoptTokenId": {
+                    "type": "string",
+                    "description": "Existing active token to adopt instead of issuing another. Use the application's \u003cspan pulumi-lang-nodejs=\"`tokenId`\" pulumi-lang-dotnet=\"`TokenId`\" pulumi-lang-go=\"`tokenId`\" pulumi-lang-python=\"`token_id`\" pulumi-lang-yaml=\"`tokenId`\" pulumi-lang-java=\"`tokenId`\"\u003e`token_id`\u003c/span\u003e for the initial handoff, then remove this resource only after a separately managed replacement has been deployed.\n"
+                },
+                "applicationId": {
+                    "type": "string",
+                    "description": "UUID of the frontend application.\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "UUID of the project that owns the application.\n"
+                },
+                "revokeOnDestroy": {
+                    "type": "boolean",
+                    "description": "Revoke this token when its resource is destroyed. Before destroying the entire application tree, set this to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\"\u003e`false`\u003c/span\u003e in a separate apply for the last token so application deletion can revoke all attached tokens.\n"
+                }
+            },
+            "requiredInputs": [
+                "applicationId",
+                "projectId"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering FrontendApplicationToken resources.\n",
+                "properties": {
+                    "adoptTokenId": {
+                        "type": "string",
+                        "description": "Existing active token to adopt instead of issuing another. Use the application's \u003cspan pulumi-lang-nodejs=\"`tokenId`\" pulumi-lang-dotnet=\"`TokenId`\" pulumi-lang-go=\"`tokenId`\" pulumi-lang-python=\"`token_id`\" pulumi-lang-yaml=\"`tokenId`\" pulumi-lang-java=\"`tokenId`\"\u003e`token_id`\u003c/span\u003e for the initial handoff, then remove this resource only after a separately managed replacement has been deployed.\n"
+                    },
+                    "applicationId": {
+                        "type": "string",
+                        "description": "UUID of the frontend application.\n"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "Timestamp when the token was created.\n"
+                    },
+                    "lastUsedAt": {
+                        "type": "string",
+                        "description": "Timestamp when the token was last used, when known.\n"
+                    },
+                    "projectId": {
+                        "type": "string",
+                        "description": "UUID of the project that owns the application.\n"
+                    },
+                    "revokeOnDestroy": {
+                        "type": "boolean",
+                        "description": "Revoke this token when its resource is destroyed. Before destroying the entire application tree, set this to \u003cspan pulumi-lang-nodejs=\"`false`\" pulumi-lang-dotnet=\"`False`\" pulumi-lang-go=\"`false`\" pulumi-lang-python=\"`false`\" pulumi-lang-yaml=\"`false`\" pulumi-lang-java=\"`false`\"\u003e`false`\u003c/span\u003e in a separate apply for the last token so application deletion can revoke all attached tokens.\n"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Token status. A managed token remains in state only while active.\n"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "Active restricted browser token. The provider recovers this value on refresh and import.\n",
+                        "secret": true
+                    }
+                },
+                "type": "object"
+            }
+        },
         "logfire:index/organization:Organization": {
             "description": "Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key with a special organization scope.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst example = new logfire.Organization(\"example\", {\n    deletionProtection: false,\n    displayName: \"Terraform Example Org\",\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample = logfire.Organization(\"example\",\n    deletion_protection=False,\n    display_name=\"Terraform Example Org\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Logfire.Organization(\"example\", new()\n    {\n        DeletionProtection = false,\n        DisplayName = \"Terraform Example Org\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewOrganization(ctx, \"example\", \u0026logfire.OrganizationArgs{\n\t\t\tDeletionProtection: pulumi.Bool(false),\n\t\t\tDisplayName:        pulumi.String(\"Terraform Example Org\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Organization;\nimport com.pulumi.logfire.OrganizationArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Organization(\"example\", OrganizationArgs.builder()\n            .deletionProtection(false)\n            .displayName(\"Terraform Example Org\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: logfire:Organization\n    properties:\n      # This defaults to true. Set false to allow destroy.\n      deletionProtection: false\n      displayName: Terraform Example Org\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
             "properties": {

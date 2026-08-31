@@ -18,6 +18,12 @@
             "logfire_dashboard": {
                 "current": "logfire:index/dashboard:Dashboard"
             },
+            "logfire_frontend_application": {
+                "current": "logfire:index/frontendApplication:FrontendApplication"
+            },
+            "logfire_frontend_application_token": {
+                "current": "logfire:index/frontendApplicationToken:FrontendApplicationToken"
+            },
             "logfire_organization": {
                 "current": "logfire:index/organization:Organization"
             },
