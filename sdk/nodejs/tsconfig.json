@@ -18,6 +18,8 @@
         "config/index.ts",
         "config/vars.ts",
         "dashboard.ts",
+        "frontendApplication.ts",
+        "frontendApplicationToken.ts",
         "index.ts",
         "organization.ts",
         "project.ts",

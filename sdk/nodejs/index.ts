@@ -20,6 +20,16 @@ export type Dashboard = import("./dashboard").Dashboard;
 export const Dashboard: typeof import("./dashboard").Dashboard = null as any;
 utilities.lazyLoad(exports, ["Dashboard"], () => require("./dashboard"));
 
+export { FrontendApplicationArgs, FrontendApplicationState } from "./frontendApplication";
+export type FrontendApplication = import("./frontendApplication").FrontendApplication;
+export const FrontendApplication: typeof import("./frontendApplication").FrontendApplication = null as any;
+utilities.lazyLoad(exports, ["FrontendApplication"], () => require("./frontendApplication"));
+
+export { FrontendApplicationTokenArgs, FrontendApplicationTokenState } from "./frontendApplicationToken";
+export type FrontendApplicationToken = import("./frontendApplicationToken").FrontendApplicationToken;
+export const FrontendApplicationToken: typeof import("./frontendApplicationToken").FrontendApplicationToken = null as any;
+utilities.lazyLoad(exports, ["FrontendApplicationToken"], () => require("./frontendApplicationToken"));
+
 export { OrganizationArgs, OrganizationState } from "./organization";
 export type Organization = import("./organization").Organization;
 export const Organization: typeof import("./organization").Organization = null as any;
@@ -68,6 +78,10 @@ const _module = {
                 return new Channel(name, <any>undefined, { urn })
             case "logfire:index/dashboard:Dashboard":
                 return new Dashboard(name, <any>undefined, { urn })
+            case "logfire:index/frontendApplication:FrontendApplication":
+                return new FrontendApplication(name, <any>undefined, { urn })
+            case "logfire:index/frontendApplicationToken:FrontendApplicationToken":
+                return new FrontendApplicationToken(name, <any>undefined, { urn })
             case "logfire:index/organization:Organization":
                 return new Organization(name, <any>undefined, { urn })
             case "logfire:index/project:Project":
@@ -86,6 +100,8 @@ const _module = {
 pulumi.runtime.registerResourceModule("logfire", "index/alert", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/channel", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/dashboard", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/frontendApplication", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/frontendApplicationToken", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)

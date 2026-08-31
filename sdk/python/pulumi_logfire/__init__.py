@@ -9,6 +9,8 @@ import typing
 from .alert import *
 from .channel import *
 from .dashboard import *
+from .frontend_application import *
+from .frontend_application_token import *
 from .organization import *
 from .project import *
 from .provider import *
@@ -50,6 +52,22 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/dashboard:Dashboard": "Dashboard"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/frontendApplication",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/frontendApplication:FrontendApplication": "FrontendApplication"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/frontendApplicationToken",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/frontendApplicationToken:FrontendApplicationToken": "FrontendApplicationToken"
   }
  },
  {
