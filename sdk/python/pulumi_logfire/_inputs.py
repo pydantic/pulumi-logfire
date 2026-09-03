@@ -25,7 +25,7 @@ if not MYPY:
     class ChannelConfigArgsDict(TypedDict):
         type: pulumi.Input[_builtins.str]
         """
-        Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
+        Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         """
         auth_key: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -45,15 +45,19 @@ if not MYPY:
         """
         install_id: NotRequired[pulumi.Input[_builtins.str]]
         """
-        ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+        ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
         """
         region: NotRequired[pulumi.Input[_builtins.str]]
         """
-        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
         """
         routing_key: NotRequired[pulumi.Input[_builtins.str]]
         """
-        PagerDuty Events API v2 integration routing key.
+        PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
+        """
+        service_id: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
         """
         url: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -73,16 +77,18 @@ class ChannelConfigArgs:
                  install_id: Optional[pulumi.Input[_builtins.str]] = None,
                  region: Optional[pulumi.Input[_builtins.str]] = None,
                  routing_key: Optional[pulumi.Input[_builtins.str]] = None,
+                 service_id: Optional[pulumi.Input[_builtins.str]] = None,
                  url: Optional[pulumi.Input[_builtins.str]] = None):
         """
-        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
+        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         :param pulumi.Input[_builtins.str] auth_key: Opsgenie API key.
         :param pulumi.Input[_builtins.str] channel_id: Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
         :param pulumi.Input[_builtins.str] format: Webhook payload format.
         :param pulumi.Input[_builtins.bool] include_agent_prompt: Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
-        :param pulumi.Input[_builtins.str] install_id: ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
-        :param pulumi.Input[_builtins.str] region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
-        :param pulumi.Input[_builtins.str] routing_key: PagerDuty Events API v2 integration routing key.
+        :param pulumi.Input[_builtins.str] install_id: ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
+        :param pulumi.Input[_builtins.str] region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
+        :param pulumi.Input[_builtins.str] routing_key: PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
+        :param pulumi.Input[_builtins.str] service_id: Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
         :param pulumi.Input[_builtins.str] url: Webhook URL endpoint.
         """
         pulumi.set(__self__, "type", type)
@@ -100,6 +106,8 @@ class ChannelConfigArgs:
             pulumi.set(__self__, "region", region)
         if routing_key is not None:
             pulumi.set(__self__, "routing_key", routing_key)
+        if service_id is not None:
+            pulumi.set(__self__, "service_id", service_id)
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -107,7 +115,7 @@ class ChannelConfigArgs:
     @pulumi.getter
     def type(self) -> pulumi.Input[_builtins.str]:
         """
-        Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
+        Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         """
         return pulumi.get(self, "type")
 
@@ -167,7 +175,7 @@ class ChannelConfigArgs:
     @pulumi.getter(name="installId")
     def install_id(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+        ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
         """
         return pulumi.get(self, "install_id")
 
@@ -179,7 +187,7 @@ class ChannelConfigArgs:
     @pulumi.getter
     def region(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
         """
         return pulumi.get(self, "region")
 
@@ -191,13 +199,25 @@ class ChannelConfigArgs:
     @pulumi.getter(name="routingKey")
     def routing_key(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        PagerDuty Events API v2 integration routing key.
+        PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
         """
         return pulumi.get(self, "routing_key")
 
     @routing_key.setter
     def routing_key(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "routing_key", value)
+
+    @_builtins.property
+    @pulumi.getter(name="serviceId")
+    def service_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
+        """
+        return pulumi.get(self, "service_id")
+
+    @service_id.setter
+    def service_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "service_id", value)
 
     @_builtins.property
     @pulumi.getter

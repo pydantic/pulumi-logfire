@@ -23,19 +23,23 @@ export interface ChannelConfig {
      */
     includeAgentPrompt?: pulumi.Input<boolean>;
     /**
-     * ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+     * ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
      */
     installId?: pulumi.Input<string>;
     /**
-     * PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+     * PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
      */
     region?: pulumi.Input<string>;
     /**
-     * PagerDuty Events API v2 integration routing key.
+     * PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
      */
     routingKey?: pulumi.Input<string>;
     /**
-     * Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
+     * Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
+     */
+    serviceId?: pulumi.Input<string>;
+    /**
+     * Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
      */
     type: pulumi.Input<string>;
     /**

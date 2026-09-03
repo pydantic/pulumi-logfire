@@ -20,6 +20,7 @@
         "dashboard.ts",
         "frontendApplication.ts",
         "frontendApplicationToken.ts",
+        "getPagerdutyService.ts",
         "index.ts",
         "organization.ts",
         "project.ts",

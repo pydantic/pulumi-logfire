@@ -30,6 +30,11 @@ export type FrontendApplicationToken = import("./frontendApplicationToken").Fron
 export const FrontendApplicationToken: typeof import("./frontendApplicationToken").FrontendApplicationToken = null as any;
 utilities.lazyLoad(exports, ["FrontendApplicationToken"], () => require("./frontendApplicationToken"));
 
+export { GetPagerdutyServiceArgs, GetPagerdutyServiceResult, GetPagerdutyServiceOutputArgs } from "./getPagerdutyService";
+export const getPagerdutyService: typeof import("./getPagerdutyService").getPagerdutyService = null as any;
+export const getPagerdutyServiceOutput: typeof import("./getPagerdutyService").getPagerdutyServiceOutput = null as any;
+utilities.lazyLoad(exports, ["getPagerdutyService","getPagerdutyServiceOutput"], () => require("./getPagerdutyService"));
+
 export { OrganizationArgs, OrganizationState } from "./organization";
 export type Organization = import("./organization").Organization;
 export const Organization: typeof import("./organization").Organization = null as any;

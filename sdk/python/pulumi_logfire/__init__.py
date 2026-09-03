@@ -11,6 +11,7 @@ from .channel import *
 from .dashboard import *
 from .frontend_application import *
 from .frontend_application_token import *
+from .get_pagerduty_service import *
 from .organization import *
 from .project import *
 from .provider import *

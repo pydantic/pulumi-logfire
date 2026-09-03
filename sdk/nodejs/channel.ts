@@ -41,6 +41,19 @@ import * as utilities from "./utilities";
  *         channelId: "C0123456789",
  *     }],
  * });
+ * const onCall = logfire.getPagerdutyService({
+ *     accountSubdomain: "acme",
+ *     region: "us",
+ *     pagerdutyServiceId: "PABC123",
+ * });
+ * const pagerdutyApp = new logfire.Channel("pagerdutyApp", {
+ *     active: true,
+ *     config: [{
+ *         type: "pagerduty-integration",
+ *         installId: onCall.then(onCall => onCall.installId),
+ *         serviceId: onCall.then(onCall => onCall.serviceId),
+ *     }],
+ * });
  * ```
  */
 export class Channel extends pulumi.CustomResource {
