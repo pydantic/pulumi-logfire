@@ -50,6 +50,11 @@
             "logfire_write_token": {
                 "current": "logfire:index/writeToken:WriteToken"
             }
+        },
+        "datasources": {
+            "logfire_pagerduty_service": {
+                "current": "logfire:index/getPagerdutyService:getPagerdutyService"
+            }
         }
     },
     "auto-settings": {}

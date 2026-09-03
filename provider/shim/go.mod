@@ -4,7 +4,7 @@ go 1.25.8
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.19.0
-	github.com/pydantic/terraform-provider-logfire v0.1.16
+	github.com/pydantic/terraform-provider-logfire v0.1.17
 )
 
 require (

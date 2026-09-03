@@ -12,7 +12,7 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/hashicorp/terraform-plugin-framework v1.19.0 // indirect
-	github.com/pydantic/terraform-provider-logfire v0.1.16 // indirect
+	github.com/pydantic/terraform-provider-logfire v0.1.17 // indirect
 )
 
 require (
