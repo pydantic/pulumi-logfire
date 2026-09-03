@@ -69,6 +69,27 @@ import (
 //			if err != nil {
 //				return err
 //			}
+//			onCall, err := logfire.GetPagerdutyService(ctx, &logfire.GetPagerdutyServiceArgs{
+//				AccountSubdomain:   "acme",
+//				Region:             pulumi.StringRef("us"),
+//				PagerdutyServiceId: "PABC123",
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewChannel(ctx, "pagerdutyApp", &logfire.ChannelArgs{
+//				Active: pulumi.Bool(true),
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":      "pagerduty-integration",
+//						"installId": onCall.InstallId,
+//						"serviceId": onCall.ServiceId,
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
 //			return nil
 //		})
 //	}

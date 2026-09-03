@@ -172,6 +172,16 @@ class Channel(pulumi.CustomResource):
                 "installId": "018f9a6a-1234-7890-abcd-ef0123456789",
                 "channelId": "C0123456789",
             }])
+        on_call = logfire.get_pagerduty_service(account_subdomain="acme",
+            region="us",
+            pagerduty_service_id="PABC123")
+        pagerduty_app = logfire.Channel("pagerdutyApp",
+            active=True,
+            config=[{
+                "type": "pagerduty-integration",
+                "installId": on_call.install_id,
+                "serviceId": on_call.service_id,
+            }])
         ```
 
         :param str resource_name: The name of the resource.
@@ -217,6 +227,16 @@ class Channel(pulumi.CustomResource):
                 "type": "slack-integration",
                 "installId": "018f9a6a-1234-7890-abcd-ef0123456789",
                 "channelId": "C0123456789",
+            }])
+        on_call = logfire.get_pagerduty_service(account_subdomain="acme",
+            region="us",
+            pagerduty_service_id="PABC123")
+        pagerduty_app = logfire.Channel("pagerdutyApp",
+            active=True,
+            config=[{
+                "type": "pagerduty-integration",
+                "installId": on_call.install_id,
+                "serviceId": on_call.service_id,
             }])
         ```
 

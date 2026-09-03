@@ -33,6 +33,8 @@ class ChannelConfig(dict):
             suggest = "install_id"
         elif key == "routingKey":
             suggest = "routing_key"
+        elif key == "serviceId":
+            suggest = "service_id"
 
         if suggest:
             pulumi.log.warn(f"Key '{key}' not found in ChannelConfig. Access the value via the '{suggest}' property getter instead.")
@@ -54,16 +56,18 @@ class ChannelConfig(dict):
                  install_id: Optional[_builtins.str] = None,
                  region: Optional[_builtins.str] = None,
                  routing_key: Optional[_builtins.str] = None,
+                 service_id: Optional[_builtins.str] = None,
                  url: Optional[_builtins.str] = None):
         """
-        :param _builtins.str type: Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
+        :param _builtins.str type: Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         :param _builtins.str auth_key: Opsgenie API key.
         :param _builtins.str channel_id: Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
         :param _builtins.str format: Webhook payload format.
         :param _builtins.bool include_agent_prompt: Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
-        :param _builtins.str install_id: ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
-        :param _builtins.str region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
-        :param _builtins.str routing_key: PagerDuty Events API v2 integration routing key.
+        :param _builtins.str install_id: ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
+        :param _builtins.str region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
+        :param _builtins.str routing_key: PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
+        :param _builtins.str service_id: Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
         :param _builtins.str url: Webhook URL endpoint.
         """
         pulumi.set(__self__, "type", type)
@@ -81,6 +85,8 @@ class ChannelConfig(dict):
             pulumi.set(__self__, "region", region)
         if routing_key is not None:
             pulumi.set(__self__, "routing_key", routing_key)
+        if service_id is not None:
+            pulumi.set(__self__, "service_id", service_id)
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -88,7 +94,7 @@ class ChannelConfig(dict):
     @pulumi.getter
     def type(self) -> _builtins.str:
         """
-        Channel type (`webhook`, `opsgenie`, `pagerduty`, or `slack-integration`).
+        Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         """
         return pulumi.get(self, "type")
 
@@ -128,7 +134,7 @@ class ChannelConfig(dict):
     @pulumi.getter(name="installId")
     def install_id(self) -> Optional[_builtins.str]:
         """
-        ID of the organization's Slack App installation, created by connecting Slack in the Logfire UI (Organization Settings > Integrations). The installation must belong to the same organization and be active.
+        ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
         """
         return pulumi.get(self, "install_id")
 
@@ -136,7 +142,7 @@ class ChannelConfig(dict):
     @pulumi.getter
     def region(self) -> Optional[_builtins.str]:
         """
-        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint.
+        PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
         """
         return pulumi.get(self, "region")
 
@@ -144,9 +150,17 @@ class ChannelConfig(dict):
     @pulumi.getter(name="routingKey")
     def routing_key(self) -> Optional[_builtins.str]:
         """
-        PagerDuty Events API v2 integration routing key.
+        PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
         """
         return pulumi.get(self, "routing_key")
+
+    @_builtins.property
+    @pulumi.getter(name="serviceId")
+    def service_id(self) -> Optional[_builtins.str]:
+        """
+        Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
+        """
+        return pulumi.get(self, "service_id")
 
     @_builtins.property
     @pulumi.getter
