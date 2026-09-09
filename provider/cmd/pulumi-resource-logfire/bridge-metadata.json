@@ -12,6 +12,14 @@
                     }
                 }
             },
+            "logfire_api_key": {
+                "current": "logfire:index/apiKey:ApiKey",
+                "fields": {
+                    "scopes": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
             "logfire_channel": {
                 "current": "logfire:index/channel:Channel"
             },
@@ -23,6 +31,9 @@
             },
             "logfire_frontend_application_token": {
                 "current": "logfire:index/frontendApplicationToken:FrontendApplicationToken"
+            },
+            "logfire_gateway_api_key": {
+                "current": "logfire:index/gatewayApiKey:GatewayApiKey"
             },
             "logfire_gateway_provider": {
                 "current": "logfire:index/gatewayProvider:GatewayProvider"
