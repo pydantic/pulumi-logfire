@@ -7,10 +7,12 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .alert import *
+from .api_key import *
 from .channel import *
 from .dashboard import *
 from .frontend_application import *
 from .frontend_application_token import *
+from .gateway_api_key import *
 from .gateway_provider import *
 from .get_pagerduty_service import *
 from .organization import *
@@ -38,6 +40,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/alert:Alert": "Alert"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/apiKey",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/apiKey:ApiKey": "ApiKey"
   }
  },
  {
@@ -70,6 +80,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/frontendApplicationToken:FrontendApplicationToken": "FrontendApplicationToken"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/gatewayApiKey",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/gatewayApiKey:GatewayApiKey": "GatewayApiKey"
   }
  },
  {

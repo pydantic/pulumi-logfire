@@ -12,7 +12,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
-// Manages a Logfire write token.
+// Manages a Logfire write token. Equivalent to ApiKey with scopes `["project:write_otlp"]`.
 //
 // ## Example Usage
 //

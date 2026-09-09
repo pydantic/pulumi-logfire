@@ -10,6 +10,11 @@ export type Alert = import("./alert").Alert;
 export const Alert: typeof import("./alert").Alert = null as any;
 utilities.lazyLoad(exports, ["Alert"], () => require("./alert"));
 
+export { ApiKeyArgs, ApiKeyState } from "./apiKey";
+export type ApiKey = import("./apiKey").ApiKey;
+export const ApiKey: typeof import("./apiKey").ApiKey = null as any;
+utilities.lazyLoad(exports, ["ApiKey"], () => require("./apiKey"));
+
 export { ChannelArgs, ChannelState } from "./channel";
 export type Channel = import("./channel").Channel;
 export const Channel: typeof import("./channel").Channel = null as any;
@@ -29,6 +34,11 @@ export { FrontendApplicationTokenArgs, FrontendApplicationTokenState } from "./f
 export type FrontendApplicationToken = import("./frontendApplicationToken").FrontendApplicationToken;
 export const FrontendApplicationToken: typeof import("./frontendApplicationToken").FrontendApplicationToken = null as any;
 utilities.lazyLoad(exports, ["FrontendApplicationToken"], () => require("./frontendApplicationToken"));
+
+export { GatewayApiKeyArgs, GatewayApiKeyState } from "./gatewayApiKey";
+export type GatewayApiKey = import("./gatewayApiKey").GatewayApiKey;
+export const GatewayApiKey: typeof import("./gatewayApiKey").GatewayApiKey = null as any;
+utilities.lazyLoad(exports, ["GatewayApiKey"], () => require("./gatewayApiKey"));
 
 export { GatewayProviderArgs, GatewayProviderState } from "./gatewayProvider";
 export type GatewayProvider = import("./gatewayProvider").GatewayProvider;
@@ -84,6 +94,8 @@ const _module = {
         switch (type) {
             case "logfire:index/alert:Alert":
                 return new Alert(name, <any>undefined, { urn })
+            case "logfire:index/apiKey:ApiKey":
+                return new ApiKey(name, <any>undefined, { urn })
             case "logfire:index/channel:Channel":
                 return new Channel(name, <any>undefined, { urn })
             case "logfire:index/dashboard:Dashboard":
@@ -92,6 +104,8 @@ const _module = {
                 return new FrontendApplication(name, <any>undefined, { urn })
             case "logfire:index/frontendApplicationToken:FrontendApplicationToken":
                 return new FrontendApplicationToken(name, <any>undefined, { urn })
+            case "logfire:index/gatewayApiKey:GatewayApiKey":
+                return new GatewayApiKey(name, <any>undefined, { urn })
             case "logfire:index/gatewayProvider:GatewayProvider":
                 return new GatewayProvider(name, <any>undefined, { urn })
             case "logfire:index/organization:Organization":
@@ -110,10 +124,12 @@ const _module = {
     },
 };
 pulumi.runtime.registerResourceModule("logfire", "index/alert", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/apiKey", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/channel", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/dashboard", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/frontendApplication", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/frontendApplicationToken", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/gatewayApiKey", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/gatewayProvider", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)

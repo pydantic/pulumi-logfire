@@ -12,7 +12,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
-// Manages a Logfire read token.
+// Manages a Logfire read token. Equivalent to ApiKey with scopes `["project:read_otlp"]`.
 //
 // ## Example Usage
 //
