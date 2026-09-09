@@ -30,6 +30,11 @@ export type FrontendApplicationToken = import("./frontendApplicationToken").Fron
 export const FrontendApplicationToken: typeof import("./frontendApplicationToken").FrontendApplicationToken = null as any;
 utilities.lazyLoad(exports, ["FrontendApplicationToken"], () => require("./frontendApplicationToken"));
 
+export { GatewayProviderArgs, GatewayProviderState } from "./gatewayProvider";
+export type GatewayProvider = import("./gatewayProvider").GatewayProvider;
+export const GatewayProvider: typeof import("./gatewayProvider").GatewayProvider = null as any;
+utilities.lazyLoad(exports, ["GatewayProvider"], () => require("./gatewayProvider"));
+
 export { GetPagerdutyServiceArgs, GetPagerdutyServiceResult, GetPagerdutyServiceOutputArgs } from "./getPagerdutyService";
 export const getPagerdutyService: typeof import("./getPagerdutyService").getPagerdutyService = null as any;
 export const getPagerdutyServiceOutput: typeof import("./getPagerdutyService").getPagerdutyServiceOutput = null as any;
@@ -87,6 +92,8 @@ const _module = {
                 return new FrontendApplication(name, <any>undefined, { urn })
             case "logfire:index/frontendApplicationToken:FrontendApplicationToken":
                 return new FrontendApplicationToken(name, <any>undefined, { urn })
+            case "logfire:index/gatewayProvider:GatewayProvider":
+                return new GatewayProvider(name, <any>undefined, { urn })
             case "logfire:index/organization:Organization":
                 return new Organization(name, <any>undefined, { urn })
             case "logfire:index/project:Project":
@@ -107,6 +114,7 @@ pulumi.runtime.registerResourceModule("logfire", "index/channel", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/dashboard", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/frontendApplication", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/frontendApplicationToken", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/gatewayProvider", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)
