@@ -11,6 +11,7 @@ from .channel import *
 from .dashboard import *
 from .frontend_application import *
 from .frontend_application_token import *
+from .gateway_provider import *
 from .get_pagerduty_service import *
 from .organization import *
 from .project import *
@@ -69,6 +70,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/frontendApplicationToken:FrontendApplicationToken": "FrontendApplicationToken"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/gatewayProvider",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/gatewayProvider:GatewayProvider": "GatewayProvider"
   }
  },
  {
