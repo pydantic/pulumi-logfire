@@ -15,11 +15,125 @@ else:
 from . import _utilities
 
 __all__ = [
+    'ApiKeyGatewayArgs',
+    'ApiKeyGatewayArgsDict',
     'ChannelConfigArgs',
     'ChannelConfigArgsDict',
 ]
 
 MYPY = False
+
+if not MYPY:
+    class ApiKeyGatewayArgsDict(TypedDict):
+        cache_enabled: NotRequired[pulumi.Input[_builtins.bool]]
+        """
+        Whether gateway responses are cached. Null inherits the project default.
+        """
+        spending_limit_daily: NotRequired[pulumi.Input[_builtins.int]]
+        """
+        Maximum gateway spend in whole US dollars per day. Null means no limit.
+        """
+        spending_limit_monthly: NotRequired[pulumi.Input[_builtins.int]]
+        """
+        Maximum gateway spend in whole US dollars per month. Null means no limit.
+        """
+        spending_limit_total: NotRequired[pulumi.Input[_builtins.int]]
+        """
+        Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+        """
+        spending_limit_weekly: NotRequired[pulumi.Input[_builtins.int]]
+        """
+        Maximum gateway spend in whole US dollars per week. Null means no limit.
+        """
+elif False:
+    ApiKeyGatewayArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class ApiKeyGatewayArgs:
+    def __init__(__self__, *,
+                 cache_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
+                 spending_limit_daily: Optional[pulumi.Input[_builtins.int]] = None,
+                 spending_limit_monthly: Optional[pulumi.Input[_builtins.int]] = None,
+                 spending_limit_total: Optional[pulumi.Input[_builtins.int]] = None,
+                 spending_limit_weekly: Optional[pulumi.Input[_builtins.int]] = None):
+        """
+        :param pulumi.Input[_builtins.bool] cache_enabled: Whether gateway responses are cached. Null inherits the project default.
+        :param pulumi.Input[_builtins.int] spending_limit_daily: Maximum gateway spend in whole US dollars per day. Null means no limit.
+        :param pulumi.Input[_builtins.int] spending_limit_monthly: Maximum gateway spend in whole US dollars per month. Null means no limit.
+        :param pulumi.Input[_builtins.int] spending_limit_total: Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+        :param pulumi.Input[_builtins.int] spending_limit_weekly: Maximum gateway spend in whole US dollars per week. Null means no limit.
+        """
+        if cache_enabled is not None:
+            pulumi.set(__self__, "cache_enabled", cache_enabled)
+        if spending_limit_daily is not None:
+            pulumi.set(__self__, "spending_limit_daily", spending_limit_daily)
+        if spending_limit_monthly is not None:
+            pulumi.set(__self__, "spending_limit_monthly", spending_limit_monthly)
+        if spending_limit_total is not None:
+            pulumi.set(__self__, "spending_limit_total", spending_limit_total)
+        if spending_limit_weekly is not None:
+            pulumi.set(__self__, "spending_limit_weekly", spending_limit_weekly)
+
+    @_builtins.property
+    @pulumi.getter(name="cacheEnabled")
+    def cache_enabled(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Whether gateway responses are cached. Null inherits the project default.
+        """
+        return pulumi.get(self, "cache_enabled")
+
+    @cache_enabled.setter
+    def cache_enabled(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "cache_enabled", value)
+
+    @_builtins.property
+    @pulumi.getter(name="spendingLimitDaily")
+    def spending_limit_daily(self) -> Optional[pulumi.Input[_builtins.int]]:
+        """
+        Maximum gateway spend in whole US dollars per day. Null means no limit.
+        """
+        return pulumi.get(self, "spending_limit_daily")
+
+    @spending_limit_daily.setter
+    def spending_limit_daily(self, value: Optional[pulumi.Input[_builtins.int]]):
+        pulumi.set(self, "spending_limit_daily", value)
+
+    @_builtins.property
+    @pulumi.getter(name="spendingLimitMonthly")
+    def spending_limit_monthly(self) -> Optional[pulumi.Input[_builtins.int]]:
+        """
+        Maximum gateway spend in whole US dollars per month. Null means no limit.
+        """
+        return pulumi.get(self, "spending_limit_monthly")
+
+    @spending_limit_monthly.setter
+    def spending_limit_monthly(self, value: Optional[pulumi.Input[_builtins.int]]):
+        pulumi.set(self, "spending_limit_monthly", value)
+
+    @_builtins.property
+    @pulumi.getter(name="spendingLimitTotal")
+    def spending_limit_total(self) -> Optional[pulumi.Input[_builtins.int]]:
+        """
+        Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+        """
+        return pulumi.get(self, "spending_limit_total")
+
+    @spending_limit_total.setter
+    def spending_limit_total(self, value: Optional[pulumi.Input[_builtins.int]]):
+        pulumi.set(self, "spending_limit_total", value)
+
+    @_builtins.property
+    @pulumi.getter(name="spendingLimitWeekly")
+    def spending_limit_weekly(self) -> Optional[pulumi.Input[_builtins.int]]:
+        """
+        Maximum gateway spend in whole US dollars per week. Null means no limit.
+        """
+        return pulumi.get(self, "spending_limit_weekly")
+
+    @spending_limit_weekly.setter
+    def spending_limit_weekly(self, value: Optional[pulumi.Input[_builtins.int]]):
+        pulumi.set(self, "spending_limit_weekly", value)
+
 
 if not MYPY:
     class ChannelConfigArgsDict(TypedDict):

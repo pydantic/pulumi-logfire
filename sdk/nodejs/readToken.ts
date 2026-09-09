@@ -5,7 +5,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 /**
- * Manages a Logfire read token.
+ * Manages a Logfire read token. Equivalent to logfire.ApiKey with scopes `["project:read_otlp"]`.
  *
  * ## Example Usage
  *

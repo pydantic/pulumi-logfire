@@ -23,6 +23,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 	switch typ {
 	case "logfire:index/alert:Alert":
 		r = &Alert{}
+	case "logfire:index/apiKey:ApiKey":
+		r = &ApiKey{}
 	case "logfire:index/channel:Channel":
 		r = &Channel{}
 	case "logfire:index/dashboard:Dashboard":
@@ -31,6 +33,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &FrontendApplication{}
 	case "logfire:index/frontendApplicationToken:FrontendApplicationToken":
 		r = &FrontendApplicationToken{}
+	case "logfire:index/gatewayApiKey:GatewayApiKey":
+		r = &GatewayApiKey{}
 	case "logfire:index/gatewayProvider:GatewayProvider":
 		r = &GatewayProvider{}
 	case "logfire:index/organization:Organization":
@@ -81,6 +85,11 @@ func init() {
 	)
 	pulumi.RegisterResourceModule(
 		"logfire",
+		"index/apiKey",
+		&module{version},
+	)
+	pulumi.RegisterResourceModule(
+		"logfire",
 		"index/channel",
 		&module{version},
 	)
@@ -97,6 +106,11 @@ func init() {
 	pulumi.RegisterResourceModule(
 		"logfire",
 		"index/frontendApplicationToken",
+		&module{version},
+	)
+	pulumi.RegisterResourceModule(
+		"logfire",
+		"index/gatewayApiKey",
 		&module{version},
 	)
 	pulumi.RegisterResourceModule(

@@ -201,7 +201,7 @@ class WriteToken(pulumi.CustomResource):
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire write token.
+        Manages a Logfire write token. Equivalent to ApiKey with scopes `["project:write_otlp"]`.
 
         ## Example Usage
 
@@ -227,7 +227,7 @@ class WriteToken(pulumi.CustomResource):
                  args: WriteTokenArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire write token.
+        Manages a Logfire write token. Equivalent to ApiKey with scopes `["project:write_otlp"]`.
 
         ## Example Usage
 

@@ -13,6 +13,219 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+type ApiKeyGateway struct {
+	// Whether gateway responses are cached. Null inherits the project default.
+	CacheEnabled *bool `pulumi:"cacheEnabled"`
+	// Maximum gateway spend in whole US dollars per day. Null means no limit.
+	SpendingLimitDaily *int `pulumi:"spendingLimitDaily"`
+	// Maximum gateway spend in whole US dollars per month. Null means no limit.
+	SpendingLimitMonthly *int `pulumi:"spendingLimitMonthly"`
+	// Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+	SpendingLimitTotal *int `pulumi:"spendingLimitTotal"`
+	// Maximum gateway spend in whole US dollars per week. Null means no limit.
+	SpendingLimitWeekly *int `pulumi:"spendingLimitWeekly"`
+}
+
+// ApiKeyGatewayInput is an input type that accepts ApiKeyGatewayArgs and ApiKeyGatewayOutput values.
+// You can construct a concrete instance of `ApiKeyGatewayInput` via:
+//
+//	ApiKeyGatewayArgs{...}
+type ApiKeyGatewayInput interface {
+	pulumi.Input
+
+	ToApiKeyGatewayOutput() ApiKeyGatewayOutput
+	ToApiKeyGatewayOutputWithContext(context.Context) ApiKeyGatewayOutput
+}
+
+type ApiKeyGatewayArgs struct {
+	// Whether gateway responses are cached. Null inherits the project default.
+	CacheEnabled pulumi.BoolPtrInput `pulumi:"cacheEnabled"`
+	// Maximum gateway spend in whole US dollars per day. Null means no limit.
+	SpendingLimitDaily pulumi.IntPtrInput `pulumi:"spendingLimitDaily"`
+	// Maximum gateway spend in whole US dollars per month. Null means no limit.
+	SpendingLimitMonthly pulumi.IntPtrInput `pulumi:"spendingLimitMonthly"`
+	// Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+	SpendingLimitTotal pulumi.IntPtrInput `pulumi:"spendingLimitTotal"`
+	// Maximum gateway spend in whole US dollars per week. Null means no limit.
+	SpendingLimitWeekly pulumi.IntPtrInput `pulumi:"spendingLimitWeekly"`
+}
+
+func (ApiKeyGatewayArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ApiKeyGateway)(nil)).Elem()
+}
+
+func (i ApiKeyGatewayArgs) ToApiKeyGatewayOutput() ApiKeyGatewayOutput {
+	return i.ToApiKeyGatewayOutputWithContext(context.Background())
+}
+
+func (i ApiKeyGatewayArgs) ToApiKeyGatewayOutputWithContext(ctx context.Context) ApiKeyGatewayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ApiKeyGatewayOutput)
+}
+
+func (i ApiKeyGatewayArgs) ToApiKeyGatewayPtrOutput() ApiKeyGatewayPtrOutput {
+	return i.ToApiKeyGatewayPtrOutputWithContext(context.Background())
+}
+
+func (i ApiKeyGatewayArgs) ToApiKeyGatewayPtrOutputWithContext(ctx context.Context) ApiKeyGatewayPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ApiKeyGatewayOutput).ToApiKeyGatewayPtrOutputWithContext(ctx)
+}
+
+// ApiKeyGatewayPtrInput is an input type that accepts ApiKeyGatewayArgs, ApiKeyGatewayPtr and ApiKeyGatewayPtrOutput values.
+// You can construct a concrete instance of `ApiKeyGatewayPtrInput` via:
+//
+//	        ApiKeyGatewayArgs{...}
+//
+//	or:
+//
+//	        nil
+type ApiKeyGatewayPtrInput interface {
+	pulumi.Input
+
+	ToApiKeyGatewayPtrOutput() ApiKeyGatewayPtrOutput
+	ToApiKeyGatewayPtrOutputWithContext(context.Context) ApiKeyGatewayPtrOutput
+}
+
+type apiKeyGatewayPtrType ApiKeyGatewayArgs
+
+func ApiKeyGatewayPtr(v *ApiKeyGatewayArgs) ApiKeyGatewayPtrInput {
+	return (*apiKeyGatewayPtrType)(v)
+}
+
+func (*apiKeyGatewayPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**ApiKeyGateway)(nil)).Elem()
+}
+
+func (i *apiKeyGatewayPtrType) ToApiKeyGatewayPtrOutput() ApiKeyGatewayPtrOutput {
+	return i.ToApiKeyGatewayPtrOutputWithContext(context.Background())
+}
+
+func (i *apiKeyGatewayPtrType) ToApiKeyGatewayPtrOutputWithContext(ctx context.Context) ApiKeyGatewayPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ApiKeyGatewayPtrOutput)
+}
+
+type ApiKeyGatewayOutput struct{ *pulumi.OutputState }
+
+func (ApiKeyGatewayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ApiKeyGateway)(nil)).Elem()
+}
+
+func (o ApiKeyGatewayOutput) ToApiKeyGatewayOutput() ApiKeyGatewayOutput {
+	return o
+}
+
+func (o ApiKeyGatewayOutput) ToApiKeyGatewayOutputWithContext(ctx context.Context) ApiKeyGatewayOutput {
+	return o
+}
+
+func (o ApiKeyGatewayOutput) ToApiKeyGatewayPtrOutput() ApiKeyGatewayPtrOutput {
+	return o.ToApiKeyGatewayPtrOutputWithContext(context.Background())
+}
+
+func (o ApiKeyGatewayOutput) ToApiKeyGatewayPtrOutputWithContext(ctx context.Context) ApiKeyGatewayPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v ApiKeyGateway) *ApiKeyGateway {
+		return &v
+	}).(ApiKeyGatewayPtrOutput)
+}
+
+// Whether gateway responses are cached. Null inherits the project default.
+func (o ApiKeyGatewayOutput) CacheEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v ApiKeyGateway) *bool { return v.CacheEnabled }).(pulumi.BoolPtrOutput)
+}
+
+// Maximum gateway spend in whole US dollars per day. Null means no limit.
+func (o ApiKeyGatewayOutput) SpendingLimitDaily() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ApiKeyGateway) *int { return v.SpendingLimitDaily }).(pulumi.IntPtrOutput)
+}
+
+// Maximum gateway spend in whole US dollars per month. Null means no limit.
+func (o ApiKeyGatewayOutput) SpendingLimitMonthly() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ApiKeyGateway) *int { return v.SpendingLimitMonthly }).(pulumi.IntPtrOutput)
+}
+
+// Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+func (o ApiKeyGatewayOutput) SpendingLimitTotal() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ApiKeyGateway) *int { return v.SpendingLimitTotal }).(pulumi.IntPtrOutput)
+}
+
+// Maximum gateway spend in whole US dollars per week. Null means no limit.
+func (o ApiKeyGatewayOutput) SpendingLimitWeekly() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v ApiKeyGateway) *int { return v.SpendingLimitWeekly }).(pulumi.IntPtrOutput)
+}
+
+type ApiKeyGatewayPtrOutput struct{ *pulumi.OutputState }
+
+func (ApiKeyGatewayPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**ApiKeyGateway)(nil)).Elem()
+}
+
+func (o ApiKeyGatewayPtrOutput) ToApiKeyGatewayPtrOutput() ApiKeyGatewayPtrOutput {
+	return o
+}
+
+func (o ApiKeyGatewayPtrOutput) ToApiKeyGatewayPtrOutputWithContext(ctx context.Context) ApiKeyGatewayPtrOutput {
+	return o
+}
+
+func (o ApiKeyGatewayPtrOutput) Elem() ApiKeyGatewayOutput {
+	return o.ApplyT(func(v *ApiKeyGateway) ApiKeyGateway {
+		if v != nil {
+			return *v
+		}
+		var ret ApiKeyGateway
+		return ret
+	}).(ApiKeyGatewayOutput)
+}
+
+// Whether gateway responses are cached. Null inherits the project default.
+func (o ApiKeyGatewayPtrOutput) CacheEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *ApiKeyGateway) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.CacheEnabled
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Maximum gateway spend in whole US dollars per day. Null means no limit.
+func (o ApiKeyGatewayPtrOutput) SpendingLimitDaily() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ApiKeyGateway) *int {
+		if v == nil {
+			return nil
+		}
+		return v.SpendingLimitDaily
+	}).(pulumi.IntPtrOutput)
+}
+
+// Maximum gateway spend in whole US dollars per month. Null means no limit.
+func (o ApiKeyGatewayPtrOutput) SpendingLimitMonthly() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ApiKeyGateway) *int {
+		if v == nil {
+			return nil
+		}
+		return v.SpendingLimitMonthly
+	}).(pulumi.IntPtrOutput)
+}
+
+// Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+func (o ApiKeyGatewayPtrOutput) SpendingLimitTotal() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ApiKeyGateway) *int {
+		if v == nil {
+			return nil
+		}
+		return v.SpendingLimitTotal
+	}).(pulumi.IntPtrOutput)
+}
+
+// Maximum gateway spend in whole US dollars per week. Null means no limit.
+func (o ApiKeyGatewayPtrOutput) SpendingLimitWeekly() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *ApiKeyGateway) *int {
+		if v == nil {
+			return nil
+		}
+		return v.SpendingLimitWeekly
+	}).(pulumi.IntPtrOutput)
+}
+
 type ChannelConfig struct {
 	// Opsgenie API key.
 	AuthKey *string `pulumi:"authKey"`
@@ -322,8 +535,12 @@ func (o ChannelConfigPtrOutput) Url() pulumi.StringPtrOutput {
 }
 
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayInput)(nil)).Elem(), ApiKeyGatewayArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayPtrInput)(nil)).Elem(), ApiKeyGatewayArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigInput)(nil)).Elem(), ChannelConfigArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigPtrInput)(nil)).Elem(), ChannelConfigArgs{})
+	pulumi.RegisterOutputType(ApiKeyGatewayOutput{})
+	pulumi.RegisterOutputType(ApiKeyGatewayPtrOutput{})
 	pulumi.RegisterOutputType(ChannelConfigOutput{})
 	pulumi.RegisterOutputType(ChannelConfigPtrOutput{})
 }

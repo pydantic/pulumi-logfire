@@ -5,6 +5,29 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface ApiKeyGateway {
+    /**
+     * Whether gateway responses are cached. Null inherits the project default.
+     */
+    cacheEnabled?: boolean;
+    /**
+     * Maximum gateway spend in whole US dollars per day. Null means no limit.
+     */
+    spendingLimitDaily?: number;
+    /**
+     * Maximum gateway spend in whole US dollars per month. Null means no limit.
+     */
+    spendingLimitMonthly?: number;
+    /**
+     * Maximum lifetime gateway spend in whole US dollars. Null means no limit.
+     */
+    spendingLimitTotal?: number;
+    /**
+     * Maximum gateway spend in whole US dollars per week. Null means no limit.
+     */
+    spendingLimitWeekly?: number;
+}
+
 export interface ChannelConfig {
     /**
      * Opsgenie API key.
