@@ -24,6 +24,9 @@
             "logfire_frontend_application_token": {
                 "current": "logfire:index/frontendApplicationToken:FrontendApplicationToken"
             },
+            "logfire_gateway_provider": {
+                "current": "logfire:index/gatewayProvider:GatewayProvider"
+            },
             "logfire_organization": {
                 "current": "logfire:index/organization:Organization"
             },
