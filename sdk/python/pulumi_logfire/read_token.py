@@ -201,8 +201,6 @@ class ReadToken(pulumi.CustomResource):
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire read token. Equivalent to ApiKey with scopes `["project:read_otlp"]`.
-
         ## Example Usage
 
         ```python
@@ -227,8 +225,6 @@ class ReadToken(pulumi.CustomResource):
                  args: ReadTokenArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire read token. Equivalent to ApiKey with scopes `["project:read_otlp"]`.
-
         ## Example Usage
 
         ```python

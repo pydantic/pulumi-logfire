@@ -141,7 +141,7 @@ class Channel(pulumi.CustomResource):
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire alert channel.
+        Manages a Logfire alert channel. Import accepts the channel UUID or its name (label).
 
         ## Example Usage
 
@@ -184,6 +184,30 @@ class Channel(pulumi.CustomResource):
             }])
         ```
 
+        ## Import
+
+        The `pulumi import` command can be used, for example:
+
+        Import an existing channel by its UUID, or by its name (label).
+
+        The UUID comes from the channel list endpoint:
+
+          curl -s -H "Authorization: Bearer $LOGFIRE_API_KEY" \\
+
+            "$LOGFIRE_BASE_URL/api/v1/channels/" | jq '.[] | {id, label}'
+
+        By name:
+
+        ```sh
+        $ pulumi import logfire:index/channel:Channel example' "alerts-webhook"
+        ```
+
+        By UUID:
+
+        ```sh
+        $ pulumi import logfire:index/channel:Channel example' "9f9b2f9e-aaaa-bbbb-cccc-ddddeeeeffff"
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the channel is active.
@@ -197,7 +221,7 @@ class Channel(pulumi.CustomResource):
                  args: Optional[ChannelArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire alert channel.
+        Manages a Logfire alert channel. Import accepts the channel UUID or its name (label).
 
         ## Example Usage
 
@@ -238,6 +262,30 @@ class Channel(pulumi.CustomResource):
                 "installId": on_call.install_id,
                 "serviceId": on_call.service_id,
             }])
+        ```
+
+        ## Import
+
+        The `pulumi import` command can be used, for example:
+
+        Import an existing channel by its UUID, or by its name (label).
+
+        The UUID comes from the channel list endpoint:
+
+          curl -s -H "Authorization: Bearer $LOGFIRE_API_KEY" \\
+
+            "$LOGFIRE_BASE_URL/api/v1/channels/" | jq '.[] | {id, label}'
+
+        By name:
+
+        ```sh
+        $ pulumi import logfire:index/channel:Channel example' "alerts-webhook"
+        ```
+
+        By UUID:
+
+        ```sh
+        $ pulumi import logfire:index/channel:Channel example' "9f9b2f9e-aaaa-bbbb-cccc-ddddeeeeffff"
         ```
 
         :param str resource_name: The name of the resource.
