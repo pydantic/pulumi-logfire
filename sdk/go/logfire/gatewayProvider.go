@@ -28,8 +28,24 @@ import (
 //
 // Or use the command line:
 //
+// Import an existing Gateway provider by its UUID, or by its organization-unique slug.
+//
+// The UUID comes from the provider list endpoint:
+//
+//	curl -s -H "Authorization: Bearer $LOGFIRE_API_KEY" \
+//
+//	  "$LOGFIRE_BASE_URL/api/v1/gateway/providers/" | jq '.providers[] | {id, slug}'
+//
+// By slug:
+//
 // ```sh
-// $ pulumi import logfire:index/gatewayProvider:GatewayProvider openai 018f45c0-3cab-7b2f-a8f7-8a0b55a7ed11
+// $ pulumi import logfire:index/gatewayProvider:GatewayProvider openai' "openai"
+// ```
+//
+// By UUID:
+//
+// ```sh
+// $ pulumi import logfire:index/gatewayProvider:GatewayProvider openai' "018f45c0-3cab-7b2f-a8f7-8a0b55a7ed11"
 // ```
 //
 // Import reads public configuration only. Set `api_key` in your configuration;
