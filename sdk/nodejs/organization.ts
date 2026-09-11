@@ -5,7 +5,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 /**
- * Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key with a special organization scope.
+ * Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes.
  *
  * ## Example Usage
  *
@@ -17,6 +17,26 @@ import * as utilities from "./utilities";
  *     deletionProtection: false,
  *     displayName: "Terraform Example Org",
  * });
+ * ```
+ *
+ * ## Import
+ *
+ * The `pulumi import` command can be used, for example:
+ *
+ * Import an existing organization by name or UUID. The provider credential must be
+ *
+ * an API key from the admin organization carrying the `organization:admin` scope.
+ *
+ * By name:
+ *
+ * ```sh
+ * $ pulumi import logfire:index/organization:Organization example' "terraform-example-org"
+ * ```
+ *
+ * By UUID:
+ *
+ * ```sh
+ * $ pulumi import logfire:index/organization:Organization example' "9f9b2f9e-aaaa-bbbb-cccc-ddddeeeeffff"
  * ```
  */
 export class Organization extends pulumi.CustomResource {
