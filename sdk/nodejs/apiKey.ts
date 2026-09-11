@@ -8,6 +8,26 @@ import * as utilities from "./utilities";
 
 /**
  * Manages a Logfire API key. Write tokens (`project:write_otlp`), read tokens (`project:read_otlp`), gateway keys (`project:gateway_proxy`), and management keys are all API keys with different scopes. The new key can never exceed the provider credential's own grant: its scopes must be a subset of the provider `apiKey` scopes, so the provider key needs `organization:create_api_key` plus every scope it delegates.
+ *
+ * ## Import
+ *
+ * The `pulumi import` command can be used, for example:
+ *
+ * Import an existing API key by its UUID. Key names are not unique across the
+ *
+ * organization, so the import is UUID-only. The UUID comes from the API key
+ *
+ * list endpoint (the API never returns the plaintext token again, so an import
+ *
+ * recovers the key without its token):
+ *
+ *   curl -s -H "Authorization: Bearer $LOGFIRE_API_KEY" \
+ *
+ *     "$LOGFIRE_BASE_URL/api/v1/api-keys/" | jq '.[] | {id, name}'
+ *
+ * ```sh
+ * $ pulumi import logfire:index/apiKey:ApiKey example' "9f9b2f9e-aaaa-bbbb-cccc-ddddeeeeffff"
+ * ```
  */
 export class ApiKey extends pulumi.CustomResource {
     /**

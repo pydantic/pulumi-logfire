@@ -5,8 +5,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 /**
- * Manages a Logfire write token. Equivalent to logfire.ApiKey with scopes `["project:write_otlp"]`.
- *
  * ## Example Usage
  *
  * ```typescript
