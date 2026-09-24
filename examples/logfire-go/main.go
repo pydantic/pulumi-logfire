@@ -13,7 +13,7 @@ func main() {
 		apiKey := cfg.RequireSecret("apiKey")
 
 		providerArgs := &logfire.ProviderArgs{
-			ApiKey:  apiKey.ToStringPtrOutput(),
+			ApiKey: apiKey.ToStringPtrOutput(),
 		}
 		if baseURL != "" {
 			providerArgs.BaseUrl = pulumi.StringPtr(baseURL)
@@ -56,7 +56,9 @@ func main() {
 			Query:      pulumi.String("select * from records limit 1"),
 			TimeWindow: pulumi.String("15m"),
 			Frequency:  pulumi.String("5m"),
-			ChannelIds: pulumi.StringArray{ch.ID()},
+			ChannelAssignments: logfire.AlertChannelAssignmentArray{
+				logfire.AlertChannelAssignmentArgs{ChannelId: ch.ID()},
+			},
 			NotifyWhen: pulumi.String("has_matches"),
 			Active:     pulumi.BoolPtr(true),
 		}, pulumi.Provider(provider))
