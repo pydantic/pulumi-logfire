@@ -24,6 +24,7 @@ import (
 // import (
 //
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 //	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
 //
 // )
@@ -34,17 +35,22 @@ import (
 //			if err != nil {
 //				return err
 //			}
-//			oncall, err := logfire.NewChannel(ctx, "oncall", &logfire.ChannelArgs{
+//			alerts, err := logfire.NewChannel(ctx, "alerts", &logfire.ChannelArgs{
 //				Config: logfire.ChannelConfigArgs{
 //					map[string]interface{}{
 //						"type":   "webhook",
 //						"format": "auto",
-//						"url":    "https://hooks.example.com/oncall",
+//						"url":    "https://hooks.example.com/alerts",
 //					},
 //				},
 //			})
 //			if err != nil {
 //				return err
+//			}
+//			everyone := []map[string]interface{}{
+//				map[string]interface{}{
+//					"channel_id": alerts.ID(),
+//				},
 //			}
 //			_, err = logfire.NewSlo(ctx, "exampleSlo", &logfire.SloArgs{
 //				ProjectId:     exampleProject.ID(),
@@ -57,19 +63,172 @@ import (
 //				Environments: pulumi.StringArray{
 //					pulumi.String("prod"),
 //				},
-//				PageChannelIds: pulumi.StringArray{
-//					oncall.ID(),
+//				Alerts: &logfire.SloAlertsArgs{
+//					Fast: &logfire.SloAlertsFastArgs{
+//						ChannelAssignments: toPulumiStringMapArray(everyone),
+//					},
+//					Medium: &logfire.SloAlertsMediumArgs{
+//						ChannelAssignments: toPulumiStringMapArray(everyone),
+//					},
+//					Slow: &logfire.SloAlertsSlowArgs{
+//						ChannelAssignments: toPulumiStringMapArray(everyone),
+//					},
 //				},
-//				TicketChannelIds: pulumi.StringArray{
-//					oncall.ID(),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			cfg := config.New(ctx, "")
+//			pagerdutyRoutingKey := cfg.Require("pagerdutyRoutingKey")
+//			// 2. Different channels per tier.
+//			pagerduty, err := logfire.NewChannel(ctx, "pagerduty", &logfire.ChannelArgs{
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":       "pagerduty",
+//						"routingKey": pagerdutyRoutingKey,
+//					},
 //				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			incidents, err := logfire.NewChannel(ctx, "incidents", &logfire.ChannelArgs{
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":   "webhook",
+//						"format": "auto",
+//						"url":    "https://hooks.example.com/incidents",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			reliability, err := logfire.NewChannel(ctx, "reliability", &logfire.ChannelArgs{
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":   "webhook",
+//						"format": "auto",
+//						"url":    "https://hooks.example.com/reliability",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewSlo(ctx, "checkoutErrors", &logfire.SloArgs{
+//				ProjectId:     exampleProject.ID(),
+//				ScopeValue:    pulumi.String("checkout"),
+//				TotalQuery:    pulumi.String("parent_span_id IS NULL"),
+//				BadQuery:      pulumi.String("otel_status_code = 'ERROR'"),
+//				TargetPercent: pulumi.String("99.9"),
+//				RollingWindow: pulumi.String("30d"),
+//				Alerts: &logfire.SloAlertsArgs{
+//					Fast: &logfire.SloAlertsFastArgs{
+//						ChannelAssignments: logfire.SloAlertsFastChannelAssignmentArray{
+//							&logfire.SloAlertsFastChannelAssignmentArgs{
+//								ChannelId: pagerduty.ID(),
+//							},
+//							&logfire.SloAlertsFastChannelAssignmentArgs{
+//								ChannelId: incidents.ID(),
+//							},
+//						},
+//					},
+//					Medium: &logfire.SloAlertsMediumArgs{
+//						ChannelAssignments: logfire.SloAlertsMediumChannelAssignmentArray{
+//							&logfire.SloAlertsMediumChannelAssignmentArgs{
+//								ChannelId: incidents.ID(),
+//							},
+//						},
+//					},
+//					Slow: &logfire.SloAlertsSlowArgs{
+//						ChannelAssignments: logfire.SloAlertsSlowChannelAssignmentArray{
+//							&logfire.SloAlertsSlowChannelAssignmentArgs{
+//								ChannelId: reliability.ID(),
+//							},
+//						},
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			// 3. Delivery schedules, shared with a normal alert. PagerDuty gets every
+//			// fast and medium burn. The incidents channel gets them only during office
+//			// hours, and the reliability channel gets slow burns during office hours. A
+//			// normal alert reuses the same configuration, because both resources use the
+//			// same assignment type.
+//			officeHours, err := logfire.NewSchedule(ctx, "officeHours", &logfire.ScheduleArgs{
+//				Label:    pulumi.String("Office hours"),
+//				Timezone: pulumi.String("Europe/London"),
+//				Windows: logfire.ScheduleWindowArray{
+//					&logfire.ScheduleWindowArgs{
+//						Days: pulumi.IntArray{
+//							pulumi.Int(1),
+//							pulumi.Int(2),
+//							pulumi.Int(3),
+//							pulumi.Int(4),
+//							pulumi.Int(5),
+//						},
+//						Start_time: "09:00",
+//						End_time:   "18:00",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			oncall := []map[string]interface{}{
+//				map[string]interface{}{
+//					"channel_id": pagerduty.ID(),
+//				},
+//				map[string]interface{}{
+//					"channel_id":  incidents.ID(),
+//					"schedule_id": officeHours.ID(),
+//				},
+//			}
+//			_, err = logfire.NewSlo(ctx, "checkout", &logfire.SloArgs{
+//				ProjectId:     exampleProject.ID(),
+//				ScopeValue:    pulumi.String("checkout"),
+//				TotalQuery:    pulumi.String("parent_span_id IS NULL"),
+//				BadQuery:      pulumi.String("otel_status_code = 'ERROR'"),
+//				TargetPercent: pulumi.String("99.9"),
+//				RollingWindow: pulumi.String("30d"),
+//				Alerts: &logfire.SloAlertsArgs{
+//					Fast: &logfire.SloAlertsFastArgs{
+//						ChannelAssignments: toPulumiStringMapArray(oncall),
+//					},
+//					Medium: &logfire.SloAlertsMediumArgs{
+//						ChannelAssignments: toPulumiStringMapArray(oncall),
+//					},
+//					Slow: &logfire.SloAlertsSlowArgs{
+//						ChannelAssignments: logfire.SloAlertsSlowChannelAssignmentArray{
+//							&logfire.SloAlertsSlowChannelAssignmentArgs{
+//								ChannelId:  reliability.ID(),
+//								ScheduleId: officeHours.ID(),
+//							},
+//						},
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewAlert(ctx, "paymentErrors", &logfire.AlertArgs{
+//				ProjectId:          exampleProject.ID(),
+//				Query:              pulumi.String("select trace_id from records where span_name = 'payment failed'"),
+//				TimeWindow:         pulumi.String("5m"),
+//				Frequency:          pulumi.String("1m"),
+//				NotifyWhen:         pulumi.String("has_matches"),
+//				ChannelAssignments: toPulumiStringMapArray(oncall),
 //			})
 //			if err != nil {
 //				return err
 //			}
 //			// A histogram-threshold metric SLI: "95% of queue-latency observations under
 //			// 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
-//			// `source = "metrics"`.
+//			// `source = "metrics"`. It configures no tier, so the provider leaves the
+//			// channels of its alerts as they are.
 //			_, err = logfire.NewSlo(ctx, "queueLatency", &logfire.SloArgs{
 //				ProjectId:         exampleProject.ID(),
 //				ScopeValue:        pulumi.String("ingest"),
@@ -86,6 +245,14 @@ import (
 //			}
 //			return nil
 //		})
+//	}
+//
+//	func toPulumiStringMapArray(arr []StringMap) pulumi.StringMapArray {
+//		var pulumiArr pulumi.StringMapArray
+//		for _, v := range arr {
+//			pulumiArr = append(pulumiArr, pulumi.StringMap(v))
+//		}
+//		return pulumiArr
 //	}
 //
 // ```
@@ -114,6 +281,7 @@ import (
 type Slo struct {
 	pulumi.CustomResourceState
 
+	Alerts SloAlertsOutput `pulumi:"alerts"`
 	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery pulumi.StringPtrOutput `pulumi:"badQuery"`
 	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
@@ -125,8 +293,7 @@ type Slo struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringOutput `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
-	Name           pulumi.StringOutput      `pulumi:"name"`
-	PageChannelIds pulumi.StringArrayOutput `pulumi:"pageChannelIds"`
+	Name pulumi.StringOutput `pulumi:"name"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -140,8 +307,7 @@ type Slo struct {
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 	TargetPercent pulumi.StringOutput `pulumi:"targetPercent"`
 	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
-	Threshold        pulumi.StringPtrOutput   `pulumi:"threshold"`
-	TicketChannelIds pulumi.StringArrayOutput `pulumi:"ticketChannelIds"`
+	Threshold pulumi.StringPtrOutput `pulumi:"threshold"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringOutput `pulumi:"totalQuery"`
 }
@@ -191,6 +357,7 @@ func GetSlo(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering Slo resources.
 type sloState struct {
+	Alerts *SloAlerts `pulumi:"alerts"`
 	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery *string `pulumi:"badQuery"`
 	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
@@ -202,8 +369,7 @@ type sloState struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
-	Name           *string  `pulumi:"name"`
-	PageChannelIds []string `pulumi:"pageChannelIds"`
+	Name *string `pulumi:"name"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId *string `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -217,13 +383,13 @@ type sloState struct {
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 	TargetPercent *string `pulumi:"targetPercent"`
 	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
-	Threshold        *string  `pulumi:"threshold"`
-	TicketChannelIds []string `pulumi:"ticketChannelIds"`
+	Threshold *string `pulumi:"threshold"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery *string `pulumi:"totalQuery"`
 }
 
 type SloState struct {
+	Alerts SloAlertsPtrInput
 	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery pulumi.StringPtrInput
 	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
@@ -235,8 +401,7 @@ type SloState struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
-	Name           pulumi.StringPtrInput
-	PageChannelIds pulumi.StringArrayInput
+	Name pulumi.StringPtrInput
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringPtrInput
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -250,8 +415,7 @@ type SloState struct {
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 	TargetPercent pulumi.StringPtrInput
 	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
-	Threshold        pulumi.StringPtrInput
-	TicketChannelIds pulumi.StringArrayInput
+	Threshold pulumi.StringPtrInput
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringPtrInput
 }
@@ -261,6 +425,7 @@ func (SloState) ElementType() reflect.Type {
 }
 
 type sloArgs struct {
+	Alerts *SloAlerts `pulumi:"alerts"`
 	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery *string `pulumi:"badQuery"`
 	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
@@ -272,8 +437,7 @@ type sloArgs struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation *string `pulumi:"metricAggregation"`
 	// SLO name (unique per project).
-	Name           *string  `pulumi:"name"`
-	PageChannelIds []string `pulumi:"pageChannelIds"`
+	Name *string `pulumi:"name"`
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId string `pulumi:"projectId"`
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -287,14 +451,14 @@ type sloArgs struct {
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 	TargetPercent string `pulumi:"targetPercent"`
 	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
-	Threshold        *string  `pulumi:"threshold"`
-	TicketChannelIds []string `pulumi:"ticketChannelIds"`
+	Threshold *string `pulumi:"threshold"`
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery string `pulumi:"totalQuery"`
 }
 
 // The set of arguments for constructing a Slo resource.
 type SloArgs struct {
+	Alerts SloAlertsPtrInput
 	// SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 	BadQuery pulumi.StringPtrInput
 	// For `metricAggregation = "histogramThreshold"`: the good side of the `threshold`. `lessThan` (good is below the threshold, the latency case) or `greaterThan`. Required for that mode, and must be omitted otherwise.
@@ -306,8 +470,7 @@ type SloArgs struct {
 	// How a `metrics` SLO aggregates its SLI: `additive` (sum of scalar values, for delta-count metrics), `gaugeFraction` (fraction of samples meeting the condition, for gauges), `counterRate` (sum of per-series increases, for cumulative counters), or `histogramThreshold` (fraction of histogram observations past a threshold; uses `threshold` and `comparison` instead of `badQuery`, and requires `source = "metrics"`). Ignored when `source = "records"`. Defaults to `additive`.
 	MetricAggregation pulumi.StringPtrInput
 	// SLO name (unique per project).
-	Name           pulumi.StringPtrInput
-	PageChannelIds pulumi.StringArrayInput
+	Name pulumi.StringPtrInput
 	// Project ID (UUID) used for SLO API paths.
 	ProjectId pulumi.StringInput
 	// Rolling evaluation window as a duration string (e.g. `"24h"`, `"30d"`). Must be between 1h and 90d. The API enforces a lower effective cap: the window cannot exceed your subscription plan's maximum SLO window, nor the project's data retention for the SLO source (`records` or `metrics`) — a longer window would compute against missing data. Requests over either cap are rejected with a validation error.
@@ -321,8 +484,7 @@ type SloArgs struct {
 	// Target percentage as a decimal string, exclusively between 0 and 100 (e.g. `"99.9"`).
 	TargetPercent pulumi.StringInput
 	// For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
-	Threshold        pulumi.StringPtrInput
-	TicketChannelIds pulumi.StringArrayInput
+	Threshold pulumi.StringPtrInput
 	// SQL boolean expression selecting all events counted by the SLO.
 	TotalQuery pulumi.StringInput
 }
@@ -414,6 +576,10 @@ func (o SloOutput) ToSloOutputWithContext(ctx context.Context) SloOutput {
 	return o
 }
 
+func (o SloOutput) Alerts() SloAlertsOutput {
+	return o.ApplyT(func(v *Slo) SloAlertsOutput { return v.Alerts }).(SloAlertsOutput)
+}
+
 // SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
 func (o SloOutput) BadQuery() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringPtrOutput { return v.BadQuery }).(pulumi.StringPtrOutput)
@@ -442,10 +608,6 @@ func (o SloOutput) MetricAggregation() pulumi.StringOutput {
 // SLO name (unique per project).
 func (o SloOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
-}
-
-func (o SloOutput) PageChannelIds() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *Slo) pulumi.StringArrayOutput { return v.PageChannelIds }).(pulumi.StringArrayOutput)
 }
 
 // Project ID (UUID) used for SLO API paths.
@@ -481,10 +643,6 @@ func (o SloOutput) TargetPercent() pulumi.StringOutput {
 // For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
 func (o SloOutput) Threshold() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Slo) pulumi.StringPtrOutput { return v.Threshold }).(pulumi.StringPtrOutput)
-}
-
-func (o SloOutput) TicketChannelIds() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *Slo) pulumi.StringArrayOutput { return v.TicketChannelIds }).(pulumi.StringArrayOutput)
 }
 
 // SQL boolean expression selecting all events counted by the SLO.

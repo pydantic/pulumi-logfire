@@ -13,13 +13,15 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = ['AlertArgs', 'Alert']
 
 @pulumi.input_type
 class AlertArgs:
     def __init__(__self__, *,
-                 channel_ids: pulumi.Input[Sequence[pulumi.Input[_builtins.str]]],
+                 channel_assignments: pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]],
                  frequency: pulumi.Input[_builtins.str],
                  notify_when: pulumi.Input[_builtins.str],
                  project_id: pulumi.Input[_builtins.str],
@@ -31,7 +33,7 @@ class AlertArgs:
                  name: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Alert resource.
-        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
+        :param pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]] channel_assignments: Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
         :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
@@ -42,7 +44,7 @@ class AlertArgs:
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         """
-        pulumi.set(__self__, "channel_ids", channel_ids)
+        pulumi.set(__self__, "channel_assignments", channel_assignments)
         pulumi.set(__self__, "frequency", frequency)
         pulumi.set(__self__, "notify_when", notify_when)
         pulumi.set(__self__, "project_id", project_id)
@@ -58,16 +60,16 @@ class AlertArgs:
             pulumi.set(__self__, "name", name)
 
     @_builtins.property
-    @pulumi.getter(name="channelIds")
-    def channel_ids(self) -> pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]:
+    @pulumi.getter(name="channelAssignments")
+    def channel_assignments(self) -> pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]]:
         """
-        Set of channel IDs to notify.
+        Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         """
-        return pulumi.get(self, "channel_ids")
+        return pulumi.get(self, "channel_assignments")
 
-    @channel_ids.setter
-    def channel_ids(self, value: pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]):
-        pulumi.set(self, "channel_ids", value)
+    @channel_assignments.setter
+    def channel_assignments(self, value: pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]]):
+        pulumi.set(self, "channel_assignments", value)
 
     @_builtins.property
     @pulumi.getter
@@ -182,7 +184,7 @@ class AlertArgs:
 class _AlertState:
     def __init__(__self__, *,
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
-                 channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 channel_assignments: Optional[pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
@@ -195,7 +197,7 @@ class _AlertState:
         """
         Input properties used for looking up and filtering Alert resources.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
-        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
+        :param pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]] channel_assignments: Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
@@ -208,8 +210,8 @@ class _AlertState:
         """
         if active is not None:
             pulumi.set(__self__, "active", active)
-        if channel_ids is not None:
-            pulumi.set(__self__, "channel_ids", channel_ids)
+        if channel_assignments is not None:
+            pulumi.set(__self__, "channel_assignments", channel_assignments)
         if description is not None:
             pulumi.set(__self__, "description", description)
         if environments is not None:
@@ -242,16 +244,16 @@ class _AlertState:
         pulumi.set(self, "active", value)
 
     @_builtins.property
-    @pulumi.getter(name="channelIds")
-    def channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
+    @pulumi.getter(name="channelAssignments")
+    def channel_assignments(self) -> Optional[pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]]]:
         """
-        Set of channel IDs to notify.
+        Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         """
-        return pulumi.get(self, "channel_ids")
+        return pulumi.get(self, "channel_assignments")
 
-    @channel_ids.setter
-    def channel_ids(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
-        pulumi.set(self, "channel_ids", value)
+    @channel_assignments.setter
+    def channel_assignments(self, value: Optional[pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]]]):
+        pulumi.set(self, "channel_assignments", value)
 
     @_builtins.property
     @pulumi.getter
@@ -369,7 +371,7 @@ class Alert(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
-                 channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 channel_assignments: Optional[pulumi.Input[Sequence[pulumi.Input[Union['AlertChannelAssignmentArgs', 'AlertChannelAssignmentArgsDict']]]]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
@@ -394,6 +396,25 @@ class Alert(pulumi.CustomResource):
             "format": "auto",
             "url": "https://example.com/logfire-webhook",
         }])
+        office = logfire.Channel("office", config=[{
+            "type": "webhook",
+            "format": "auto",
+            "url": "https://example.com/logfire-office-webhook",
+        }])
+        office_hours = logfire.Schedule("officeHours",
+            label="Office hours",
+            timezone="Europe/London",
+            windows=[{
+                "days": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                ],
+                "start_time": "09:00",
+                "end_time": "18:00",
+            }])
         example_alert = logfire.Alert("exampleAlert",
             project_id=example_project.id,
             description="Alert on exception spans",
@@ -408,7 +429,15 @@ class Alert(pulumi.CustomResource):
             time_window="1h",
             frequency="15m",
             environments=["production"],
-            channel_ids=[example_channel.id],
+            channel_assignments=[
+                {
+                    "channel_id": example_channel.id,
+                },
+                {
+                    "channel_id": office.id,
+                    "schedule_id": office_hours.id,
+                },
+            ],
             notify_when="has_matches",
             active=True)
         ```
@@ -425,7 +454,7 @@ class Alert(pulumi.CustomResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
-        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
+        :param pulumi.Input[Sequence[pulumi.Input[Union['AlertChannelAssignmentArgs', 'AlertChannelAssignmentArgsDict']]]] channel_assignments: Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
@@ -456,6 +485,25 @@ class Alert(pulumi.CustomResource):
             "format": "auto",
             "url": "https://example.com/logfire-webhook",
         }])
+        office = logfire.Channel("office", config=[{
+            "type": "webhook",
+            "format": "auto",
+            "url": "https://example.com/logfire-office-webhook",
+        }])
+        office_hours = logfire.Schedule("officeHours",
+            label="Office hours",
+            timezone="Europe/London",
+            windows=[{
+                "days": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                ],
+                "start_time": "09:00",
+                "end_time": "18:00",
+            }])
         example_alert = logfire.Alert("exampleAlert",
             project_id=example_project.id,
             description="Alert on exception spans",
@@ -470,7 +518,15 @@ class Alert(pulumi.CustomResource):
             time_window="1h",
             frequency="15m",
             environments=["production"],
-            channel_ids=[example_channel.id],
+            channel_assignments=[
+                {
+                    "channel_id": example_channel.id,
+                },
+                {
+                    "channel_id": office.id,
+                    "schedule_id": office_hours.id,
+                },
+            ],
             notify_when="has_matches",
             active=True)
         ```
@@ -500,7 +556,7 @@ class Alert(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
-                 channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 channel_assignments: Optional[pulumi.Input[Sequence[pulumi.Input[Union['AlertChannelAssignmentArgs', 'AlertChannelAssignmentArgsDict']]]]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
@@ -519,9 +575,9 @@ class Alert(pulumi.CustomResource):
             __props__ = AlertArgs.__new__(AlertArgs)
 
             __props__.__dict__["active"] = active
-            if channel_ids is None and not opts.urn:
-                raise TypeError("Missing required property 'channel_ids'")
-            __props__.__dict__["channel_ids"] = channel_ids
+            if channel_assignments is None and not opts.urn:
+                raise TypeError("Missing required property 'channel_assignments'")
+            __props__.__dict__["channel_assignments"] = channel_assignments
             __props__.__dict__["description"] = description
             __props__.__dict__["environments"] = environments
             if frequency is None and not opts.urn:
@@ -552,7 +608,7 @@ class Alert(pulumi.CustomResource):
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
             active: Optional[pulumi.Input[_builtins.bool]] = None,
-            channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+            channel_assignments: Optional[pulumi.Input[Sequence[pulumi.Input[Union['AlertChannelAssignmentArgs', 'AlertChannelAssignmentArgsDict']]]]] = None,
             description: Optional[pulumi.Input[_builtins.str]] = None,
             environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             frequency: Optional[pulumi.Input[_builtins.str]] = None,
@@ -570,7 +626,7 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
-        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] channel_ids: Set of channel IDs to notify.
+        :param pulumi.Input[Sequence[pulumi.Input[Union['AlertChannelAssignmentArgs', 'AlertChannelAssignmentArgsDict']]]] channel_assignments: Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
@@ -586,7 +642,7 @@ class Alert(pulumi.CustomResource):
         __props__ = _AlertState.__new__(_AlertState)
 
         __props__.__dict__["active"] = active
-        __props__.__dict__["channel_ids"] = channel_ids
+        __props__.__dict__["channel_assignments"] = channel_assignments
         __props__.__dict__["description"] = description
         __props__.__dict__["environments"] = environments
         __props__.__dict__["frequency"] = frequency
@@ -607,12 +663,12 @@ class Alert(pulumi.CustomResource):
         return pulumi.get(self, "active")
 
     @_builtins.property
-    @pulumi.getter(name="channelIds")
-    def channel_ids(self) -> pulumi.Output[Sequence[_builtins.str]]:
+    @pulumi.getter(name="channelAssignments")
+    def channel_assignments(self) -> pulumi.Output[Sequence['outputs.AlertChannelAssignment']]:
         """
-        Set of channel IDs to notify.
+        Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         """
-        return pulumi.get(self, "channel_ids")
+        return pulumi.get(self, "channel_assignments")
 
     @_builtins.property
     @pulumi.getter

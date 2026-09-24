@@ -5,6 +5,17 @@ import * as pulumi from "@pulumi/pulumi";
 import * as inputs from "../types/input";
 import * as outputs from "../types/output";
 
+export interface AlertChannelAssignment {
+    /**
+     * ID of the `logfire.Channel` to notify.
+     */
+    channelId: pulumi.Input<string>;
+    /**
+     * ID of a `logfire.Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+     */
+    scheduleId?: pulumi.Input<string>;
+}
+
 export interface ApiKeyGateway {
     /**
      * Whether gateway responses are cached. Null inherits the project default.
@@ -69,4 +80,124 @@ export interface ChannelConfig {
      * Webhook URL endpoint.
      */
     url?: pulumi.Input<string>;
+}
+
+export interface ScheduleWindow {
+    /**
+     * ISO weekday numbers: `1` is Monday and `7` is Sunday.
+     */
+    days: pulumi.Input<pulumi.Input<number>[]>;
+    /**
+     * End of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+     */
+    endTime: pulumi.Input<string>;
+    /**
+     * Start of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+     */
+    startTime: pulumi.Input<string>;
+}
+
+export interface SloAlerts {
+    /**
+     * The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+     */
+    fast?: pulumi.Input<inputs.SloAlertsFast>;
+    /**
+     * The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+     */
+    medium?: pulumi.Input<inputs.SloAlertsMedium>;
+    /**
+     * The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+     */
+    slow?: pulumi.Input<inputs.SloAlertsSlow>;
+}
+
+export interface SloAlertsFast {
+    /**
+     * ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+     */
+    alertId?: pulumi.Input<string>;
+    /**
+     * Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+     */
+    channelAssignments?: pulumi.Input<pulumi.Input<inputs.SloAlertsFastChannelAssignment>[]>;
+    /**
+     * `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+     */
+    severity?: pulumi.Input<string>;
+    /**
+     * False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+     */
+    viable?: pulumi.Input<boolean>;
+}
+
+export interface SloAlertsFastChannelAssignment {
+    /**
+     * ID of the `logfire.Channel` to notify.
+     */
+    channelId: pulumi.Input<string>;
+    /**
+     * ID of a `logfire.Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+     */
+    scheduleId?: pulumi.Input<string>;
+}
+
+export interface SloAlertsMedium {
+    /**
+     * ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+     */
+    alertId?: pulumi.Input<string>;
+    /**
+     * Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+     */
+    channelAssignments?: pulumi.Input<pulumi.Input<inputs.SloAlertsMediumChannelAssignment>[]>;
+    /**
+     * `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+     */
+    severity?: pulumi.Input<string>;
+    /**
+     * False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+     */
+    viable?: pulumi.Input<boolean>;
+}
+
+export interface SloAlertsMediumChannelAssignment {
+    /**
+     * ID of the `logfire.Channel` to notify.
+     */
+    channelId: pulumi.Input<string>;
+    /**
+     * ID of a `logfire.Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+     */
+    scheduleId?: pulumi.Input<string>;
+}
+
+export interface SloAlertsSlow {
+    /**
+     * ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+     */
+    alertId?: pulumi.Input<string>;
+    /**
+     * Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+     */
+    channelAssignments?: pulumi.Input<pulumi.Input<inputs.SloAlertsSlowChannelAssignment>[]>;
+    /**
+     * `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+     */
+    severity?: pulumi.Input<string>;
+    /**
+     * False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+     */
+    viable?: pulumi.Input<boolean>;
+}
+
+export interface SloAlertsSlowChannelAssignment {
+    /**
+     * ID of the `logfire.Channel` to notify.
+     */
+    channelId: pulumi.Input<string>;
+    /**
+     * ID of a `logfire.Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+     */
+    scheduleId?: pulumi.Input<string>;
 }

@@ -5,7 +5,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 /**
- * Manages a Logfire project.
+ * Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.
  *
  * ## Example Usage
  *

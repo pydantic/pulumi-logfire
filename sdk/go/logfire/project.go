@@ -11,7 +11,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
-// Manages a Logfire project.
+// Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.
 //
 // ## Example Usage
 //

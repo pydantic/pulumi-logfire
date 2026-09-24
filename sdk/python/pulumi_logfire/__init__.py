@@ -19,6 +19,7 @@ from .organization import *
 from .project import *
 from .provider import *
 from .read_token import *
+from .schedule import *
 from .slo import *
 from .write_token import *
 from ._inputs import *
@@ -120,6 +121,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/readToken:ReadToken": "ReadToken"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/schedule",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/schedule:Schedule": "Schedule"
   }
  },
  {

@@ -68,6 +68,11 @@ export type ReadToken = import("./readToken").ReadToken;
 export const ReadToken: typeof import("./readToken").ReadToken = null as any;
 utilities.lazyLoad(exports, ["ReadToken"], () => require("./readToken"));
 
+export { ScheduleArgs, ScheduleState } from "./schedule";
+export type Schedule = import("./schedule").Schedule;
+export const Schedule: typeof import("./schedule").Schedule = null as any;
+utilities.lazyLoad(exports, ["Schedule"], () => require("./schedule"));
+
 export { SloArgs, SloState } from "./slo";
 export type Slo = import("./slo").Slo;
 export const Slo: typeof import("./slo").Slo = null as any;
@@ -114,6 +119,8 @@ const _module = {
                 return new Project(name, <any>undefined, { urn })
             case "logfire:index/readToken:ReadToken":
                 return new ReadToken(name, <any>undefined, { urn })
+            case "logfire:index/schedule:Schedule":
+                return new Schedule(name, <any>undefined, { urn })
             case "logfire:index/slo:Slo":
                 return new Slo(name, <any>undefined, { urn })
             case "logfire:index/writeToken:WriteToken":
@@ -134,6 +141,7 @@ pulumi.runtime.registerResourceModule("logfire", "index/gatewayProvider", _modul
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/schedule", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/slo", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/writeToken", _module)
 pulumi.runtime.registerResourcePackage("logfire", {

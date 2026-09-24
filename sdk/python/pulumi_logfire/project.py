@@ -155,7 +155,7 @@ class Project(pulumi.CustomResource):
                  visibility: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire project.
+        Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.
 
         ## Example Usage
 
@@ -188,7 +188,7 @@ class Project(pulumi.CustomResource):
                  args: Optional[ProjectArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire project.
+        Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.
 
         ## Example Usage
 

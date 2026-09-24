@@ -29,6 +29,7 @@
         "project.ts",
         "provider.ts",
         "readToken.ts",
+        "schedule.ts",
         "slo.ts",
         "types/index.ts",
         "types/input.ts",

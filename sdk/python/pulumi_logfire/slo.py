@@ -13,6 +13,8 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
+from ._inputs import *
 
 __all__ = ['SloArgs', 'Slo']
 
@@ -24,17 +26,16 @@ class SloArgs:
                  scope_value: pulumi.Input[_builtins.str],
                  target_percent: pulumi.Input[_builtins.str],
                  total_query: pulumi.Input[_builtins.str],
+                 alerts: Optional[pulumi.Input['SloAlertsArgs']] = None,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
-                 page_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
                  source: Optional[pulumi.Input[_builtins.str]] = None,
-                 threshold: Optional[pulumi.Input[_builtins.str]] = None,
-                 ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None):
+                 threshold: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Slo resource.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for SLO API paths.
@@ -57,6 +58,8 @@ class SloArgs:
         pulumi.set(__self__, "scope_value", scope_value)
         pulumi.set(__self__, "target_percent", target_percent)
         pulumi.set(__self__, "total_query", total_query)
+        if alerts is not None:
+            pulumi.set(__self__, "alerts", alerts)
         if bad_query is not None:
             pulumi.set(__self__, "bad_query", bad_query)
         if comparison is not None:
@@ -69,16 +72,12 @@ class SloArgs:
             pulumi.set(__self__, "metric_aggregation", metric_aggregation)
         if name is not None:
             pulumi.set(__self__, "name", name)
-        if page_channel_ids is not None:
-            pulumi.set(__self__, "page_channel_ids", page_channel_ids)
         if scope_kind is not None:
             pulumi.set(__self__, "scope_kind", scope_kind)
         if source is not None:
             pulumi.set(__self__, "source", source)
         if threshold is not None:
             pulumi.set(__self__, "threshold", threshold)
-        if ticket_channel_ids is not None:
-            pulumi.set(__self__, "ticket_channel_ids", ticket_channel_ids)
 
     @_builtins.property
     @pulumi.getter(name="projectId")
@@ -141,6 +140,15 @@ class SloArgs:
         pulumi.set(self, "total_query", value)
 
     @_builtins.property
+    @pulumi.getter
+    def alerts(self) -> Optional[pulumi.Input['SloAlertsArgs']]:
+        return pulumi.get(self, "alerts")
+
+    @alerts.setter
+    def alerts(self, value: Optional[pulumi.Input['SloAlertsArgs']]):
+        pulumi.set(self, "alerts", value)
+
+    @_builtins.property
     @pulumi.getter(name="badQuery")
     def bad_query(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -211,15 +219,6 @@ class SloArgs:
     @name.setter
     def name(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "name", value)
-
-    @_builtins.property
-    @pulumi.getter(name="pageChannelIds")
-    def page_channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
-        return pulumi.get(self, "page_channel_ids")
-
-    @page_channel_ids.setter
-    def page_channel_ids(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
-        pulumi.set(self, "page_channel_ids", value)
 
     @_builtins.property
     @pulumi.getter(name="scopeKind")
@@ -257,26 +256,17 @@ class SloArgs:
     def threshold(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "threshold", value)
 
-    @_builtins.property
-    @pulumi.getter(name="ticketChannelIds")
-    def ticket_channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
-        return pulumi.get(self, "ticket_channel_ids")
-
-    @ticket_channel_ids.setter
-    def ticket_channel_ids(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
-        pulumi.set(self, "ticket_channel_ids", value)
-
 
 @pulumi.input_type
 class _SloState:
     def __init__(__self__, *,
+                 alerts: Optional[pulumi.Input['SloAlertsArgs']] = None,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
-                 page_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
                  scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
@@ -284,7 +274,6 @@ class _SloState:
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
                  threshold: Optional[pulumi.Input[_builtins.str]] = None,
-                 ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None):
         """
         Input properties used for looking up and filtering Slo resources.
@@ -303,6 +292,8 @@ class _SloState:
         :param pulumi.Input[_builtins.str] threshold: For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
         :param pulumi.Input[_builtins.str] total_query: SQL boolean expression selecting all events counted by the SLO.
         """
+        if alerts is not None:
+            pulumi.set(__self__, "alerts", alerts)
         if bad_query is not None:
             pulumi.set(__self__, "bad_query", bad_query)
         if comparison is not None:
@@ -315,8 +306,6 @@ class _SloState:
             pulumi.set(__self__, "metric_aggregation", metric_aggregation)
         if name is not None:
             pulumi.set(__self__, "name", name)
-        if page_channel_ids is not None:
-            pulumi.set(__self__, "page_channel_ids", page_channel_ids)
         if project_id is not None:
             pulumi.set(__self__, "project_id", project_id)
         if rolling_window is not None:
@@ -331,10 +320,17 @@ class _SloState:
             pulumi.set(__self__, "target_percent", target_percent)
         if threshold is not None:
             pulumi.set(__self__, "threshold", threshold)
-        if ticket_channel_ids is not None:
-            pulumi.set(__self__, "ticket_channel_ids", ticket_channel_ids)
         if total_query is not None:
             pulumi.set(__self__, "total_query", total_query)
+
+    @_builtins.property
+    @pulumi.getter
+    def alerts(self) -> Optional[pulumi.Input['SloAlertsArgs']]:
+        return pulumi.get(self, "alerts")
+
+    @alerts.setter
+    def alerts(self, value: Optional[pulumi.Input['SloAlertsArgs']]):
+        pulumi.set(self, "alerts", value)
 
     @_builtins.property
     @pulumi.getter(name="badQuery")
@@ -407,15 +403,6 @@ class _SloState:
     @name.setter
     def name(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "name", value)
-
-    @_builtins.property
-    @pulumi.getter(name="pageChannelIds")
-    def page_channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
-        return pulumi.get(self, "page_channel_ids")
-
-    @page_channel_ids.setter
-    def page_channel_ids(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
-        pulumi.set(self, "page_channel_ids", value)
 
     @_builtins.property
     @pulumi.getter(name="projectId")
@@ -502,15 +489,6 @@ class _SloState:
         pulumi.set(self, "threshold", value)
 
     @_builtins.property
-    @pulumi.getter(name="ticketChannelIds")
-    def ticket_channel_ids(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
-        return pulumi.get(self, "ticket_channel_ids")
-
-    @ticket_channel_ids.setter
-    def ticket_channel_ids(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
-        pulumi.set(self, "ticket_channel_ids", value)
-
-    @_builtins.property
     @pulumi.getter(name="totalQuery")
     def total_query(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -529,13 +507,13 @@ class Slo(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 alerts: Optional[pulumi.Input[Union['SloAlertsArgs', 'SloAlertsArgsDict']]] = None,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
-                 page_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
                  scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
@@ -543,7 +521,6 @@ class Slo(pulumi.CustomResource):
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
                  threshold: Optional[pulumi.Input[_builtins.str]] = None,
-                 ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
@@ -558,11 +535,19 @@ class Slo(pulumi.CustomResource):
         import pulumi_logfire as logfire
 
         example_project = logfire.Project("exampleProject")
-        oncall = logfire.Channel("oncall", config=[{
+        alerts = logfire.Channel("alerts", config=[{
             "type": "webhook",
             "format": "auto",
-            "url": "https://hooks.example.com/oncall",
+            "url": "https://hooks.example.com/alerts",
         }])
+        # An SLO has three burn-rate alerts: `fast` and `medium` (severity `page`)
+        # and `slow` (severity `ticket`). The provider writes each configured tier's
+        # channel assignments to its alert and reads them back, so a change made on
+        # the Logfire alerts page shows as drift in the next plan. A tier that is not
+        # configured keeps its channels.
+        everyone = [{
+            "channel_id": alerts.id,
+        }]
         example_slo = logfire.Slo("exampleSlo",
             project_id=example_project.id,
             scope_value="payments-api",
@@ -572,11 +557,123 @@ class Slo(pulumi.CustomResource):
             target_percent="99.9",
             rolling_window="30d",
             environments=["prod"],
-            page_channel_ids=[oncall.id],
-            ticket_channel_ids=[oncall.id])
+            alerts={
+                "fast": {
+                    "channel_assignments": everyone,
+                },
+                "medium": {
+                    "channel_assignments": everyone,
+                },
+                "slow": {
+                    "channel_assignments": everyone,
+                },
+            })
+        config = pulumi.Config()
+        pagerduty_routing_key = config.require("pagerdutyRoutingKey")
+        # 2. Different channels per tier.
+        pagerduty = logfire.Channel("pagerduty", config=[{
+            "type": "pagerduty",
+            "routingKey": pagerduty_routing_key,
+        }])
+        incidents = logfire.Channel("incidents", config=[{
+            "type": "webhook",
+            "format": "auto",
+            "url": "https://hooks.example.com/incidents",
+        }])
+        reliability = logfire.Channel("reliability", config=[{
+            "type": "webhook",
+            "format": "auto",
+            "url": "https://hooks.example.com/reliability",
+        }])
+        checkout_errors = logfire.Slo("checkoutErrors",
+            project_id=example_project.id,
+            scope_value="checkout",
+            total_query="parent_span_id IS NULL",
+            bad_query="otel_status_code = 'ERROR'",
+            target_percent="99.9",
+            rolling_window="30d",
+            alerts={
+                "fast": {
+                    "channel_assignments": [
+                        {
+                            "channel_id": pagerduty.id,
+                        },
+                        {
+                            "channel_id": incidents.id,
+                        },
+                    ],
+                },
+                "medium": {
+                    "channel_assignments": [{
+                        "channel_id": incidents.id,
+                    }],
+                },
+                "slow": {
+                    "channel_assignments": [{
+                        "channel_id": reliability.id,
+                    }],
+                },
+            })
+        # 3. Delivery schedules, shared with a normal alert. PagerDuty gets every
+        # fast and medium burn. The incidents channel gets them only during office
+        # hours, and the reliability channel gets slow burns during office hours. A
+        # normal alert reuses the same configuration, because both resources use the
+        # same assignment type.
+        office_hours = logfire.Schedule("officeHours",
+            label="Office hours",
+            timezone="Europe/London",
+            windows=[{
+                "days": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                ],
+                "start_time": "09:00",
+                "end_time": "18:00",
+            }])
+        oncall = [
+            {
+                "channel_id": pagerduty.id,
+            },
+            {
+                "channel_id": incidents.id,
+                "schedule_id": office_hours.id,
+            },
+        ]
+        checkout = logfire.Slo("checkout",
+            project_id=example_project.id,
+            scope_value="checkout",
+            total_query="parent_span_id IS NULL",
+            bad_query="otel_status_code = 'ERROR'",
+            target_percent="99.9",
+            rolling_window="30d",
+            alerts={
+                "fast": {
+                    "channel_assignments": oncall,
+                },
+                "medium": {
+                    "channel_assignments": oncall,
+                },
+                "slow": {
+                    "channel_assignments": [{
+                        "channel_id": reliability.id,
+                        "schedule_id": office_hours.id,
+                    }],
+                },
+            })
+        payment_errors = logfire.Alert("paymentErrors",
+            project_id=example_project.id,
+            query="select trace_id from records where span_name = 'payment failed'",
+            time_window="5m",
+            frequency="1m",
+            notify_when="has_matches",
+            channel_assignments=oncall)
         # A histogram-threshold metric SLI: "95% of queue-latency observations under
         # 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
-        # `source = "metrics"`.
+        # `source = "metrics"`. It configures no tier, so the provider leaves the
+        # channels of its alerts as they are.
         queue_latency = logfire.Slo("queueLatency",
             project_id=example_project.id,
             scope_value="ingest",
@@ -646,11 +743,19 @@ class Slo(pulumi.CustomResource):
         import pulumi_logfire as logfire
 
         example_project = logfire.Project("exampleProject")
-        oncall = logfire.Channel("oncall", config=[{
+        alerts = logfire.Channel("alerts", config=[{
             "type": "webhook",
             "format": "auto",
-            "url": "https://hooks.example.com/oncall",
+            "url": "https://hooks.example.com/alerts",
         }])
+        # An SLO has three burn-rate alerts: `fast` and `medium` (severity `page`)
+        # and `slow` (severity `ticket`). The provider writes each configured tier's
+        # channel assignments to its alert and reads them back, so a change made on
+        # the Logfire alerts page shows as drift in the next plan. A tier that is not
+        # configured keeps its channels.
+        everyone = [{
+            "channel_id": alerts.id,
+        }]
         example_slo = logfire.Slo("exampleSlo",
             project_id=example_project.id,
             scope_value="payments-api",
@@ -660,11 +765,123 @@ class Slo(pulumi.CustomResource):
             target_percent="99.9",
             rolling_window="30d",
             environments=["prod"],
-            page_channel_ids=[oncall.id],
-            ticket_channel_ids=[oncall.id])
+            alerts={
+                "fast": {
+                    "channel_assignments": everyone,
+                },
+                "medium": {
+                    "channel_assignments": everyone,
+                },
+                "slow": {
+                    "channel_assignments": everyone,
+                },
+            })
+        config = pulumi.Config()
+        pagerduty_routing_key = config.require("pagerdutyRoutingKey")
+        # 2. Different channels per tier.
+        pagerduty = logfire.Channel("pagerduty", config=[{
+            "type": "pagerduty",
+            "routingKey": pagerduty_routing_key,
+        }])
+        incidents = logfire.Channel("incidents", config=[{
+            "type": "webhook",
+            "format": "auto",
+            "url": "https://hooks.example.com/incidents",
+        }])
+        reliability = logfire.Channel("reliability", config=[{
+            "type": "webhook",
+            "format": "auto",
+            "url": "https://hooks.example.com/reliability",
+        }])
+        checkout_errors = logfire.Slo("checkoutErrors",
+            project_id=example_project.id,
+            scope_value="checkout",
+            total_query="parent_span_id IS NULL",
+            bad_query="otel_status_code = 'ERROR'",
+            target_percent="99.9",
+            rolling_window="30d",
+            alerts={
+                "fast": {
+                    "channel_assignments": [
+                        {
+                            "channel_id": pagerduty.id,
+                        },
+                        {
+                            "channel_id": incidents.id,
+                        },
+                    ],
+                },
+                "medium": {
+                    "channel_assignments": [{
+                        "channel_id": incidents.id,
+                    }],
+                },
+                "slow": {
+                    "channel_assignments": [{
+                        "channel_id": reliability.id,
+                    }],
+                },
+            })
+        # 3. Delivery schedules, shared with a normal alert. PagerDuty gets every
+        # fast and medium burn. The incidents channel gets them only during office
+        # hours, and the reliability channel gets slow burns during office hours. A
+        # normal alert reuses the same configuration, because both resources use the
+        # same assignment type.
+        office_hours = logfire.Schedule("officeHours",
+            label="Office hours",
+            timezone="Europe/London",
+            windows=[{
+                "days": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                ],
+                "start_time": "09:00",
+                "end_time": "18:00",
+            }])
+        oncall = [
+            {
+                "channel_id": pagerduty.id,
+            },
+            {
+                "channel_id": incidents.id,
+                "schedule_id": office_hours.id,
+            },
+        ]
+        checkout = logfire.Slo("checkout",
+            project_id=example_project.id,
+            scope_value="checkout",
+            total_query="parent_span_id IS NULL",
+            bad_query="otel_status_code = 'ERROR'",
+            target_percent="99.9",
+            rolling_window="30d",
+            alerts={
+                "fast": {
+                    "channel_assignments": oncall,
+                },
+                "medium": {
+                    "channel_assignments": oncall,
+                },
+                "slow": {
+                    "channel_assignments": [{
+                        "channel_id": reliability.id,
+                        "schedule_id": office_hours.id,
+                    }],
+                },
+            })
+        payment_errors = logfire.Alert("paymentErrors",
+            project_id=example_project.id,
+            query="select trace_id from records where span_name = 'payment failed'",
+            time_window="5m",
+            frequency="1m",
+            notify_when="has_matches",
+            channel_assignments=oncall)
         # A histogram-threshold metric SLI: "95% of queue-latency observations under
         # 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
-        # `source = "metrics"`.
+        # `source = "metrics"`. It configures no tier, so the provider leaves the
+        # channels of its alerts as they are.
         queue_latency = logfire.Slo("queueLatency",
             project_id=example_project.id,
             scope_value="ingest",
@@ -714,13 +931,13 @@ class Slo(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 alerts: Optional[pulumi.Input[Union['SloAlertsArgs', 'SloAlertsArgsDict']]] = None,
                  bad_query: Optional[pulumi.Input[_builtins.str]] = None,
                  comparison: Optional[pulumi.Input[_builtins.str]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
-                 page_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
                  scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
@@ -728,7 +945,6 @@ class Slo(pulumi.CustomResource):
                  source: Optional[pulumi.Input[_builtins.str]] = None,
                  target_percent: Optional[pulumi.Input[_builtins.str]] = None,
                  threshold: Optional[pulumi.Input[_builtins.str]] = None,
-                 ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  total_query: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -739,13 +955,13 @@ class Slo(pulumi.CustomResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = SloArgs.__new__(SloArgs)
 
+            __props__.__dict__["alerts"] = alerts
             __props__.__dict__["bad_query"] = bad_query
             __props__.__dict__["comparison"] = comparison
             __props__.__dict__["description"] = description
             __props__.__dict__["environments"] = environments
             __props__.__dict__["metric_aggregation"] = metric_aggregation
             __props__.__dict__["name"] = name
-            __props__.__dict__["page_channel_ids"] = page_channel_ids
             if project_id is None and not opts.urn:
                 raise TypeError("Missing required property 'project_id'")
             __props__.__dict__["project_id"] = project_id
@@ -761,7 +977,6 @@ class Slo(pulumi.CustomResource):
                 raise TypeError("Missing required property 'target_percent'")
             __props__.__dict__["target_percent"] = target_percent
             __props__.__dict__["threshold"] = threshold
-            __props__.__dict__["ticket_channel_ids"] = ticket_channel_ids
             if total_query is None and not opts.urn:
                 raise TypeError("Missing required property 'total_query'")
             __props__.__dict__["total_query"] = total_query
@@ -775,13 +990,13 @@ class Slo(pulumi.CustomResource):
     def get(resource_name: str,
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
+            alerts: Optional[pulumi.Input[Union['SloAlertsArgs', 'SloAlertsArgsDict']]] = None,
             bad_query: Optional[pulumi.Input[_builtins.str]] = None,
             comparison: Optional[pulumi.Input[_builtins.str]] = None,
             description: Optional[pulumi.Input[_builtins.str]] = None,
             environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             metric_aggregation: Optional[pulumi.Input[_builtins.str]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
-            page_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             project_id: Optional[pulumi.Input[_builtins.str]] = None,
             rolling_window: Optional[pulumi.Input[_builtins.str]] = None,
             scope_kind: Optional[pulumi.Input[_builtins.str]] = None,
@@ -789,7 +1004,6 @@ class Slo(pulumi.CustomResource):
             source: Optional[pulumi.Input[_builtins.str]] = None,
             target_percent: Optional[pulumi.Input[_builtins.str]] = None,
             threshold: Optional[pulumi.Input[_builtins.str]] = None,
-            ticket_channel_ids: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             total_query: Optional[pulumi.Input[_builtins.str]] = None) -> 'Slo':
         """
         Get an existing Slo resource's state with the given name, id, and optional extra
@@ -817,13 +1031,13 @@ class Slo(pulumi.CustomResource):
 
         __props__ = _SloState.__new__(_SloState)
 
+        __props__.__dict__["alerts"] = alerts
         __props__.__dict__["bad_query"] = bad_query
         __props__.__dict__["comparison"] = comparison
         __props__.__dict__["description"] = description
         __props__.__dict__["environments"] = environments
         __props__.__dict__["metric_aggregation"] = metric_aggregation
         __props__.__dict__["name"] = name
-        __props__.__dict__["page_channel_ids"] = page_channel_ids
         __props__.__dict__["project_id"] = project_id
         __props__.__dict__["rolling_window"] = rolling_window
         __props__.__dict__["scope_kind"] = scope_kind
@@ -831,9 +1045,13 @@ class Slo(pulumi.CustomResource):
         __props__.__dict__["source"] = source
         __props__.__dict__["target_percent"] = target_percent
         __props__.__dict__["threshold"] = threshold
-        __props__.__dict__["ticket_channel_ids"] = ticket_channel_ids
         __props__.__dict__["total_query"] = total_query
         return Slo(resource_name, opts=opts, __props__=__props__)
+
+    @_builtins.property
+    @pulumi.getter
+    def alerts(self) -> pulumi.Output['outputs.SloAlerts']:
+        return pulumi.get(self, "alerts")
 
     @_builtins.property
     @pulumi.getter(name="badQuery")
@@ -882,11 +1100,6 @@ class Slo(pulumi.CustomResource):
         SLO name (unique per project).
         """
         return pulumi.get(self, "name")
-
-    @_builtins.property
-    @pulumi.getter(name="pageChannelIds")
-    def page_channel_ids(self) -> pulumi.Output[Optional[Sequence[_builtins.str]]]:
-        return pulumi.get(self, "page_channel_ids")
 
     @_builtins.property
     @pulumi.getter(name="projectId")
@@ -943,11 +1156,6 @@ class Slo(pulumi.CustomResource):
         For `metric_aggregation = "histogram_threshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
         """
         return pulumi.get(self, "threshold")
-
-    @_builtins.property
-    @pulumi.getter(name="ticketChannelIds")
-    def ticket_channel_ids(self) -> pulumi.Output[Optional[Sequence[_builtins.str]]]:
-        return pulumi.get(self, "ticket_channel_ids")
 
     @_builtins.property
     @pulumi.getter(name="totalQuery")

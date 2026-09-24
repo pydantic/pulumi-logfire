@@ -44,6 +44,38 @@ import (
 //			if err != nil {
 //				return err
 //			}
+//			office, err := logfire.NewChannel(ctx, "office", &logfire.ChannelArgs{
+//				Config: logfire.ChannelConfigArgs{
+//					map[string]interface{}{
+//						"type":   "webhook",
+//						"format": "auto",
+//						"url":    "https://example.com/logfire-office-webhook",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			officeHours, err := logfire.NewSchedule(ctx, "officeHours", &logfire.ScheduleArgs{
+//				Label:    pulumi.String("Office hours"),
+//				Timezone: pulumi.String("Europe/London"),
+//				Windows: logfire.ScheduleWindowArray{
+//					&logfire.ScheduleWindowArgs{
+//						Days: pulumi.IntArray{
+//							pulumi.Int(1),
+//							pulumi.Int(2),
+//							pulumi.Int(3),
+//							pulumi.Int(4),
+//							pulumi.Int(5),
+//						},
+//						Start_time: "09:00",
+//						End_time:   "18:00",
+//					},
+//				},
+//			})
+//			if err != nil {
+//				return err
+//			}
 //			_, err = logfire.NewAlert(ctx, "exampleAlert", &logfire.AlertArgs{
 //				ProjectId:   exampleProject.ID(),
 //				Description: pulumi.String("Alert on exception spans"),
@@ -62,8 +94,14 @@ import (
 //				Environments: pulumi.StringArray{
 //					pulumi.String("production"),
 //				},
-//				ChannelIds: pulumi.StringArray{
-//					exampleChannel.ID(),
+//				ChannelAssignments: logfire.AlertChannelAssignmentArray{
+//					&logfire.AlertChannelAssignmentArgs{
+//						Channel_id: exampleChannel.ID(),
+//					},
+//					&logfire.AlertChannelAssignmentArgs{
+//						Channel_id:  office.ID(),
+//						Schedule_id: officeHours.ID(),
+//					},
 //				},
 //				NotifyWhen: pulumi.String("has_matches"),
 //				Active:     pulumi.Bool(true),
@@ -90,8 +128,8 @@ type Alert struct {
 
 	// Whether the alert is active (defaults to true on creation).
 	Active pulumi.BoolOutput `pulumi:"active"`
-	// Set of channel IDs to notify.
-	ChannelIds pulumi.StringArrayOutput `pulumi:"channelIds"`
+	// Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
+	ChannelAssignments AlertChannelAssignmentArrayOutput `pulumi:"channelAssignments"`
 	// Alert description.
 	Description pulumi.StringPtrOutput `pulumi:"description"`
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
@@ -119,8 +157,8 @@ func NewAlert(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
-	if args.ChannelIds == nil {
-		return nil, errors.New("invalid value for required argument 'ChannelIds'")
+	if args.ChannelAssignments == nil {
+		return nil, errors.New("invalid value for required argument 'ChannelAssignments'")
 	}
 	if args.Frequency == nil {
 		return nil, errors.New("invalid value for required argument 'Frequency'")
@@ -162,8 +200,8 @@ func GetAlert(ctx *pulumi.Context,
 type alertState struct {
 	// Whether the alert is active (defaults to true on creation).
 	Active *bool `pulumi:"active"`
-	// Set of channel IDs to notify.
-	ChannelIds []string `pulumi:"channelIds"`
+	// Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
+	ChannelAssignments []AlertChannelAssignment `pulumi:"channelAssignments"`
 	// Alert description.
 	Description *string `pulumi:"description"`
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
@@ -187,8 +225,8 @@ type alertState struct {
 type AlertState struct {
 	// Whether the alert is active (defaults to true on creation).
 	Active pulumi.BoolPtrInput
-	// Set of channel IDs to notify.
-	ChannelIds pulumi.StringArrayInput
+	// Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
+	ChannelAssignments AlertChannelAssignmentArrayInput
 	// Alert description.
 	Description pulumi.StringPtrInput
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
@@ -216,8 +254,8 @@ func (AlertState) ElementType() reflect.Type {
 type alertArgs struct {
 	// Whether the alert is active (defaults to true on creation).
 	Active *bool `pulumi:"active"`
-	// Set of channel IDs to notify.
-	ChannelIds []string `pulumi:"channelIds"`
+	// Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
+	ChannelAssignments []AlertChannelAssignment `pulumi:"channelAssignments"`
 	// Alert description.
 	Description *string `pulumi:"description"`
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
@@ -240,8 +278,8 @@ type alertArgs struct {
 type AlertArgs struct {
 	// Whether the alert is active (defaults to true on creation).
 	Active pulumi.BoolPtrInput
-	// Set of channel IDs to notify.
-	ChannelIds pulumi.StringArrayInput
+	// Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
+	ChannelAssignments AlertChannelAssignmentArrayInput
 	// Alert description.
 	Description pulumi.StringPtrInput
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
@@ -352,9 +390,9 @@ func (o AlertOutput) Active() pulumi.BoolOutput {
 	return o.ApplyT(func(v *Alert) pulumi.BoolOutput { return v.Active }).(pulumi.BoolOutput)
 }
 
-// Set of channel IDs to notify.
-func (o AlertOutput) ChannelIds() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *Alert) pulumi.StringArrayOutput { return v.ChannelIds }).(pulumi.StringArrayOutput)
+// Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
+func (o AlertOutput) ChannelAssignments() AlertChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v *Alert) AlertChannelAssignmentArrayOutput { return v.ChannelAssignments }).(AlertChannelAssignmentArrayOutput)
 }
 
 // Alert description.

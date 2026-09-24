@@ -13,6 +13,112 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+type AlertChannelAssignment struct {
+	// ID of the `Channel` to notify.
+	ChannelId string `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId *string `pulumi:"scheduleId"`
+}
+
+// AlertChannelAssignmentInput is an input type that accepts AlertChannelAssignmentArgs and AlertChannelAssignmentOutput values.
+// You can construct a concrete instance of `AlertChannelAssignmentInput` via:
+//
+//	AlertChannelAssignmentArgs{...}
+type AlertChannelAssignmentInput interface {
+	pulumi.Input
+
+	ToAlertChannelAssignmentOutput() AlertChannelAssignmentOutput
+	ToAlertChannelAssignmentOutputWithContext(context.Context) AlertChannelAssignmentOutput
+}
+
+type AlertChannelAssignmentArgs struct {
+	// ID of the `Channel` to notify.
+	ChannelId pulumi.StringInput `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId pulumi.StringPtrInput `pulumi:"scheduleId"`
+}
+
+func (AlertChannelAssignmentArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*AlertChannelAssignment)(nil)).Elem()
+}
+
+func (i AlertChannelAssignmentArgs) ToAlertChannelAssignmentOutput() AlertChannelAssignmentOutput {
+	return i.ToAlertChannelAssignmentOutputWithContext(context.Background())
+}
+
+func (i AlertChannelAssignmentArgs) ToAlertChannelAssignmentOutputWithContext(ctx context.Context) AlertChannelAssignmentOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(AlertChannelAssignmentOutput)
+}
+
+// AlertChannelAssignmentArrayInput is an input type that accepts AlertChannelAssignmentArray and AlertChannelAssignmentArrayOutput values.
+// You can construct a concrete instance of `AlertChannelAssignmentArrayInput` via:
+//
+//	AlertChannelAssignmentArray{ AlertChannelAssignmentArgs{...} }
+type AlertChannelAssignmentArrayInput interface {
+	pulumi.Input
+
+	ToAlertChannelAssignmentArrayOutput() AlertChannelAssignmentArrayOutput
+	ToAlertChannelAssignmentArrayOutputWithContext(context.Context) AlertChannelAssignmentArrayOutput
+}
+
+type AlertChannelAssignmentArray []AlertChannelAssignmentInput
+
+func (AlertChannelAssignmentArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]AlertChannelAssignment)(nil)).Elem()
+}
+
+func (i AlertChannelAssignmentArray) ToAlertChannelAssignmentArrayOutput() AlertChannelAssignmentArrayOutput {
+	return i.ToAlertChannelAssignmentArrayOutputWithContext(context.Background())
+}
+
+func (i AlertChannelAssignmentArray) ToAlertChannelAssignmentArrayOutputWithContext(ctx context.Context) AlertChannelAssignmentArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(AlertChannelAssignmentArrayOutput)
+}
+
+type AlertChannelAssignmentOutput struct{ *pulumi.OutputState }
+
+func (AlertChannelAssignmentOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*AlertChannelAssignment)(nil)).Elem()
+}
+
+func (o AlertChannelAssignmentOutput) ToAlertChannelAssignmentOutput() AlertChannelAssignmentOutput {
+	return o
+}
+
+func (o AlertChannelAssignmentOutput) ToAlertChannelAssignmentOutputWithContext(ctx context.Context) AlertChannelAssignmentOutput {
+	return o
+}
+
+// ID of the `Channel` to notify.
+func (o AlertChannelAssignmentOutput) ChannelId() pulumi.StringOutput {
+	return o.ApplyT(func(v AlertChannelAssignment) string { return v.ChannelId }).(pulumi.StringOutput)
+}
+
+// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+func (o AlertChannelAssignmentOutput) ScheduleId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v AlertChannelAssignment) *string { return v.ScheduleId }).(pulumi.StringPtrOutput)
+}
+
+type AlertChannelAssignmentArrayOutput struct{ *pulumi.OutputState }
+
+func (AlertChannelAssignmentArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]AlertChannelAssignment)(nil)).Elem()
+}
+
+func (o AlertChannelAssignmentArrayOutput) ToAlertChannelAssignmentArrayOutput() AlertChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o AlertChannelAssignmentArrayOutput) ToAlertChannelAssignmentArrayOutputWithContext(ctx context.Context) AlertChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o AlertChannelAssignmentArrayOutput) Index(i pulumi.IntInput) AlertChannelAssignmentOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) AlertChannelAssignment {
+		return vs[0].([]AlertChannelAssignment)[vs[1].(int)]
+	}).(AlertChannelAssignmentOutput)
+}
+
 type ApiKeyGateway struct {
 	// Whether gateway responses are cached. Null inherits the project default.
 	CacheEnabled *bool `pulumi:"cacheEnabled"`
@@ -534,13 +640,1239 @@ func (o ChannelConfigPtrOutput) Url() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+type ScheduleWindow struct {
+	// ISO weekday numbers: `1` is Monday and `7` is Sunday.
+	Days []int `pulumi:"days"`
+	// End of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+	EndTime string `pulumi:"endTime"`
+	// Start of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+	StartTime string `pulumi:"startTime"`
+}
+
+// ScheduleWindowInput is an input type that accepts ScheduleWindowArgs and ScheduleWindowOutput values.
+// You can construct a concrete instance of `ScheduleWindowInput` via:
+//
+//	ScheduleWindowArgs{...}
+type ScheduleWindowInput interface {
+	pulumi.Input
+
+	ToScheduleWindowOutput() ScheduleWindowOutput
+	ToScheduleWindowOutputWithContext(context.Context) ScheduleWindowOutput
+}
+
+type ScheduleWindowArgs struct {
+	// ISO weekday numbers: `1` is Monday and `7` is Sunday.
+	Days pulumi.IntArrayInput `pulumi:"days"`
+	// End of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+	EndTime pulumi.StringInput `pulumi:"endTime"`
+	// Start of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+	StartTime pulumi.StringInput `pulumi:"startTime"`
+}
+
+func (ScheduleWindowArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*ScheduleWindow)(nil)).Elem()
+}
+
+func (i ScheduleWindowArgs) ToScheduleWindowOutput() ScheduleWindowOutput {
+	return i.ToScheduleWindowOutputWithContext(context.Background())
+}
+
+func (i ScheduleWindowArgs) ToScheduleWindowOutputWithContext(ctx context.Context) ScheduleWindowOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ScheduleWindowOutput)
+}
+
+// ScheduleWindowArrayInput is an input type that accepts ScheduleWindowArray and ScheduleWindowArrayOutput values.
+// You can construct a concrete instance of `ScheduleWindowArrayInput` via:
+//
+//	ScheduleWindowArray{ ScheduleWindowArgs{...} }
+type ScheduleWindowArrayInput interface {
+	pulumi.Input
+
+	ToScheduleWindowArrayOutput() ScheduleWindowArrayOutput
+	ToScheduleWindowArrayOutputWithContext(context.Context) ScheduleWindowArrayOutput
+}
+
+type ScheduleWindowArray []ScheduleWindowInput
+
+func (ScheduleWindowArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]ScheduleWindow)(nil)).Elem()
+}
+
+func (i ScheduleWindowArray) ToScheduleWindowArrayOutput() ScheduleWindowArrayOutput {
+	return i.ToScheduleWindowArrayOutputWithContext(context.Background())
+}
+
+func (i ScheduleWindowArray) ToScheduleWindowArrayOutputWithContext(ctx context.Context) ScheduleWindowArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(ScheduleWindowArrayOutput)
+}
+
+type ScheduleWindowOutput struct{ *pulumi.OutputState }
+
+func (ScheduleWindowOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*ScheduleWindow)(nil)).Elem()
+}
+
+func (o ScheduleWindowOutput) ToScheduleWindowOutput() ScheduleWindowOutput {
+	return o
+}
+
+func (o ScheduleWindowOutput) ToScheduleWindowOutputWithContext(ctx context.Context) ScheduleWindowOutput {
+	return o
+}
+
+// ISO weekday numbers: `1` is Monday and `7` is Sunday.
+func (o ScheduleWindowOutput) Days() pulumi.IntArrayOutput {
+	return o.ApplyT(func(v ScheduleWindow) []int { return v.Days }).(pulumi.IntArrayOutput)
+}
+
+// End of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+func (o ScheduleWindowOutput) EndTime() pulumi.StringOutput {
+	return o.ApplyT(func(v ScheduleWindow) string { return v.EndTime }).(pulumi.StringOutput)
+}
+
+// Start of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+func (o ScheduleWindowOutput) StartTime() pulumi.StringOutput {
+	return o.ApplyT(func(v ScheduleWindow) string { return v.StartTime }).(pulumi.StringOutput)
+}
+
+type ScheduleWindowArrayOutput struct{ *pulumi.OutputState }
+
+func (ScheduleWindowArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]ScheduleWindow)(nil)).Elem()
+}
+
+func (o ScheduleWindowArrayOutput) ToScheduleWindowArrayOutput() ScheduleWindowArrayOutput {
+	return o
+}
+
+func (o ScheduleWindowArrayOutput) ToScheduleWindowArrayOutputWithContext(ctx context.Context) ScheduleWindowArrayOutput {
+	return o
+}
+
+func (o ScheduleWindowArrayOutput) Index(i pulumi.IntInput) ScheduleWindowOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) ScheduleWindow {
+		return vs[0].([]ScheduleWindow)[vs[1].(int)]
+	}).(ScheduleWindowOutput)
+}
+
+type SloAlerts struct {
+	// The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+	Fast *SloAlertsFast `pulumi:"fast"`
+	// The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+	Medium *SloAlertsMedium `pulumi:"medium"`
+	// The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+	Slow *SloAlertsSlow `pulumi:"slow"`
+}
+
+// SloAlertsInput is an input type that accepts SloAlertsArgs and SloAlertsOutput values.
+// You can construct a concrete instance of `SloAlertsInput` via:
+//
+//	SloAlertsArgs{...}
+type SloAlertsInput interface {
+	pulumi.Input
+
+	ToSloAlertsOutput() SloAlertsOutput
+	ToSloAlertsOutputWithContext(context.Context) SloAlertsOutput
+}
+
+type SloAlertsArgs struct {
+	// The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+	Fast SloAlertsFastPtrInput `pulumi:"fast"`
+	// The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+	Medium SloAlertsMediumPtrInput `pulumi:"medium"`
+	// The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+	Slow SloAlertsSlowPtrInput `pulumi:"slow"`
+}
+
+func (SloAlertsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlerts)(nil)).Elem()
+}
+
+func (i SloAlertsArgs) ToSloAlertsOutput() SloAlertsOutput {
+	return i.ToSloAlertsOutputWithContext(context.Background())
+}
+
+func (i SloAlertsArgs) ToSloAlertsOutputWithContext(ctx context.Context) SloAlertsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsOutput)
+}
+
+func (i SloAlertsArgs) ToSloAlertsPtrOutput() SloAlertsPtrOutput {
+	return i.ToSloAlertsPtrOutputWithContext(context.Background())
+}
+
+func (i SloAlertsArgs) ToSloAlertsPtrOutputWithContext(ctx context.Context) SloAlertsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsOutput).ToSloAlertsPtrOutputWithContext(ctx)
+}
+
+// SloAlertsPtrInput is an input type that accepts SloAlertsArgs, SloAlertsPtr and SloAlertsPtrOutput values.
+// You can construct a concrete instance of `SloAlertsPtrInput` via:
+//
+//	        SloAlertsArgs{...}
+//
+//	or:
+//
+//	        nil
+type SloAlertsPtrInput interface {
+	pulumi.Input
+
+	ToSloAlertsPtrOutput() SloAlertsPtrOutput
+	ToSloAlertsPtrOutputWithContext(context.Context) SloAlertsPtrOutput
+}
+
+type sloAlertsPtrType SloAlertsArgs
+
+func SloAlertsPtr(v *SloAlertsArgs) SloAlertsPtrInput {
+	return (*sloAlertsPtrType)(v)
+}
+
+func (*sloAlertsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlerts)(nil)).Elem()
+}
+
+func (i *sloAlertsPtrType) ToSloAlertsPtrOutput() SloAlertsPtrOutput {
+	return i.ToSloAlertsPtrOutputWithContext(context.Background())
+}
+
+func (i *sloAlertsPtrType) ToSloAlertsPtrOutputWithContext(ctx context.Context) SloAlertsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsPtrOutput)
+}
+
+type SloAlertsOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlerts)(nil)).Elem()
+}
+
+func (o SloAlertsOutput) ToSloAlertsOutput() SloAlertsOutput {
+	return o
+}
+
+func (o SloAlertsOutput) ToSloAlertsOutputWithContext(ctx context.Context) SloAlertsOutput {
+	return o
+}
+
+func (o SloAlertsOutput) ToSloAlertsPtrOutput() SloAlertsPtrOutput {
+	return o.ToSloAlertsPtrOutputWithContext(context.Background())
+}
+
+func (o SloAlertsOutput) ToSloAlertsPtrOutputWithContext(ctx context.Context) SloAlertsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v SloAlerts) *SloAlerts {
+		return &v
+	}).(SloAlertsPtrOutput)
+}
+
+// The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+func (o SloAlertsOutput) Fast() SloAlertsFastPtrOutput {
+	return o.ApplyT(func(v SloAlerts) *SloAlertsFast { return v.Fast }).(SloAlertsFastPtrOutput)
+}
+
+// The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+func (o SloAlertsOutput) Medium() SloAlertsMediumPtrOutput {
+	return o.ApplyT(func(v SloAlerts) *SloAlertsMedium { return v.Medium }).(SloAlertsMediumPtrOutput)
+}
+
+// The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+func (o SloAlertsOutput) Slow() SloAlertsSlowPtrOutput {
+	return o.ApplyT(func(v SloAlerts) *SloAlertsSlow { return v.Slow }).(SloAlertsSlowPtrOutput)
+}
+
+type SloAlertsPtrOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlerts)(nil)).Elem()
+}
+
+func (o SloAlertsPtrOutput) ToSloAlertsPtrOutput() SloAlertsPtrOutput {
+	return o
+}
+
+func (o SloAlertsPtrOutput) ToSloAlertsPtrOutputWithContext(ctx context.Context) SloAlertsPtrOutput {
+	return o
+}
+
+func (o SloAlertsPtrOutput) Elem() SloAlertsOutput {
+	return o.ApplyT(func(v *SloAlerts) SloAlerts {
+		if v != nil {
+			return *v
+		}
+		var ret SloAlerts
+		return ret
+	}).(SloAlertsOutput)
+}
+
+// The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+func (o SloAlertsPtrOutput) Fast() SloAlertsFastPtrOutput {
+	return o.ApplyT(func(v *SloAlerts) *SloAlertsFast {
+		if v == nil {
+			return nil
+		}
+		return v.Fast
+	}).(SloAlertsFastPtrOutput)
+}
+
+// The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+func (o SloAlertsPtrOutput) Medium() SloAlertsMediumPtrOutput {
+	return o.ApplyT(func(v *SloAlerts) *SloAlertsMedium {
+		if v == nil {
+			return nil
+		}
+		return v.Medium
+	}).(SloAlertsMediumPtrOutput)
+}
+
+// The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+func (o SloAlertsPtrOutput) Slow() SloAlertsSlowPtrOutput {
+	return o.ApplyT(func(v *SloAlerts) *SloAlertsSlow {
+		if v == nil {
+			return nil
+		}
+		return v.Slow
+	}).(SloAlertsSlowPtrOutput)
+}
+
+type SloAlertsFast struct {
+	// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+	AlertId *string `pulumi:"alertId"`
+	// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+	ChannelAssignments []SloAlertsFastChannelAssignment `pulumi:"channelAssignments"`
+	// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+	Severity *string `pulumi:"severity"`
+	// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+	Viable *bool `pulumi:"viable"`
+}
+
+// SloAlertsFastInput is an input type that accepts SloAlertsFastArgs and SloAlertsFastOutput values.
+// You can construct a concrete instance of `SloAlertsFastInput` via:
+//
+//	SloAlertsFastArgs{...}
+type SloAlertsFastInput interface {
+	pulumi.Input
+
+	ToSloAlertsFastOutput() SloAlertsFastOutput
+	ToSloAlertsFastOutputWithContext(context.Context) SloAlertsFastOutput
+}
+
+type SloAlertsFastArgs struct {
+	// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+	AlertId pulumi.StringPtrInput `pulumi:"alertId"`
+	// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+	ChannelAssignments SloAlertsFastChannelAssignmentArrayInput `pulumi:"channelAssignments"`
+	// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+	Severity pulumi.StringPtrInput `pulumi:"severity"`
+	// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+	Viable pulumi.BoolPtrInput `pulumi:"viable"`
+}
+
+func (SloAlertsFastArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsFast)(nil)).Elem()
+}
+
+func (i SloAlertsFastArgs) ToSloAlertsFastOutput() SloAlertsFastOutput {
+	return i.ToSloAlertsFastOutputWithContext(context.Background())
+}
+
+func (i SloAlertsFastArgs) ToSloAlertsFastOutputWithContext(ctx context.Context) SloAlertsFastOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsFastOutput)
+}
+
+func (i SloAlertsFastArgs) ToSloAlertsFastPtrOutput() SloAlertsFastPtrOutput {
+	return i.ToSloAlertsFastPtrOutputWithContext(context.Background())
+}
+
+func (i SloAlertsFastArgs) ToSloAlertsFastPtrOutputWithContext(ctx context.Context) SloAlertsFastPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsFastOutput).ToSloAlertsFastPtrOutputWithContext(ctx)
+}
+
+// SloAlertsFastPtrInput is an input type that accepts SloAlertsFastArgs, SloAlertsFastPtr and SloAlertsFastPtrOutput values.
+// You can construct a concrete instance of `SloAlertsFastPtrInput` via:
+//
+//	        SloAlertsFastArgs{...}
+//
+//	or:
+//
+//	        nil
+type SloAlertsFastPtrInput interface {
+	pulumi.Input
+
+	ToSloAlertsFastPtrOutput() SloAlertsFastPtrOutput
+	ToSloAlertsFastPtrOutputWithContext(context.Context) SloAlertsFastPtrOutput
+}
+
+type sloAlertsFastPtrType SloAlertsFastArgs
+
+func SloAlertsFastPtr(v *SloAlertsFastArgs) SloAlertsFastPtrInput {
+	return (*sloAlertsFastPtrType)(v)
+}
+
+func (*sloAlertsFastPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlertsFast)(nil)).Elem()
+}
+
+func (i *sloAlertsFastPtrType) ToSloAlertsFastPtrOutput() SloAlertsFastPtrOutput {
+	return i.ToSloAlertsFastPtrOutputWithContext(context.Background())
+}
+
+func (i *sloAlertsFastPtrType) ToSloAlertsFastPtrOutputWithContext(ctx context.Context) SloAlertsFastPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsFastPtrOutput)
+}
+
+type SloAlertsFastOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsFastOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsFast)(nil)).Elem()
+}
+
+func (o SloAlertsFastOutput) ToSloAlertsFastOutput() SloAlertsFastOutput {
+	return o
+}
+
+func (o SloAlertsFastOutput) ToSloAlertsFastOutputWithContext(ctx context.Context) SloAlertsFastOutput {
+	return o
+}
+
+func (o SloAlertsFastOutput) ToSloAlertsFastPtrOutput() SloAlertsFastPtrOutput {
+	return o.ToSloAlertsFastPtrOutputWithContext(context.Background())
+}
+
+func (o SloAlertsFastOutput) ToSloAlertsFastPtrOutputWithContext(ctx context.Context) SloAlertsFastPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v SloAlertsFast) *SloAlertsFast {
+		return &v
+	}).(SloAlertsFastPtrOutput)
+}
+
+// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+func (o SloAlertsFastOutput) AlertId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsFast) *string { return v.AlertId }).(pulumi.StringPtrOutput)
+}
+
+// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+func (o SloAlertsFastOutput) ChannelAssignments() SloAlertsFastChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v SloAlertsFast) []SloAlertsFastChannelAssignment { return v.ChannelAssignments }).(SloAlertsFastChannelAssignmentArrayOutput)
+}
+
+// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+func (o SloAlertsFastOutput) Severity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsFast) *string { return v.Severity }).(pulumi.StringPtrOutput)
+}
+
+// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+func (o SloAlertsFastOutput) Viable() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v SloAlertsFast) *bool { return v.Viable }).(pulumi.BoolPtrOutput)
+}
+
+type SloAlertsFastPtrOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsFastPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlertsFast)(nil)).Elem()
+}
+
+func (o SloAlertsFastPtrOutput) ToSloAlertsFastPtrOutput() SloAlertsFastPtrOutput {
+	return o
+}
+
+func (o SloAlertsFastPtrOutput) ToSloAlertsFastPtrOutputWithContext(ctx context.Context) SloAlertsFastPtrOutput {
+	return o
+}
+
+func (o SloAlertsFastPtrOutput) Elem() SloAlertsFastOutput {
+	return o.ApplyT(func(v *SloAlertsFast) SloAlertsFast {
+		if v != nil {
+			return *v
+		}
+		var ret SloAlertsFast
+		return ret
+	}).(SloAlertsFastOutput)
+}
+
+// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+func (o SloAlertsFastPtrOutput) AlertId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *SloAlertsFast) *string {
+		if v == nil {
+			return nil
+		}
+		return v.AlertId
+	}).(pulumi.StringPtrOutput)
+}
+
+// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+func (o SloAlertsFastPtrOutput) ChannelAssignments() SloAlertsFastChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v *SloAlertsFast) []SloAlertsFastChannelAssignment {
+		if v == nil {
+			return nil
+		}
+		return v.ChannelAssignments
+	}).(SloAlertsFastChannelAssignmentArrayOutput)
+}
+
+// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+func (o SloAlertsFastPtrOutput) Severity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *SloAlertsFast) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Severity
+	}).(pulumi.StringPtrOutput)
+}
+
+// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+func (o SloAlertsFastPtrOutput) Viable() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *SloAlertsFast) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.Viable
+	}).(pulumi.BoolPtrOutput)
+}
+
+type SloAlertsFastChannelAssignment struct {
+	// ID of the `Channel` to notify.
+	ChannelId string `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId *string `pulumi:"scheduleId"`
+}
+
+// SloAlertsFastChannelAssignmentInput is an input type that accepts SloAlertsFastChannelAssignmentArgs and SloAlertsFastChannelAssignmentOutput values.
+// You can construct a concrete instance of `SloAlertsFastChannelAssignmentInput` via:
+//
+//	SloAlertsFastChannelAssignmentArgs{...}
+type SloAlertsFastChannelAssignmentInput interface {
+	pulumi.Input
+
+	ToSloAlertsFastChannelAssignmentOutput() SloAlertsFastChannelAssignmentOutput
+	ToSloAlertsFastChannelAssignmentOutputWithContext(context.Context) SloAlertsFastChannelAssignmentOutput
+}
+
+type SloAlertsFastChannelAssignmentArgs struct {
+	// ID of the `Channel` to notify.
+	ChannelId pulumi.StringInput `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId pulumi.StringPtrInput `pulumi:"scheduleId"`
+}
+
+func (SloAlertsFastChannelAssignmentArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsFastChannelAssignment)(nil)).Elem()
+}
+
+func (i SloAlertsFastChannelAssignmentArgs) ToSloAlertsFastChannelAssignmentOutput() SloAlertsFastChannelAssignmentOutput {
+	return i.ToSloAlertsFastChannelAssignmentOutputWithContext(context.Background())
+}
+
+func (i SloAlertsFastChannelAssignmentArgs) ToSloAlertsFastChannelAssignmentOutputWithContext(ctx context.Context) SloAlertsFastChannelAssignmentOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsFastChannelAssignmentOutput)
+}
+
+// SloAlertsFastChannelAssignmentArrayInput is an input type that accepts SloAlertsFastChannelAssignmentArray and SloAlertsFastChannelAssignmentArrayOutput values.
+// You can construct a concrete instance of `SloAlertsFastChannelAssignmentArrayInput` via:
+//
+//	SloAlertsFastChannelAssignmentArray{ SloAlertsFastChannelAssignmentArgs{...} }
+type SloAlertsFastChannelAssignmentArrayInput interface {
+	pulumi.Input
+
+	ToSloAlertsFastChannelAssignmentArrayOutput() SloAlertsFastChannelAssignmentArrayOutput
+	ToSloAlertsFastChannelAssignmentArrayOutputWithContext(context.Context) SloAlertsFastChannelAssignmentArrayOutput
+}
+
+type SloAlertsFastChannelAssignmentArray []SloAlertsFastChannelAssignmentInput
+
+func (SloAlertsFastChannelAssignmentArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SloAlertsFastChannelAssignment)(nil)).Elem()
+}
+
+func (i SloAlertsFastChannelAssignmentArray) ToSloAlertsFastChannelAssignmentArrayOutput() SloAlertsFastChannelAssignmentArrayOutput {
+	return i.ToSloAlertsFastChannelAssignmentArrayOutputWithContext(context.Background())
+}
+
+func (i SloAlertsFastChannelAssignmentArray) ToSloAlertsFastChannelAssignmentArrayOutputWithContext(ctx context.Context) SloAlertsFastChannelAssignmentArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsFastChannelAssignmentArrayOutput)
+}
+
+type SloAlertsFastChannelAssignmentOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsFastChannelAssignmentOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsFastChannelAssignment)(nil)).Elem()
+}
+
+func (o SloAlertsFastChannelAssignmentOutput) ToSloAlertsFastChannelAssignmentOutput() SloAlertsFastChannelAssignmentOutput {
+	return o
+}
+
+func (o SloAlertsFastChannelAssignmentOutput) ToSloAlertsFastChannelAssignmentOutputWithContext(ctx context.Context) SloAlertsFastChannelAssignmentOutput {
+	return o
+}
+
+// ID of the `Channel` to notify.
+func (o SloAlertsFastChannelAssignmentOutput) ChannelId() pulumi.StringOutput {
+	return o.ApplyT(func(v SloAlertsFastChannelAssignment) string { return v.ChannelId }).(pulumi.StringOutput)
+}
+
+// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+func (o SloAlertsFastChannelAssignmentOutput) ScheduleId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsFastChannelAssignment) *string { return v.ScheduleId }).(pulumi.StringPtrOutput)
+}
+
+type SloAlertsFastChannelAssignmentArrayOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsFastChannelAssignmentArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SloAlertsFastChannelAssignment)(nil)).Elem()
+}
+
+func (o SloAlertsFastChannelAssignmentArrayOutput) ToSloAlertsFastChannelAssignmentArrayOutput() SloAlertsFastChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o SloAlertsFastChannelAssignmentArrayOutput) ToSloAlertsFastChannelAssignmentArrayOutputWithContext(ctx context.Context) SloAlertsFastChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o SloAlertsFastChannelAssignmentArrayOutput) Index(i pulumi.IntInput) SloAlertsFastChannelAssignmentOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) SloAlertsFastChannelAssignment {
+		return vs[0].([]SloAlertsFastChannelAssignment)[vs[1].(int)]
+	}).(SloAlertsFastChannelAssignmentOutput)
+}
+
+type SloAlertsMedium struct {
+	// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+	AlertId *string `pulumi:"alertId"`
+	// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+	ChannelAssignments []SloAlertsMediumChannelAssignment `pulumi:"channelAssignments"`
+	// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+	Severity *string `pulumi:"severity"`
+	// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+	Viable *bool `pulumi:"viable"`
+}
+
+// SloAlertsMediumInput is an input type that accepts SloAlertsMediumArgs and SloAlertsMediumOutput values.
+// You can construct a concrete instance of `SloAlertsMediumInput` via:
+//
+//	SloAlertsMediumArgs{...}
+type SloAlertsMediumInput interface {
+	pulumi.Input
+
+	ToSloAlertsMediumOutput() SloAlertsMediumOutput
+	ToSloAlertsMediumOutputWithContext(context.Context) SloAlertsMediumOutput
+}
+
+type SloAlertsMediumArgs struct {
+	// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+	AlertId pulumi.StringPtrInput `pulumi:"alertId"`
+	// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+	ChannelAssignments SloAlertsMediumChannelAssignmentArrayInput `pulumi:"channelAssignments"`
+	// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+	Severity pulumi.StringPtrInput `pulumi:"severity"`
+	// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+	Viable pulumi.BoolPtrInput `pulumi:"viable"`
+}
+
+func (SloAlertsMediumArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsMedium)(nil)).Elem()
+}
+
+func (i SloAlertsMediumArgs) ToSloAlertsMediumOutput() SloAlertsMediumOutput {
+	return i.ToSloAlertsMediumOutputWithContext(context.Background())
+}
+
+func (i SloAlertsMediumArgs) ToSloAlertsMediumOutputWithContext(ctx context.Context) SloAlertsMediumOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsMediumOutput)
+}
+
+func (i SloAlertsMediumArgs) ToSloAlertsMediumPtrOutput() SloAlertsMediumPtrOutput {
+	return i.ToSloAlertsMediumPtrOutputWithContext(context.Background())
+}
+
+func (i SloAlertsMediumArgs) ToSloAlertsMediumPtrOutputWithContext(ctx context.Context) SloAlertsMediumPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsMediumOutput).ToSloAlertsMediumPtrOutputWithContext(ctx)
+}
+
+// SloAlertsMediumPtrInput is an input type that accepts SloAlertsMediumArgs, SloAlertsMediumPtr and SloAlertsMediumPtrOutput values.
+// You can construct a concrete instance of `SloAlertsMediumPtrInput` via:
+//
+//	        SloAlertsMediumArgs{...}
+//
+//	or:
+//
+//	        nil
+type SloAlertsMediumPtrInput interface {
+	pulumi.Input
+
+	ToSloAlertsMediumPtrOutput() SloAlertsMediumPtrOutput
+	ToSloAlertsMediumPtrOutputWithContext(context.Context) SloAlertsMediumPtrOutput
+}
+
+type sloAlertsMediumPtrType SloAlertsMediumArgs
+
+func SloAlertsMediumPtr(v *SloAlertsMediumArgs) SloAlertsMediumPtrInput {
+	return (*sloAlertsMediumPtrType)(v)
+}
+
+func (*sloAlertsMediumPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlertsMedium)(nil)).Elem()
+}
+
+func (i *sloAlertsMediumPtrType) ToSloAlertsMediumPtrOutput() SloAlertsMediumPtrOutput {
+	return i.ToSloAlertsMediumPtrOutputWithContext(context.Background())
+}
+
+func (i *sloAlertsMediumPtrType) ToSloAlertsMediumPtrOutputWithContext(ctx context.Context) SloAlertsMediumPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsMediumPtrOutput)
+}
+
+type SloAlertsMediumOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsMediumOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsMedium)(nil)).Elem()
+}
+
+func (o SloAlertsMediumOutput) ToSloAlertsMediumOutput() SloAlertsMediumOutput {
+	return o
+}
+
+func (o SloAlertsMediumOutput) ToSloAlertsMediumOutputWithContext(ctx context.Context) SloAlertsMediumOutput {
+	return o
+}
+
+func (o SloAlertsMediumOutput) ToSloAlertsMediumPtrOutput() SloAlertsMediumPtrOutput {
+	return o.ToSloAlertsMediumPtrOutputWithContext(context.Background())
+}
+
+func (o SloAlertsMediumOutput) ToSloAlertsMediumPtrOutputWithContext(ctx context.Context) SloAlertsMediumPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v SloAlertsMedium) *SloAlertsMedium {
+		return &v
+	}).(SloAlertsMediumPtrOutput)
+}
+
+// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+func (o SloAlertsMediumOutput) AlertId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsMedium) *string { return v.AlertId }).(pulumi.StringPtrOutput)
+}
+
+// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+func (o SloAlertsMediumOutput) ChannelAssignments() SloAlertsMediumChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v SloAlertsMedium) []SloAlertsMediumChannelAssignment { return v.ChannelAssignments }).(SloAlertsMediumChannelAssignmentArrayOutput)
+}
+
+// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+func (o SloAlertsMediumOutput) Severity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsMedium) *string { return v.Severity }).(pulumi.StringPtrOutput)
+}
+
+// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+func (o SloAlertsMediumOutput) Viable() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v SloAlertsMedium) *bool { return v.Viable }).(pulumi.BoolPtrOutput)
+}
+
+type SloAlertsMediumPtrOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsMediumPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlertsMedium)(nil)).Elem()
+}
+
+func (o SloAlertsMediumPtrOutput) ToSloAlertsMediumPtrOutput() SloAlertsMediumPtrOutput {
+	return o
+}
+
+func (o SloAlertsMediumPtrOutput) ToSloAlertsMediumPtrOutputWithContext(ctx context.Context) SloAlertsMediumPtrOutput {
+	return o
+}
+
+func (o SloAlertsMediumPtrOutput) Elem() SloAlertsMediumOutput {
+	return o.ApplyT(func(v *SloAlertsMedium) SloAlertsMedium {
+		if v != nil {
+			return *v
+		}
+		var ret SloAlertsMedium
+		return ret
+	}).(SloAlertsMediumOutput)
+}
+
+// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+func (o SloAlertsMediumPtrOutput) AlertId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *SloAlertsMedium) *string {
+		if v == nil {
+			return nil
+		}
+		return v.AlertId
+	}).(pulumi.StringPtrOutput)
+}
+
+// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+func (o SloAlertsMediumPtrOutput) ChannelAssignments() SloAlertsMediumChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v *SloAlertsMedium) []SloAlertsMediumChannelAssignment {
+		if v == nil {
+			return nil
+		}
+		return v.ChannelAssignments
+	}).(SloAlertsMediumChannelAssignmentArrayOutput)
+}
+
+// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+func (o SloAlertsMediumPtrOutput) Severity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *SloAlertsMedium) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Severity
+	}).(pulumi.StringPtrOutput)
+}
+
+// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+func (o SloAlertsMediumPtrOutput) Viable() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *SloAlertsMedium) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.Viable
+	}).(pulumi.BoolPtrOutput)
+}
+
+type SloAlertsMediumChannelAssignment struct {
+	// ID of the `Channel` to notify.
+	ChannelId string `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId *string `pulumi:"scheduleId"`
+}
+
+// SloAlertsMediumChannelAssignmentInput is an input type that accepts SloAlertsMediumChannelAssignmentArgs and SloAlertsMediumChannelAssignmentOutput values.
+// You can construct a concrete instance of `SloAlertsMediumChannelAssignmentInput` via:
+//
+//	SloAlertsMediumChannelAssignmentArgs{...}
+type SloAlertsMediumChannelAssignmentInput interface {
+	pulumi.Input
+
+	ToSloAlertsMediumChannelAssignmentOutput() SloAlertsMediumChannelAssignmentOutput
+	ToSloAlertsMediumChannelAssignmentOutputWithContext(context.Context) SloAlertsMediumChannelAssignmentOutput
+}
+
+type SloAlertsMediumChannelAssignmentArgs struct {
+	// ID of the `Channel` to notify.
+	ChannelId pulumi.StringInput `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId pulumi.StringPtrInput `pulumi:"scheduleId"`
+}
+
+func (SloAlertsMediumChannelAssignmentArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsMediumChannelAssignment)(nil)).Elem()
+}
+
+func (i SloAlertsMediumChannelAssignmentArgs) ToSloAlertsMediumChannelAssignmentOutput() SloAlertsMediumChannelAssignmentOutput {
+	return i.ToSloAlertsMediumChannelAssignmentOutputWithContext(context.Background())
+}
+
+func (i SloAlertsMediumChannelAssignmentArgs) ToSloAlertsMediumChannelAssignmentOutputWithContext(ctx context.Context) SloAlertsMediumChannelAssignmentOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsMediumChannelAssignmentOutput)
+}
+
+// SloAlertsMediumChannelAssignmentArrayInput is an input type that accepts SloAlertsMediumChannelAssignmentArray and SloAlertsMediumChannelAssignmentArrayOutput values.
+// You can construct a concrete instance of `SloAlertsMediumChannelAssignmentArrayInput` via:
+//
+//	SloAlertsMediumChannelAssignmentArray{ SloAlertsMediumChannelAssignmentArgs{...} }
+type SloAlertsMediumChannelAssignmentArrayInput interface {
+	pulumi.Input
+
+	ToSloAlertsMediumChannelAssignmentArrayOutput() SloAlertsMediumChannelAssignmentArrayOutput
+	ToSloAlertsMediumChannelAssignmentArrayOutputWithContext(context.Context) SloAlertsMediumChannelAssignmentArrayOutput
+}
+
+type SloAlertsMediumChannelAssignmentArray []SloAlertsMediumChannelAssignmentInput
+
+func (SloAlertsMediumChannelAssignmentArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SloAlertsMediumChannelAssignment)(nil)).Elem()
+}
+
+func (i SloAlertsMediumChannelAssignmentArray) ToSloAlertsMediumChannelAssignmentArrayOutput() SloAlertsMediumChannelAssignmentArrayOutput {
+	return i.ToSloAlertsMediumChannelAssignmentArrayOutputWithContext(context.Background())
+}
+
+func (i SloAlertsMediumChannelAssignmentArray) ToSloAlertsMediumChannelAssignmentArrayOutputWithContext(ctx context.Context) SloAlertsMediumChannelAssignmentArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsMediumChannelAssignmentArrayOutput)
+}
+
+type SloAlertsMediumChannelAssignmentOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsMediumChannelAssignmentOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsMediumChannelAssignment)(nil)).Elem()
+}
+
+func (o SloAlertsMediumChannelAssignmentOutput) ToSloAlertsMediumChannelAssignmentOutput() SloAlertsMediumChannelAssignmentOutput {
+	return o
+}
+
+func (o SloAlertsMediumChannelAssignmentOutput) ToSloAlertsMediumChannelAssignmentOutputWithContext(ctx context.Context) SloAlertsMediumChannelAssignmentOutput {
+	return o
+}
+
+// ID of the `Channel` to notify.
+func (o SloAlertsMediumChannelAssignmentOutput) ChannelId() pulumi.StringOutput {
+	return o.ApplyT(func(v SloAlertsMediumChannelAssignment) string { return v.ChannelId }).(pulumi.StringOutput)
+}
+
+// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+func (o SloAlertsMediumChannelAssignmentOutput) ScheduleId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsMediumChannelAssignment) *string { return v.ScheduleId }).(pulumi.StringPtrOutput)
+}
+
+type SloAlertsMediumChannelAssignmentArrayOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsMediumChannelAssignmentArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SloAlertsMediumChannelAssignment)(nil)).Elem()
+}
+
+func (o SloAlertsMediumChannelAssignmentArrayOutput) ToSloAlertsMediumChannelAssignmentArrayOutput() SloAlertsMediumChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o SloAlertsMediumChannelAssignmentArrayOutput) ToSloAlertsMediumChannelAssignmentArrayOutputWithContext(ctx context.Context) SloAlertsMediumChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o SloAlertsMediumChannelAssignmentArrayOutput) Index(i pulumi.IntInput) SloAlertsMediumChannelAssignmentOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) SloAlertsMediumChannelAssignment {
+		return vs[0].([]SloAlertsMediumChannelAssignment)[vs[1].(int)]
+	}).(SloAlertsMediumChannelAssignmentOutput)
+}
+
+type SloAlertsSlow struct {
+	// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+	AlertId *string `pulumi:"alertId"`
+	// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+	ChannelAssignments []SloAlertsSlowChannelAssignment `pulumi:"channelAssignments"`
+	// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+	Severity *string `pulumi:"severity"`
+	// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+	Viable *bool `pulumi:"viable"`
+}
+
+// SloAlertsSlowInput is an input type that accepts SloAlertsSlowArgs and SloAlertsSlowOutput values.
+// You can construct a concrete instance of `SloAlertsSlowInput` via:
+//
+//	SloAlertsSlowArgs{...}
+type SloAlertsSlowInput interface {
+	pulumi.Input
+
+	ToSloAlertsSlowOutput() SloAlertsSlowOutput
+	ToSloAlertsSlowOutputWithContext(context.Context) SloAlertsSlowOutput
+}
+
+type SloAlertsSlowArgs struct {
+	// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+	AlertId pulumi.StringPtrInput `pulumi:"alertId"`
+	// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+	ChannelAssignments SloAlertsSlowChannelAssignmentArrayInput `pulumi:"channelAssignments"`
+	// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+	Severity pulumi.StringPtrInput `pulumi:"severity"`
+	// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+	Viable pulumi.BoolPtrInput `pulumi:"viable"`
+}
+
+func (SloAlertsSlowArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsSlow)(nil)).Elem()
+}
+
+func (i SloAlertsSlowArgs) ToSloAlertsSlowOutput() SloAlertsSlowOutput {
+	return i.ToSloAlertsSlowOutputWithContext(context.Background())
+}
+
+func (i SloAlertsSlowArgs) ToSloAlertsSlowOutputWithContext(ctx context.Context) SloAlertsSlowOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsSlowOutput)
+}
+
+func (i SloAlertsSlowArgs) ToSloAlertsSlowPtrOutput() SloAlertsSlowPtrOutput {
+	return i.ToSloAlertsSlowPtrOutputWithContext(context.Background())
+}
+
+func (i SloAlertsSlowArgs) ToSloAlertsSlowPtrOutputWithContext(ctx context.Context) SloAlertsSlowPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsSlowOutput).ToSloAlertsSlowPtrOutputWithContext(ctx)
+}
+
+// SloAlertsSlowPtrInput is an input type that accepts SloAlertsSlowArgs, SloAlertsSlowPtr and SloAlertsSlowPtrOutput values.
+// You can construct a concrete instance of `SloAlertsSlowPtrInput` via:
+//
+//	        SloAlertsSlowArgs{...}
+//
+//	or:
+//
+//	        nil
+type SloAlertsSlowPtrInput interface {
+	pulumi.Input
+
+	ToSloAlertsSlowPtrOutput() SloAlertsSlowPtrOutput
+	ToSloAlertsSlowPtrOutputWithContext(context.Context) SloAlertsSlowPtrOutput
+}
+
+type sloAlertsSlowPtrType SloAlertsSlowArgs
+
+func SloAlertsSlowPtr(v *SloAlertsSlowArgs) SloAlertsSlowPtrInput {
+	return (*sloAlertsSlowPtrType)(v)
+}
+
+func (*sloAlertsSlowPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlertsSlow)(nil)).Elem()
+}
+
+func (i *sloAlertsSlowPtrType) ToSloAlertsSlowPtrOutput() SloAlertsSlowPtrOutput {
+	return i.ToSloAlertsSlowPtrOutputWithContext(context.Background())
+}
+
+func (i *sloAlertsSlowPtrType) ToSloAlertsSlowPtrOutputWithContext(ctx context.Context) SloAlertsSlowPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsSlowPtrOutput)
+}
+
+type SloAlertsSlowOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsSlowOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsSlow)(nil)).Elem()
+}
+
+func (o SloAlertsSlowOutput) ToSloAlertsSlowOutput() SloAlertsSlowOutput {
+	return o
+}
+
+func (o SloAlertsSlowOutput) ToSloAlertsSlowOutputWithContext(ctx context.Context) SloAlertsSlowOutput {
+	return o
+}
+
+func (o SloAlertsSlowOutput) ToSloAlertsSlowPtrOutput() SloAlertsSlowPtrOutput {
+	return o.ToSloAlertsSlowPtrOutputWithContext(context.Background())
+}
+
+func (o SloAlertsSlowOutput) ToSloAlertsSlowPtrOutputWithContext(ctx context.Context) SloAlertsSlowPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v SloAlertsSlow) *SloAlertsSlow {
+		return &v
+	}).(SloAlertsSlowPtrOutput)
+}
+
+// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+func (o SloAlertsSlowOutput) AlertId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsSlow) *string { return v.AlertId }).(pulumi.StringPtrOutput)
+}
+
+// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+func (o SloAlertsSlowOutput) ChannelAssignments() SloAlertsSlowChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v SloAlertsSlow) []SloAlertsSlowChannelAssignment { return v.ChannelAssignments }).(SloAlertsSlowChannelAssignmentArrayOutput)
+}
+
+// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+func (o SloAlertsSlowOutput) Severity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsSlow) *string { return v.Severity }).(pulumi.StringPtrOutput)
+}
+
+// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+func (o SloAlertsSlowOutput) Viable() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v SloAlertsSlow) *bool { return v.Viable }).(pulumi.BoolPtrOutput)
+}
+
+type SloAlertsSlowPtrOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsSlowPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**SloAlertsSlow)(nil)).Elem()
+}
+
+func (o SloAlertsSlowPtrOutput) ToSloAlertsSlowPtrOutput() SloAlertsSlowPtrOutput {
+	return o
+}
+
+func (o SloAlertsSlowPtrOutput) ToSloAlertsSlowPtrOutputWithContext(ctx context.Context) SloAlertsSlowPtrOutput {
+	return o
+}
+
+func (o SloAlertsSlowPtrOutput) Elem() SloAlertsSlowOutput {
+	return o.ApplyT(func(v *SloAlertsSlow) SloAlertsSlow {
+		if v != nil {
+			return *v
+		}
+		var ret SloAlertsSlow
+		return ret
+	}).(SloAlertsSlowOutput)
+}
+
+// ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+func (o SloAlertsSlowPtrOutput) AlertId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *SloAlertsSlow) *string {
+		if v == nil {
+			return nil
+		}
+		return v.AlertId
+	}).(pulumi.StringPtrOutput)
+}
+
+// Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+func (o SloAlertsSlowPtrOutput) ChannelAssignments() SloAlertsSlowChannelAssignmentArrayOutput {
+	return o.ApplyT(func(v *SloAlertsSlow) []SloAlertsSlowChannelAssignment {
+		if v == nil {
+			return nil
+		}
+		return v.ChannelAssignments
+	}).(SloAlertsSlowChannelAssignmentArrayOutput)
+}
+
+// `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+func (o SloAlertsSlowPtrOutput) Severity() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *SloAlertsSlow) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Severity
+	}).(pulumi.StringPtrOutput)
+}
+
+// False when the tier cannot fire at the SLO's `targetPercent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+func (o SloAlertsSlowPtrOutput) Viable() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *SloAlertsSlow) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.Viable
+	}).(pulumi.BoolPtrOutput)
+}
+
+type SloAlertsSlowChannelAssignment struct {
+	// ID of the `Channel` to notify.
+	ChannelId string `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId *string `pulumi:"scheduleId"`
+}
+
+// SloAlertsSlowChannelAssignmentInput is an input type that accepts SloAlertsSlowChannelAssignmentArgs and SloAlertsSlowChannelAssignmentOutput values.
+// You can construct a concrete instance of `SloAlertsSlowChannelAssignmentInput` via:
+//
+//	SloAlertsSlowChannelAssignmentArgs{...}
+type SloAlertsSlowChannelAssignmentInput interface {
+	pulumi.Input
+
+	ToSloAlertsSlowChannelAssignmentOutput() SloAlertsSlowChannelAssignmentOutput
+	ToSloAlertsSlowChannelAssignmentOutputWithContext(context.Context) SloAlertsSlowChannelAssignmentOutput
+}
+
+type SloAlertsSlowChannelAssignmentArgs struct {
+	// ID of the `Channel` to notify.
+	ChannelId pulumi.StringInput `pulumi:"channelId"`
+	// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+	ScheduleId pulumi.StringPtrInput `pulumi:"scheduleId"`
+}
+
+func (SloAlertsSlowChannelAssignmentArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsSlowChannelAssignment)(nil)).Elem()
+}
+
+func (i SloAlertsSlowChannelAssignmentArgs) ToSloAlertsSlowChannelAssignmentOutput() SloAlertsSlowChannelAssignmentOutput {
+	return i.ToSloAlertsSlowChannelAssignmentOutputWithContext(context.Background())
+}
+
+func (i SloAlertsSlowChannelAssignmentArgs) ToSloAlertsSlowChannelAssignmentOutputWithContext(ctx context.Context) SloAlertsSlowChannelAssignmentOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsSlowChannelAssignmentOutput)
+}
+
+// SloAlertsSlowChannelAssignmentArrayInput is an input type that accepts SloAlertsSlowChannelAssignmentArray and SloAlertsSlowChannelAssignmentArrayOutput values.
+// You can construct a concrete instance of `SloAlertsSlowChannelAssignmentArrayInput` via:
+//
+//	SloAlertsSlowChannelAssignmentArray{ SloAlertsSlowChannelAssignmentArgs{...} }
+type SloAlertsSlowChannelAssignmentArrayInput interface {
+	pulumi.Input
+
+	ToSloAlertsSlowChannelAssignmentArrayOutput() SloAlertsSlowChannelAssignmentArrayOutput
+	ToSloAlertsSlowChannelAssignmentArrayOutputWithContext(context.Context) SloAlertsSlowChannelAssignmentArrayOutput
+}
+
+type SloAlertsSlowChannelAssignmentArray []SloAlertsSlowChannelAssignmentInput
+
+func (SloAlertsSlowChannelAssignmentArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SloAlertsSlowChannelAssignment)(nil)).Elem()
+}
+
+func (i SloAlertsSlowChannelAssignmentArray) ToSloAlertsSlowChannelAssignmentArrayOutput() SloAlertsSlowChannelAssignmentArrayOutput {
+	return i.ToSloAlertsSlowChannelAssignmentArrayOutputWithContext(context.Background())
+}
+
+func (i SloAlertsSlowChannelAssignmentArray) ToSloAlertsSlowChannelAssignmentArrayOutputWithContext(ctx context.Context) SloAlertsSlowChannelAssignmentArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(SloAlertsSlowChannelAssignmentArrayOutput)
+}
+
+type SloAlertsSlowChannelAssignmentOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsSlowChannelAssignmentOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SloAlertsSlowChannelAssignment)(nil)).Elem()
+}
+
+func (o SloAlertsSlowChannelAssignmentOutput) ToSloAlertsSlowChannelAssignmentOutput() SloAlertsSlowChannelAssignmentOutput {
+	return o
+}
+
+func (o SloAlertsSlowChannelAssignmentOutput) ToSloAlertsSlowChannelAssignmentOutputWithContext(ctx context.Context) SloAlertsSlowChannelAssignmentOutput {
+	return o
+}
+
+// ID of the `Channel` to notify.
+func (o SloAlertsSlowChannelAssignmentOutput) ChannelId() pulumi.StringOutput {
+	return o.ApplyT(func(v SloAlertsSlowChannelAssignment) string { return v.ChannelId }).(pulumi.StringOutput)
+}
+
+// ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+func (o SloAlertsSlowChannelAssignmentOutput) ScheduleId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SloAlertsSlowChannelAssignment) *string { return v.ScheduleId }).(pulumi.StringPtrOutput)
+}
+
+type SloAlertsSlowChannelAssignmentArrayOutput struct{ *pulumi.OutputState }
+
+func (SloAlertsSlowChannelAssignmentArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SloAlertsSlowChannelAssignment)(nil)).Elem()
+}
+
+func (o SloAlertsSlowChannelAssignmentArrayOutput) ToSloAlertsSlowChannelAssignmentArrayOutput() SloAlertsSlowChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o SloAlertsSlowChannelAssignmentArrayOutput) ToSloAlertsSlowChannelAssignmentArrayOutputWithContext(ctx context.Context) SloAlertsSlowChannelAssignmentArrayOutput {
+	return o
+}
+
+func (o SloAlertsSlowChannelAssignmentArrayOutput) Index(i pulumi.IntInput) SloAlertsSlowChannelAssignmentOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) SloAlertsSlowChannelAssignment {
+		return vs[0].([]SloAlertsSlowChannelAssignment)[vs[1].(int)]
+	}).(SloAlertsSlowChannelAssignmentOutput)
+}
+
 func init() {
+	pulumi.RegisterInputType(reflect.TypeOf((*AlertChannelAssignmentInput)(nil)).Elem(), AlertChannelAssignmentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*AlertChannelAssignmentArrayInput)(nil)).Elem(), AlertChannelAssignmentArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayInput)(nil)).Elem(), ApiKeyGatewayArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayPtrInput)(nil)).Elem(), ApiKeyGatewayArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigInput)(nil)).Elem(), ChannelConfigArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigPtrInput)(nil)).Elem(), ChannelConfigArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ScheduleWindowInput)(nil)).Elem(), ScheduleWindowArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*ScheduleWindowArrayInput)(nil)).Elem(), ScheduleWindowArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsInput)(nil)).Elem(), SloAlertsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsPtrInput)(nil)).Elem(), SloAlertsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsFastInput)(nil)).Elem(), SloAlertsFastArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsFastPtrInput)(nil)).Elem(), SloAlertsFastArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsFastChannelAssignmentInput)(nil)).Elem(), SloAlertsFastChannelAssignmentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsFastChannelAssignmentArrayInput)(nil)).Elem(), SloAlertsFastChannelAssignmentArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsMediumInput)(nil)).Elem(), SloAlertsMediumArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsMediumPtrInput)(nil)).Elem(), SloAlertsMediumArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsMediumChannelAssignmentInput)(nil)).Elem(), SloAlertsMediumChannelAssignmentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsMediumChannelAssignmentArrayInput)(nil)).Elem(), SloAlertsMediumChannelAssignmentArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsSlowInput)(nil)).Elem(), SloAlertsSlowArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsSlowPtrInput)(nil)).Elem(), SloAlertsSlowArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsSlowChannelAssignmentInput)(nil)).Elem(), SloAlertsSlowChannelAssignmentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsSlowChannelAssignmentArrayInput)(nil)).Elem(), SloAlertsSlowChannelAssignmentArray{})
+	pulumi.RegisterOutputType(AlertChannelAssignmentOutput{})
+	pulumi.RegisterOutputType(AlertChannelAssignmentArrayOutput{})
 	pulumi.RegisterOutputType(ApiKeyGatewayOutput{})
 	pulumi.RegisterOutputType(ApiKeyGatewayPtrOutput{})
 	pulumi.RegisterOutputType(ChannelConfigOutput{})
 	pulumi.RegisterOutputType(ChannelConfigPtrOutput{})
+	pulumi.RegisterOutputType(ScheduleWindowOutput{})
+	pulumi.RegisterOutputType(ScheduleWindowArrayOutput{})
+	pulumi.RegisterOutputType(SloAlertsOutput{})
+	pulumi.RegisterOutputType(SloAlertsPtrOutput{})
+	pulumi.RegisterOutputType(SloAlertsFastOutput{})
+	pulumi.RegisterOutputType(SloAlertsFastPtrOutput{})
+	pulumi.RegisterOutputType(SloAlertsFastChannelAssignmentOutput{})
+	pulumi.RegisterOutputType(SloAlertsFastChannelAssignmentArrayOutput{})
+	pulumi.RegisterOutputType(SloAlertsMediumOutput{})
+	pulumi.RegisterOutputType(SloAlertsMediumPtrOutput{})
+	pulumi.RegisterOutputType(SloAlertsMediumChannelAssignmentOutput{})
+	pulumi.RegisterOutputType(SloAlertsMediumChannelAssignmentArrayOutput{})
+	pulumi.RegisterOutputType(SloAlertsSlowOutput{})
+	pulumi.RegisterOutputType(SloAlertsSlowPtrOutput{})
+	pulumi.RegisterOutputType(SloAlertsSlowChannelAssignmentOutput{})
+	pulumi.RegisterOutputType(SloAlertsSlowChannelAssignmentArrayOutput{})
 }
