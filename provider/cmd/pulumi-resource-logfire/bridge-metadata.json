@@ -4,7 +4,7 @@
             "logfire_alert": {
                 "current": "logfire:index/alert:Alert",
                 "fields": {
-                    "channel_ids": {
+                    "channel_assignments": {
                         "maxItemsOne": false
                     },
                     "environments": {
@@ -47,16 +47,50 @@
             "logfire_read_token": {
                 "current": "logfire:index/readToken:ReadToken"
             },
+            "logfire_schedule": {
+                "current": "logfire:index/schedule:Schedule",
+                "fields": {
+                    "windows": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "days": {
+                                    "maxItemsOne": false
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "logfire_slo": {
                 "current": "logfire:index/slo:Slo",
                 "fields": {
+                    "alerts": {
+                        "fields": {
+                            "fast": {
+                                "fields": {
+                                    "channel_assignments": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "medium": {
+                                "fields": {
+                                    "channel_assignments": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            },
+                            "slow": {
+                                "fields": {
+                                    "channel_assignments": {
+                                        "maxItemsOne": false
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "environments": {
-                        "maxItemsOne": false
-                    },
-                    "page_channel_ids": {
-                        "maxItemsOne": false
-                    },
-                    "ticket_channel_ids": {
                         "maxItemsOne": false
                     }
                 }
