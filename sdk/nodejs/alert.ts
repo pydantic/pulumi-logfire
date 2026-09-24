@@ -123,7 +123,7 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly environments: pulumi.Output<string[] | undefined>;
     /**
-     * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+     * Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
      */
     declare public readonly frequency: pulumi.Output<string>;
     /**
@@ -143,7 +143,7 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly query: pulumi.Output<string>;
     /**
-     * Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+     * Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
      */
     declare public readonly timeWindow: pulumi.Output<string>;
     /**
@@ -233,7 +233,7 @@ export interface AlertState {
      */
     environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+     * Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
      */
     frequency?: pulumi.Input<string>;
     /**
@@ -253,7 +253,7 @@ export interface AlertState {
      */
     query?: pulumi.Input<string>;
     /**
-     * Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+     * Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
      */
     timeWindow?: pulumi.Input<string>;
     /**
@@ -283,7 +283,7 @@ export interface AlertArgs {
      */
     environments?: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+     * Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
      */
     frequency: pulumi.Input<string>;
     /**
@@ -303,7 +303,7 @@ export interface AlertArgs {
      */
     query: pulumi.Input<string>;
     /**
-     * Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+     * Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
      */
     timeWindow: pulumi.Input<string>;
 }

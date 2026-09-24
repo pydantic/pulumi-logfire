@@ -134,7 +134,7 @@ type Alert struct {
 	Description pulumi.StringPtrOutput `pulumi:"description"`
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
 	Environments pulumi.StringArrayOutput `pulumi:"environments"`
-	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency pulumi.StringOutput `pulumi:"frequency"`
 	// Alert name (unique per project).
 	Name pulumi.StringOutput `pulumi:"name"`
@@ -144,7 +144,7 @@ type Alert struct {
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
 	// SQL / query string used by the alert.
 	Query pulumi.StringOutput `pulumi:"query"`
-	// Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+	// Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
 	TimeWindow pulumi.StringOutput `pulumi:"timeWindow"`
 	// Provider-managed watermark (lateness tolerance) sent to the API.
 	Watermark pulumi.StringOutput `pulumi:"watermark"`
@@ -206,7 +206,7 @@ type alertState struct {
 	Description *string `pulumi:"description"`
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
 	Environments []string `pulumi:"environments"`
-	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency *string `pulumi:"frequency"`
 	// Alert name (unique per project).
 	Name *string `pulumi:"name"`
@@ -216,7 +216,7 @@ type alertState struct {
 	ProjectId *string `pulumi:"projectId"`
 	// SQL / query string used by the alert.
 	Query *string `pulumi:"query"`
-	// Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+	// Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
 	TimeWindow *string `pulumi:"timeWindow"`
 	// Provider-managed watermark (lateness tolerance) sent to the API.
 	Watermark *string `pulumi:"watermark"`
@@ -231,7 +231,7 @@ type AlertState struct {
 	Description pulumi.StringPtrInput
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
 	Environments pulumi.StringArrayInput
-	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency pulumi.StringPtrInput
 	// Alert name (unique per project).
 	Name pulumi.StringPtrInput
@@ -241,7 +241,7 @@ type AlertState struct {
 	ProjectId pulumi.StringPtrInput
 	// SQL / query string used by the alert.
 	Query pulumi.StringPtrInput
-	// Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+	// Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
 	TimeWindow pulumi.StringPtrInput
 	// Provider-managed watermark (lateness tolerance) sent to the API.
 	Watermark pulumi.StringPtrInput
@@ -260,7 +260,7 @@ type alertArgs struct {
 	Description *string `pulumi:"description"`
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
 	Environments []string `pulumi:"environments"`
-	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency string `pulumi:"frequency"`
 	// Alert name (unique per project).
 	Name *string `pulumi:"name"`
@@ -270,7 +270,7 @@ type alertArgs struct {
 	ProjectId string `pulumi:"projectId"`
 	// SQL / query string used by the alert.
 	Query string `pulumi:"query"`
-	// Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+	// Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
 	TimeWindow string `pulumi:"timeWindow"`
 }
 
@@ -284,7 +284,7 @@ type AlertArgs struct {
 	Description pulumi.StringPtrInput
 	// Deployment environments to scope the query to. Empty = all environments (no filter).
 	Environments pulumi.StringArrayInput
-	// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency pulumi.StringInput
 	// Alert name (unique per project).
 	Name pulumi.StringPtrInput
@@ -294,7 +294,7 @@ type AlertArgs struct {
 	ProjectId pulumi.StringInput
 	// SQL / query string used by the alert.
 	Query pulumi.StringInput
-	// Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+	// Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
 	TimeWindow pulumi.StringInput
 }
 
@@ -405,7 +405,7 @@ func (o AlertOutput) Environments() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringArrayOutput { return v.Environments }).(pulumi.StringArrayOutput)
 }
 
-// Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.
+// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 func (o AlertOutput) Frequency() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.Frequency }).(pulumi.StringOutput)
 }
@@ -430,7 +430,7 @@ func (o AlertOutput) Query() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.Query }).(pulumi.StringOutput)
 }
 
-// Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.
+// Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
 func (o AlertOutput) TimeWindow() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.TimeWindow }).(pulumi.StringOutput)
 }

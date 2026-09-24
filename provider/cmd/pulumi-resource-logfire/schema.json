@@ -428,7 +428,7 @@
                 },
                 "frequency": {
                     "type": "string",
-                    "description": "Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.\n"
+                    "description": "Evaluation frequency, as a duration from \u003cspan pulumi-lang-nodejs=\"`1m`\" pulumi-lang-dotnet=\"`1m`\" pulumi-lang-go=\"`1m`\" pulumi-lang-python=\"`1m`\" pulumi-lang-yaml=\"`1m`\" pulumi-lang-java=\"`1m`\"\u003e`1m`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`24h`\" pulumi-lang-dotnet=\"`24h`\" pulumi-lang-go=\"`24h`\" pulumi-lang-python=\"`24h`\" pulumi-lang-yaml=\"`24h`\" pulumi-lang-java=\"`24h`\"\u003e`24h`\u003c/span\u003e (for example \u003cspan pulumi-lang-nodejs=\"`5m`\" pulumi-lang-dotnet=\"`5m`\" pulumi-lang-go=\"`5m`\" pulumi-lang-python=\"`5m`\" pulumi-lang-yaml=\"`5m`\" pulumi-lang-java=\"`5m`\"\u003e`5m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`20m`\" pulumi-lang-dotnet=\"`20m`\" pulumi-lang-go=\"`20m`\" pulumi-lang-python=\"`20m`\" pulumi-lang-yaml=\"`20m`\" pulumi-lang-java=\"`20m`\"\u003e`20m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`1h`\" pulumi-lang-dotnet=\"`1h`\" pulumi-lang-go=\"`1h`\" pulumi-lang-python=\"`1h`\" pulumi-lang-yaml=\"`1h`\" pulumi-lang-java=\"`1h`\"\u003e`1h`\u003c/span\u003e). Equivalent spellings are accepted and kept as written.\n"
                 },
                 "name": {
                     "type": "string",
@@ -448,7 +448,7 @@
                 },
                 "timeWindow": {
                     "type": "string",
-                    "description": "Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.\n"
+                    "description": "Lookback window, as a duration from \u003cspan pulumi-lang-nodejs=\"`1m`\" pulumi-lang-dotnet=\"`1m`\" pulumi-lang-go=\"`1m`\" pulumi-lang-python=\"`1m`\" pulumi-lang-yaml=\"`1m`\" pulumi-lang-java=\"`1m`\"\u003e`1m`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`30d`\" pulumi-lang-dotnet=\"`30d`\" pulumi-lang-go=\"`30d`\" pulumi-lang-python=\"`30d`\" pulumi-lang-yaml=\"`30d`\" pulumi-lang-java=\"`30d`\"\u003e`30d`\u003c/span\u003e (for example \u003cspan pulumi-lang-nodejs=\"`20m`\" pulumi-lang-dotnet=\"`20m`\" pulumi-lang-go=\"`20m`\" pulumi-lang-python=\"`20m`\" pulumi-lang-yaml=\"`20m`\" pulumi-lang-java=\"`20m`\"\u003e`20m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`1h30m`\" pulumi-lang-dotnet=\"`1h30m`\" pulumi-lang-go=\"`1h30m`\" pulumi-lang-python=\"`1h30m`\" pulumi-lang-yaml=\"`1h30m`\" pulumi-lang-java=\"`1h30m`\"\u003e`1h30m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`7d`\" pulumi-lang-dotnet=\"`7d`\" pulumi-lang-go=\"`7d`\" pulumi-lang-python=\"`7d`\" pulumi-lang-yaml=\"`7d`\" pulumi-lang-java=\"`7d`\"\u003e`7d`\u003c/span\u003e). The API caps this relative to \u003cspan pulumi-lang-nodejs=\"`frequency`\" pulumi-lang-dotnet=\"`Frequency`\" pulumi-lang-go=\"`frequency`\" pulumi-lang-python=\"`frequency`\" pulumi-lang-yaml=\"`frequency`\" pulumi-lang-java=\"`frequency`\"\u003e`frequency`\u003c/span\u003e - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.\n"
                 },
                 "watermark": {
                     "type": "string",
@@ -491,7 +491,7 @@
                 },
                 "frequency": {
                     "type": "string",
-                    "description": "Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.\n"
+                    "description": "Evaluation frequency, as a duration from \u003cspan pulumi-lang-nodejs=\"`1m`\" pulumi-lang-dotnet=\"`1m`\" pulumi-lang-go=\"`1m`\" pulumi-lang-python=\"`1m`\" pulumi-lang-yaml=\"`1m`\" pulumi-lang-java=\"`1m`\"\u003e`1m`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`24h`\" pulumi-lang-dotnet=\"`24h`\" pulumi-lang-go=\"`24h`\" pulumi-lang-python=\"`24h`\" pulumi-lang-yaml=\"`24h`\" pulumi-lang-java=\"`24h`\"\u003e`24h`\u003c/span\u003e (for example \u003cspan pulumi-lang-nodejs=\"`5m`\" pulumi-lang-dotnet=\"`5m`\" pulumi-lang-go=\"`5m`\" pulumi-lang-python=\"`5m`\" pulumi-lang-yaml=\"`5m`\" pulumi-lang-java=\"`5m`\"\u003e`5m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`20m`\" pulumi-lang-dotnet=\"`20m`\" pulumi-lang-go=\"`20m`\" pulumi-lang-python=\"`20m`\" pulumi-lang-yaml=\"`20m`\" pulumi-lang-java=\"`20m`\"\u003e`20m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`1h`\" pulumi-lang-dotnet=\"`1h`\" pulumi-lang-go=\"`1h`\" pulumi-lang-python=\"`1h`\" pulumi-lang-yaml=\"`1h`\" pulumi-lang-java=\"`1h`\"\u003e`1h`\u003c/span\u003e). Equivalent spellings are accepted and kept as written.\n"
                 },
                 "name": {
                     "type": "string",
@@ -511,7 +511,7 @@
                 },
                 "timeWindow": {
                     "type": "string",
-                    "description": "Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.\n"
+                    "description": "Lookback window, as a duration from \u003cspan pulumi-lang-nodejs=\"`1m`\" pulumi-lang-dotnet=\"`1m`\" pulumi-lang-go=\"`1m`\" pulumi-lang-python=\"`1m`\" pulumi-lang-yaml=\"`1m`\" pulumi-lang-java=\"`1m`\"\u003e`1m`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`30d`\" pulumi-lang-dotnet=\"`30d`\" pulumi-lang-go=\"`30d`\" pulumi-lang-python=\"`30d`\" pulumi-lang-yaml=\"`30d`\" pulumi-lang-java=\"`30d`\"\u003e`30d`\u003c/span\u003e (for example \u003cspan pulumi-lang-nodejs=\"`20m`\" pulumi-lang-dotnet=\"`20m`\" pulumi-lang-go=\"`20m`\" pulumi-lang-python=\"`20m`\" pulumi-lang-yaml=\"`20m`\" pulumi-lang-java=\"`20m`\"\u003e`20m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`1h30m`\" pulumi-lang-dotnet=\"`1h30m`\" pulumi-lang-go=\"`1h30m`\" pulumi-lang-python=\"`1h30m`\" pulumi-lang-yaml=\"`1h30m`\" pulumi-lang-java=\"`1h30m`\"\u003e`1h30m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`7d`\" pulumi-lang-dotnet=\"`7d`\" pulumi-lang-go=\"`7d`\" pulumi-lang-python=\"`7d`\" pulumi-lang-yaml=\"`7d`\" pulumi-lang-java=\"`7d`\"\u003e`7d`\u003c/span\u003e). The API caps this relative to \u003cspan pulumi-lang-nodejs=\"`frequency`\" pulumi-lang-dotnet=\"`Frequency`\" pulumi-lang-go=\"`frequency`\" pulumi-lang-python=\"`frequency`\" pulumi-lang-yaml=\"`frequency`\" pulumi-lang-java=\"`frequency`\"\u003e`frequency`\u003c/span\u003e - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.\n"
                 }
             },
             "requiredInputs": [
@@ -549,7 +549,7 @@
                     },
                     "frequency": {
                         "type": "string",
-                        "description": "Evaluation frequency. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h.\n"
+                        "description": "Evaluation frequency, as a duration from \u003cspan pulumi-lang-nodejs=\"`1m`\" pulumi-lang-dotnet=\"`1m`\" pulumi-lang-go=\"`1m`\" pulumi-lang-python=\"`1m`\" pulumi-lang-yaml=\"`1m`\" pulumi-lang-java=\"`1m`\"\u003e`1m`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`24h`\" pulumi-lang-dotnet=\"`24h`\" pulumi-lang-go=\"`24h`\" pulumi-lang-python=\"`24h`\" pulumi-lang-yaml=\"`24h`\" pulumi-lang-java=\"`24h`\"\u003e`24h`\u003c/span\u003e (for example \u003cspan pulumi-lang-nodejs=\"`5m`\" pulumi-lang-dotnet=\"`5m`\" pulumi-lang-go=\"`5m`\" pulumi-lang-python=\"`5m`\" pulumi-lang-yaml=\"`5m`\" pulumi-lang-java=\"`5m`\"\u003e`5m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`20m`\" pulumi-lang-dotnet=\"`20m`\" pulumi-lang-go=\"`20m`\" pulumi-lang-python=\"`20m`\" pulumi-lang-yaml=\"`20m`\" pulumi-lang-java=\"`20m`\"\u003e`20m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`1h`\" pulumi-lang-dotnet=\"`1h`\" pulumi-lang-go=\"`1h`\" pulumi-lang-python=\"`1h`\" pulumi-lang-yaml=\"`1h`\" pulumi-lang-java=\"`1h`\"\u003e`1h`\u003c/span\u003e). Equivalent spellings are accepted and kept as written.\n"
                     },
                     "name": {
                         "type": "string",
@@ -569,7 +569,7 @@
                     },
                     "timeWindow": {
                         "type": "string",
-                        "description": "Lookback window. Allowed values: 1m, 2m, 5m, 10m, 15m, 30m, 1h, 6h, 12h, 24h, 7d, 30d.\n"
+                        "description": "Lookback window, as a duration from \u003cspan pulumi-lang-nodejs=\"`1m`\" pulumi-lang-dotnet=\"`1m`\" pulumi-lang-go=\"`1m`\" pulumi-lang-python=\"`1m`\" pulumi-lang-yaml=\"`1m`\" pulumi-lang-java=\"`1m`\"\u003e`1m`\u003c/span\u003e to \u003cspan pulumi-lang-nodejs=\"`30d`\" pulumi-lang-dotnet=\"`30d`\" pulumi-lang-go=\"`30d`\" pulumi-lang-python=\"`30d`\" pulumi-lang-yaml=\"`30d`\" pulumi-lang-java=\"`30d`\"\u003e`30d`\u003c/span\u003e (for example \u003cspan pulumi-lang-nodejs=\"`20m`\" pulumi-lang-dotnet=\"`20m`\" pulumi-lang-go=\"`20m`\" pulumi-lang-python=\"`20m`\" pulumi-lang-yaml=\"`20m`\" pulumi-lang-java=\"`20m`\"\u003e`20m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`1h30m`\" pulumi-lang-dotnet=\"`1h30m`\" pulumi-lang-go=\"`1h30m`\" pulumi-lang-python=\"`1h30m`\" pulumi-lang-yaml=\"`1h30m`\" pulumi-lang-java=\"`1h30m`\"\u003e`1h30m`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`7d`\" pulumi-lang-dotnet=\"`7d`\" pulumi-lang-go=\"`7d`\" pulumi-lang-python=\"`7d`\" pulumi-lang-yaml=\"`7d`\" pulumi-lang-java=\"`7d`\"\u003e`7d`\u003c/span\u003e). The API caps this relative to \u003cspan pulumi-lang-nodejs=\"`frequency`\" pulumi-lang-dotnet=\"`Frequency`\" pulumi-lang-go=\"`frequency`\" pulumi-lang-python=\"`frequency`\" pulumi-lang-yaml=\"`frequency`\" pulumi-lang-java=\"`frequency`\"\u003e`frequency`\u003c/span\u003e - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.\n"
                     },
                     "watermark": {
                         "type": "string",
