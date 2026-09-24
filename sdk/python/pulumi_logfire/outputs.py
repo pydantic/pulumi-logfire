@@ -13,11 +13,70 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
 
 __all__ = [
+    'AlertChannelAssignment',
     'ApiKeyGateway',
     'ChannelConfig',
+    'ScheduleWindow',
+    'SloAlerts',
+    'SloAlertsFast',
+    'SloAlertsFastChannelAssignment',
+    'SloAlertsMedium',
+    'SloAlertsMediumChannelAssignment',
+    'SloAlertsSlow',
+    'SloAlertsSlowChannelAssignment',
 ]
+
+@pulumi.output_type
+class AlertChannelAssignment(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "channelId":
+            suggest = "channel_id"
+        elif key == "scheduleId":
+            suggest = "schedule_id"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in AlertChannelAssignment. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        AlertChannelAssignment.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        AlertChannelAssignment.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 channel_id: _builtins.str,
+                 schedule_id: Optional[_builtins.str] = None):
+        """
+        :param _builtins.str channel_id: ID of the `Channel` to notify.
+        :param _builtins.str schedule_id: ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        pulumi.set(__self__, "channel_id", channel_id)
+        if schedule_id is not None:
+            pulumi.set(__self__, "schedule_id", schedule_id)
+
+    @_builtins.property
+    @pulumi.getter(name="channelId")
+    def channel_id(self) -> _builtins.str:
+        """
+        ID of the `Channel` to notify.
+        """
+        return pulumi.get(self, "channel_id")
+
+    @_builtins.property
+    @pulumi.getter(name="scheduleId")
+    def schedule_id(self) -> Optional[_builtins.str]:
+        """
+        ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        return pulumi.get(self, "schedule_id")
+
 
 @pulumi.output_type
 class ApiKeyGateway(dict):
@@ -262,5 +321,476 @@ class ChannelConfig(dict):
         Webhook URL endpoint.
         """
         return pulumi.get(self, "url")
+
+
+@pulumi.output_type
+class ScheduleWindow(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "endTime":
+            suggest = "end_time"
+        elif key == "startTime":
+            suggest = "start_time"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in ScheduleWindow. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        ScheduleWindow.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        ScheduleWindow.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 days: Sequence[_builtins.int],
+                 end_time: _builtins.str,
+                 start_time: _builtins.str):
+        """
+        :param Sequence[_builtins.int] days: ISO weekday numbers: `1` is Monday and `7` is Sunday.
+        :param _builtins.str end_time: End of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+        :param _builtins.str start_time: Start of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+        """
+        pulumi.set(__self__, "days", days)
+        pulumi.set(__self__, "end_time", end_time)
+        pulumi.set(__self__, "start_time", start_time)
+
+    @_builtins.property
+    @pulumi.getter
+    def days(self) -> Sequence[_builtins.int]:
+        """
+        ISO weekday numbers: `1` is Monday and `7` is Sunday.
+        """
+        return pulumi.get(self, "days")
+
+    @_builtins.property
+    @pulumi.getter(name="endTime")
+    def end_time(self) -> _builtins.str:
+        """
+        End of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+        """
+        return pulumi.get(self, "end_time")
+
+    @_builtins.property
+    @pulumi.getter(name="startTime")
+    def start_time(self) -> _builtins.str:
+        """
+        Start of the window, as 24-hour `HH:MM` or `HH:MM:SS` in `timezone`. A read keeps your spelling when it denotes the same time, and shows seconds only when they are not zero.
+        """
+        return pulumi.get(self, "start_time")
+
+
+@pulumi.output_type
+class SloAlerts(dict):
+    def __init__(__self__, *,
+                 fast: Optional['outputs.SloAlertsFast'] = None,
+                 medium: Optional['outputs.SloAlertsMedium'] = None,
+                 slow: Optional['outputs.SloAlertsSlow'] = None):
+        """
+        :param 'SloAlertsFastArgs' fast: The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+        :param 'SloAlertsMediumArgs' medium: The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+        :param 'SloAlertsSlowArgs' slow: The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+        """
+        if fast is not None:
+            pulumi.set(__self__, "fast", fast)
+        if medium is not None:
+            pulumi.set(__self__, "medium", medium)
+        if slow is not None:
+            pulumi.set(__self__, "slow", slow)
+
+    @_builtins.property
+    @pulumi.getter
+    def fast(self) -> Optional['outputs.SloAlertsFast']:
+        """
+        The `fast` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+        """
+        return pulumi.get(self, "fast")
+
+    @_builtins.property
+    @pulumi.getter
+    def medium(self) -> Optional['outputs.SloAlertsMedium']:
+        """
+        The `medium` burn-rate tier's alert (severity `page`). Omit it to leave that alert's channels as they are.
+        """
+        return pulumi.get(self, "medium")
+
+    @_builtins.property
+    @pulumi.getter
+    def slow(self) -> Optional['outputs.SloAlertsSlow']:
+        """
+        The `slow` burn-rate tier's alert (severity `ticket`). Omit it to leave that alert's channels as they are.
+        """
+        return pulumi.get(self, "slow")
+
+
+@pulumi.output_type
+class SloAlertsFast(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "alertId":
+            suggest = "alert_id"
+        elif key == "channelAssignments":
+            suggest = "channel_assignments"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SloAlertsFast. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SloAlertsFast.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SloAlertsFast.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 alert_id: Optional[_builtins.str] = None,
+                 channel_assignments: Optional[Sequence['outputs.SloAlertsFastChannelAssignment']] = None,
+                 severity: Optional[_builtins.str] = None,
+                 viable: Optional[_builtins.bool] = None):
+        """
+        :param _builtins.str alert_id: ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+        :param Sequence['SloAlertsFastChannelAssignmentArgs'] channel_assignments: Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+        :param _builtins.str severity: `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+        :param _builtins.bool viable: False when the tier cannot fire at the SLO's `target_percent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+        """
+        if alert_id is not None:
+            pulumi.set(__self__, "alert_id", alert_id)
+        if channel_assignments is not None:
+            pulumi.set(__self__, "channel_assignments", channel_assignments)
+        if severity is not None:
+            pulumi.set(__self__, "severity", severity)
+        if viable is not None:
+            pulumi.set(__self__, "viable", viable)
+
+    @_builtins.property
+    @pulumi.getter(name="alertId")
+    def alert_id(self) -> Optional[_builtins.str]:
+        """
+        ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+        """
+        return pulumi.get(self, "alert_id")
+
+    @_builtins.property
+    @pulumi.getter(name="channelAssignments")
+    def channel_assignments(self) -> Optional[Sequence['outputs.SloAlertsFastChannelAssignment']]:
+        """
+        Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+        """
+        return pulumi.get(self, "channel_assignments")
+
+    @_builtins.property
+    @pulumi.getter
+    def severity(self) -> Optional[_builtins.str]:
+        """
+        `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+        """
+        return pulumi.get(self, "severity")
+
+    @_builtins.property
+    @pulumi.getter
+    def viable(self) -> Optional[_builtins.bool]:
+        """
+        False when the tier cannot fire at the SLO's `target_percent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+        """
+        return pulumi.get(self, "viable")
+
+
+@pulumi.output_type
+class SloAlertsFastChannelAssignment(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "channelId":
+            suggest = "channel_id"
+        elif key == "scheduleId":
+            suggest = "schedule_id"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SloAlertsFastChannelAssignment. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SloAlertsFastChannelAssignment.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SloAlertsFastChannelAssignment.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 channel_id: _builtins.str,
+                 schedule_id: Optional[_builtins.str] = None):
+        """
+        :param _builtins.str channel_id: ID of the `Channel` to notify.
+        :param _builtins.str schedule_id: ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        pulumi.set(__self__, "channel_id", channel_id)
+        if schedule_id is not None:
+            pulumi.set(__self__, "schedule_id", schedule_id)
+
+    @_builtins.property
+    @pulumi.getter(name="channelId")
+    def channel_id(self) -> _builtins.str:
+        """
+        ID of the `Channel` to notify.
+        """
+        return pulumi.get(self, "channel_id")
+
+    @_builtins.property
+    @pulumi.getter(name="scheduleId")
+    def schedule_id(self) -> Optional[_builtins.str]:
+        """
+        ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        return pulumi.get(self, "schedule_id")
+
+
+@pulumi.output_type
+class SloAlertsMedium(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "alertId":
+            suggest = "alert_id"
+        elif key == "channelAssignments":
+            suggest = "channel_assignments"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SloAlertsMedium. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SloAlertsMedium.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SloAlertsMedium.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 alert_id: Optional[_builtins.str] = None,
+                 channel_assignments: Optional[Sequence['outputs.SloAlertsMediumChannelAssignment']] = None,
+                 severity: Optional[_builtins.str] = None,
+                 viable: Optional[_builtins.bool] = None):
+        """
+        :param _builtins.str alert_id: ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+        :param Sequence['SloAlertsMediumChannelAssignmentArgs'] channel_assignments: Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+        :param _builtins.str severity: `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+        :param _builtins.bool viable: False when the tier cannot fire at the SLO's `target_percent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+        """
+        if alert_id is not None:
+            pulumi.set(__self__, "alert_id", alert_id)
+        if channel_assignments is not None:
+            pulumi.set(__self__, "channel_assignments", channel_assignments)
+        if severity is not None:
+            pulumi.set(__self__, "severity", severity)
+        if viable is not None:
+            pulumi.set(__self__, "viable", viable)
+
+    @_builtins.property
+    @pulumi.getter(name="alertId")
+    def alert_id(self) -> Optional[_builtins.str]:
+        """
+        ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+        """
+        return pulumi.get(self, "alert_id")
+
+    @_builtins.property
+    @pulumi.getter(name="channelAssignments")
+    def channel_assignments(self) -> Optional[Sequence['outputs.SloAlertsMediumChannelAssignment']]:
+        """
+        Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+        """
+        return pulumi.get(self, "channel_assignments")
+
+    @_builtins.property
+    @pulumi.getter
+    def severity(self) -> Optional[_builtins.str]:
+        """
+        `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+        """
+        return pulumi.get(self, "severity")
+
+    @_builtins.property
+    @pulumi.getter
+    def viable(self) -> Optional[_builtins.bool]:
+        """
+        False when the tier cannot fire at the SLO's `target_percent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+        """
+        return pulumi.get(self, "viable")
+
+
+@pulumi.output_type
+class SloAlertsMediumChannelAssignment(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "channelId":
+            suggest = "channel_id"
+        elif key == "scheduleId":
+            suggest = "schedule_id"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SloAlertsMediumChannelAssignment. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SloAlertsMediumChannelAssignment.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SloAlertsMediumChannelAssignment.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 channel_id: _builtins.str,
+                 schedule_id: Optional[_builtins.str] = None):
+        """
+        :param _builtins.str channel_id: ID of the `Channel` to notify.
+        :param _builtins.str schedule_id: ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        pulumi.set(__self__, "channel_id", channel_id)
+        if schedule_id is not None:
+            pulumi.set(__self__, "schedule_id", schedule_id)
+
+    @_builtins.property
+    @pulumi.getter(name="channelId")
+    def channel_id(self) -> _builtins.str:
+        """
+        ID of the `Channel` to notify.
+        """
+        return pulumi.get(self, "channel_id")
+
+    @_builtins.property
+    @pulumi.getter(name="scheduleId")
+    def schedule_id(self) -> Optional[_builtins.str]:
+        """
+        ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        return pulumi.get(self, "schedule_id")
+
+
+@pulumi.output_type
+class SloAlertsSlow(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "alertId":
+            suggest = "alert_id"
+        elif key == "channelAssignments":
+            suggest = "channel_assignments"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SloAlertsSlow. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SloAlertsSlow.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SloAlertsSlow.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 alert_id: Optional[_builtins.str] = None,
+                 channel_assignments: Optional[Sequence['outputs.SloAlertsSlowChannelAssignment']] = None,
+                 severity: Optional[_builtins.str] = None,
+                 viable: Optional[_builtins.bool] = None):
+        """
+        :param _builtins.str alert_id: ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+        :param Sequence['SloAlertsSlowChannelAssignmentArgs'] channel_assignments: Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+        :param _builtins.str severity: `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+        :param _builtins.bool viable: False when the tier cannot fire at the SLO's `target_percent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+        """
+        if alert_id is not None:
+            pulumi.set(__self__, "alert_id", alert_id)
+        if channel_assignments is not None:
+            pulumi.set(__self__, "channel_assignments", channel_assignments)
+        if severity is not None:
+            pulumi.set(__self__, "severity", severity)
+        if viable is not None:
+            pulumi.set(__self__, "viable", viable)
+
+    @_builtins.property
+    @pulumi.getter(name="alertId")
+    def alert_id(self) -> Optional[_builtins.str]:
+        """
+        ID of the tier's alert. Null only for an SLO created before Logfire kept all three tier alerts, when the tier could not fire at the SLO's target. The provider then plans an update of the SLO, even when no attribute changed, and that update creates the missing alert.
+        """
+        return pulumi.get(self, "alert_id")
+
+    @_builtins.property
+    @pulumi.getter(name="channelAssignments")
+    def channel_assignments(self) -> Optional[Sequence['outputs.SloAlertsSlowChannelAssignment']]:
+        """
+        Channels of this tier's alert, each with an optional delivery schedule. The provider writes the value to the alert on create, and on update when it differs from what the alert has. It is read back from the alert, so a change made on the Logfire alerts page shows as drift. Set it to `[]` to remove every channel. It is the same type as `logfire_alert.channel_assignments`.
+        """
+        return pulumi.get(self, "channel_assignments")
+
+    @_builtins.property
+    @pulumi.getter
+    def severity(self) -> Optional[_builtins.str]:
+        """
+        `page` for the `fast` and `medium` tiers, `ticket` for the `slow` tier.
+        """
+        return pulumi.get(self, "severity")
+
+    @_builtins.property
+    @pulumi.getter
+    def viable(self) -> Optional[_builtins.bool]:
+        """
+        False when the tier cannot fire at the SLO's `target_percent`. The alert keeps its channels but is not evaluated until a target change makes the tier viable.
+        """
+        return pulumi.get(self, "viable")
+
+
+@pulumi.output_type
+class SloAlertsSlowChannelAssignment(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "channelId":
+            suggest = "channel_id"
+        elif key == "scheduleId":
+            suggest = "schedule_id"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in SloAlertsSlowChannelAssignment. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        SloAlertsSlowChannelAssignment.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        SloAlertsSlowChannelAssignment.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 channel_id: _builtins.str,
+                 schedule_id: Optional[_builtins.str] = None):
+        """
+        :param _builtins.str channel_id: ID of the `Channel` to notify.
+        :param _builtins.str schedule_id: ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        pulumi.set(__self__, "channel_id", channel_id)
+        if schedule_id is not None:
+            pulumi.set(__self__, "schedule_id", schedule_id)
+
+    @_builtins.property
+    @pulumi.getter(name="channelId")
+    def channel_id(self) -> _builtins.str:
+        """
+        ID of the `Channel` to notify.
+        """
+        return pulumi.get(self, "channel_id")
+
+    @_builtins.property
+    @pulumi.getter(name="scheduleId")
+    def schedule_id(self) -> Optional[_builtins.str]:
+        """
+        ID of a `Schedule`. The channel is notified only inside the schedule's windows. Omit it to notify the channel at all times.
+        """
+        return pulumi.get(self, "schedule_id")
 
 

@@ -38,7 +38,7 @@ new logfire.Alert("alert", {
     query: "select * from records limit 1",
     timeWindow: "15m",
     frequency: "5m",
-    channelIds: [channel.id],
+    channelAssignments: [{ channelId: channel.id }],
     notifyWhen: "has_matches",
     active: true,
 }, { provider });

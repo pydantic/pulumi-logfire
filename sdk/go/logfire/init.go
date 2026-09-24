@@ -43,6 +43,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &Project{}
 	case "logfire:index/readToken:ReadToken":
 		r = &ReadToken{}
+	case "logfire:index/schedule:Schedule":
+		r = &Schedule{}
 	case "logfire:index/slo:Slo":
 		r = &Slo{}
 	case "logfire:index/writeToken:WriteToken":
@@ -131,6 +133,11 @@ func init() {
 	pulumi.RegisterResourceModule(
 		"logfire",
 		"index/readToken",
+		&module{version},
+	)
+	pulumi.RegisterResourceModule(
+		"logfire",
+		"index/schedule",
 		&module{version},
 	)
 	pulumi.RegisterResourceModule(

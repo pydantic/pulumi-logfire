@@ -12,7 +12,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
-// Manages a project-scoped AI Gateway API key (`project:gateway_proxy` scope). Do not confuse this with `GatewayProvider`, which configures an upstream LLM provider credential. The provider credential needs `organization:create_api_key` plus `project:gateway_proxy` delegation.
+// Manages a project-scoped AI Gateway API key (`project:gateway_proxy` scope). Do not confuse this with `GatewayProvider`, which configures an upstream LLM provider credential. The provider credential needs `organization:create_api_key` plus `project:gateway_proxy` delegation; a project-scoped operator key for this is minted from the organization-level API keys page with the project selected.
 //
 // ## Import
 //

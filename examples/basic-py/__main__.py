@@ -1,5 +1,5 @@
 import pulumi
-from pulumi_logfire import Provider, Project, Channel, Alert
+from pulumi_logfire import Provider, Project, Channel, Alert, AlertChannelAssignmentArgs
 from pulumi import Config
 
 cfg = Config('logfire')
@@ -35,7 +35,7 @@ Alert('alert',
       query='select * from records limit 1',
       time_window='15m',
       frequency='5m',
-      channel_ids=[chan.id],
+      channel_assignments=[AlertChannelAssignmentArgs(channel_id=chan.id)],
       notify_when='has_matches',
       active=True,
       opts=pulumi.ResourceOptions(provider=provider))

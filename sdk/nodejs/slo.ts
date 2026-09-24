@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -16,11 +18,19 @@ import * as utilities from "./utilities";
  * import * as logfire from "@pydantic/pulumi-logfire";
  *
  * const exampleProject = new logfire.Project("exampleProject", {});
- * const oncall = new logfire.Channel("oncall", {config: [{
+ * const alerts = new logfire.Channel("alerts", {config: [{
  *     type: "webhook",
  *     format: "auto",
- *     url: "https://hooks.example.com/oncall",
+ *     url: "https://hooks.example.com/alerts",
  * }]});
+ * // An SLO has three burn-rate alerts: `fast` and `medium` (severity `page`)
+ * // and `slow` (severity `ticket`). The provider writes each configured tier's
+ * // channel assignments to its alert and reads them back, so a change made on
+ * // the Logfire alerts page shows as drift in the next plan. A tier that is not
+ * // configured keeps its channels.
+ * const everyone = [{
+ *     channel_id: alerts.id,
+ * }];
  * const exampleSlo = new logfire.Slo("exampleSlo", {
  *     projectId: exampleProject.id,
  *     scopeValue: "payments-api",
@@ -30,12 +40,128 @@ import * as utilities from "./utilities";
  *     targetPercent: "99.9",
  *     rollingWindow: "30d",
  *     environments: ["prod"],
- *     pageChannelIds: [oncall.id],
- *     ticketChannelIds: [oncall.id],
+ *     alerts: {
+ *         fast: {
+ *             channelAssignments: everyone,
+ *         },
+ *         medium: {
+ *             channelAssignments: everyone,
+ *         },
+ *         slow: {
+ *             channelAssignments: everyone,
+ *         },
+ *     },
+ * });
+ * const config = new pulumi.Config();
+ * const pagerdutyRoutingKey = config.require("pagerdutyRoutingKey");
+ * // 2. Different channels per tier.
+ * const pagerduty = new logfire.Channel("pagerduty", {config: [{
+ *     type: "pagerduty",
+ *     routingKey: pagerdutyRoutingKey,
+ * }]});
+ * const incidents = new logfire.Channel("incidents", {config: [{
+ *     type: "webhook",
+ *     format: "auto",
+ *     url: "https://hooks.example.com/incidents",
+ * }]});
+ * const reliability = new logfire.Channel("reliability", {config: [{
+ *     type: "webhook",
+ *     format: "auto",
+ *     url: "https://hooks.example.com/reliability",
+ * }]});
+ * const checkoutErrors = new logfire.Slo("checkoutErrors", {
+ *     projectId: exampleProject.id,
+ *     scopeValue: "checkout",
+ *     totalQuery: "parent_span_id IS NULL",
+ *     badQuery: "otel_status_code = 'ERROR'",
+ *     targetPercent: "99.9",
+ *     rollingWindow: "30d",
+ *     alerts: {
+ *         fast: {
+ *             channelAssignments: [
+ *                 {
+ *                     channelId: pagerduty.id,
+ *                 },
+ *                 {
+ *                     channelId: incidents.id,
+ *                 },
+ *             ],
+ *         },
+ *         medium: {
+ *             channelAssignments: [{
+ *                 channelId: incidents.id,
+ *             }],
+ *         },
+ *         slow: {
+ *             channelAssignments: [{
+ *                 channelId: reliability.id,
+ *             }],
+ *         },
+ *     },
+ * });
+ * // 3. Delivery schedules, shared with a normal alert. PagerDuty gets every
+ * // fast and medium burn. The incidents channel gets them only during office
+ * // hours, and the reliability channel gets slow burns during office hours. A
+ * // normal alert reuses the same configuration, because both resources use the
+ * // same assignment type.
+ * const officeHours = new logfire.Schedule("officeHours", {
+ *     label: "Office hours",
+ *     timezone: "Europe/London",
+ *     windows: [{
+ *         days: [
+ *             1,
+ *             2,
+ *             3,
+ *             4,
+ *             5,
+ *         ],
+ *         start_time: "09:00",
+ *         end_time: "18:00",
+ *     }],
+ * });
+ * const oncall = [
+ *     {
+ *         channel_id: pagerduty.id,
+ *     },
+ *     {
+ *         channel_id: incidents.id,
+ *         schedule_id: officeHours.id,
+ *     },
+ * ];
+ * const checkout = new logfire.Slo("checkout", {
+ *     projectId: exampleProject.id,
+ *     scopeValue: "checkout",
+ *     totalQuery: "parent_span_id IS NULL",
+ *     badQuery: "otel_status_code = 'ERROR'",
+ *     targetPercent: "99.9",
+ *     rollingWindow: "30d",
+ *     alerts: {
+ *         fast: {
+ *             channelAssignments: oncall,
+ *         },
+ *         medium: {
+ *             channelAssignments: oncall,
+ *         },
+ *         slow: {
+ *             channelAssignments: [{
+ *                 channelId: reliability.id,
+ *                 scheduleId: officeHours.id,
+ *             }],
+ *         },
+ *     },
+ * });
+ * const paymentErrors = new logfire.Alert("paymentErrors", {
+ *     projectId: exampleProject.id,
+ *     query: "select trace_id from records where span_name = 'payment failed'",
+ *     timeWindow: "5m",
+ *     frequency: "1m",
+ *     notifyWhen: "has_matches",
+ *     channelAssignments: oncall,
  * });
  * // A histogram-threshold metric SLI: "95% of queue-latency observations under
  * // 60s". Uses `threshold` + `comparison` instead of `bad_query`, and requires
- * // `source = "metrics"`.
+ * // `source = "metrics"`. It configures no tier, so the provider leaves the
+ * // channels of its alerts as they are.
  * const queueLatency = new logfire.Slo("queueLatency", {
  *     projectId: exampleProject.id,
  *     scopeValue: "ingest",
@@ -99,6 +225,7 @@ export class Slo extends pulumi.CustomResource {
         return obj['__pulumiType'] === Slo.__pulumiType;
     }
 
+    declare public readonly alerts: pulumi.Output<outputs.SloAlerts>;
     /**
      * SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
      */
@@ -123,7 +250,6 @@ export class Slo extends pulumi.CustomResource {
      * SLO name (unique per project).
      */
     declare public readonly name: pulumi.Output<string>;
-    declare public readonly pageChannelIds: pulumi.Output<string[] | undefined>;
     /**
      * Project ID (UUID) used for SLO API paths.
      */
@@ -152,7 +278,6 @@ export class Slo extends pulumi.CustomResource {
      * For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
      */
     declare public readonly threshold: pulumi.Output<string | undefined>;
-    declare public readonly ticketChannelIds: pulumi.Output<string[] | undefined>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
      */
@@ -171,13 +296,13 @@ export class Slo extends pulumi.CustomResource {
         opts = opts || {};
         if (opts.id) {
             const state = argsOrState as SloState | undefined;
+            resourceInputs["alerts"] = state?.alerts;
             resourceInputs["badQuery"] = state?.badQuery;
             resourceInputs["comparison"] = state?.comparison;
             resourceInputs["description"] = state?.description;
             resourceInputs["environments"] = state?.environments;
             resourceInputs["metricAggregation"] = state?.metricAggregation;
             resourceInputs["name"] = state?.name;
-            resourceInputs["pageChannelIds"] = state?.pageChannelIds;
             resourceInputs["projectId"] = state?.projectId;
             resourceInputs["rollingWindow"] = state?.rollingWindow;
             resourceInputs["scopeKind"] = state?.scopeKind;
@@ -185,7 +310,6 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["source"] = state?.source;
             resourceInputs["targetPercent"] = state?.targetPercent;
             resourceInputs["threshold"] = state?.threshold;
-            resourceInputs["ticketChannelIds"] = state?.ticketChannelIds;
             resourceInputs["totalQuery"] = state?.totalQuery;
         } else {
             const args = argsOrState as SloArgs | undefined;
@@ -204,13 +328,13 @@ export class Slo extends pulumi.CustomResource {
             if (args?.totalQuery === undefined && !opts.urn) {
                 throw new Error("Missing required property 'totalQuery'");
             }
+            resourceInputs["alerts"] = args?.alerts;
             resourceInputs["badQuery"] = args?.badQuery;
             resourceInputs["comparison"] = args?.comparison;
             resourceInputs["description"] = args?.description;
             resourceInputs["environments"] = args?.environments;
             resourceInputs["metricAggregation"] = args?.metricAggregation;
             resourceInputs["name"] = args?.name;
-            resourceInputs["pageChannelIds"] = args?.pageChannelIds;
             resourceInputs["projectId"] = args?.projectId;
             resourceInputs["rollingWindow"] = args?.rollingWindow;
             resourceInputs["scopeKind"] = args?.scopeKind;
@@ -218,7 +342,6 @@ export class Slo extends pulumi.CustomResource {
             resourceInputs["source"] = args?.source;
             resourceInputs["targetPercent"] = args?.targetPercent;
             resourceInputs["threshold"] = args?.threshold;
-            resourceInputs["ticketChannelIds"] = args?.ticketChannelIds;
             resourceInputs["totalQuery"] = args?.totalQuery;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -230,6 +353,7 @@ export class Slo extends pulumi.CustomResource {
  * Input properties used for looking up and filtering Slo resources.
  */
 export interface SloState {
+    alerts?: pulumi.Input<inputs.SloAlerts>;
     /**
      * SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
      */
@@ -254,7 +378,6 @@ export interface SloState {
      * SLO name (unique per project).
      */
     name?: pulumi.Input<string>;
-    pageChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Project ID (UUID) used for SLO API paths.
      */
@@ -283,7 +406,6 @@ export interface SloState {
      * For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
      */
     threshold?: pulumi.Input<string>;
-    ticketChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
      */
@@ -294,6 +416,7 @@ export interface SloState {
  * The set of arguments for constructing a Slo resource.
  */
 export interface SloArgs {
+    alerts?: pulumi.Input<inputs.SloAlerts>;
     /**
      * SQL boolean expression selecting the bad events counted by the SLO. Required for every mode except `metricAggregation = "histogramThreshold"`, which uses `threshold` and `comparison` instead.
      */
@@ -318,7 +441,6 @@ export interface SloArgs {
      * SLO name (unique per project).
      */
     name?: pulumi.Input<string>;
-    pageChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Project ID (UUID) used for SLO API paths.
      */
@@ -347,7 +469,6 @@ export interface SloArgs {
      * For `metricAggregation = "histogramThreshold"`: the cutoff in the metric's native unit, as a decimal string (e.g. `"60000"` on a `_ms` latency metric). Required for that mode, and must be omitted otherwise.
      */
     threshold?: pulumi.Input<string>;
-    ticketChannelIds?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * SQL boolean expression selecting all events counted by the SLO.
      */

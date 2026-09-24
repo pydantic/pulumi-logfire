@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -19,6 +21,26 @@ import * as utilities from "./utilities";
  *     format: "auto",
  *     url: "https://example.com/logfire-webhook",
  * }]});
+ * const office = new logfire.Channel("office", {config: [{
+ *     type: "webhook",
+ *     format: "auto",
+ *     url: "https://example.com/logfire-office-webhook",
+ * }]});
+ * const officeHours = new logfire.Schedule("officeHours", {
+ *     label: "Office hours",
+ *     timezone: "Europe/London",
+ *     windows: [{
+ *         days: [
+ *             1,
+ *             2,
+ *             3,
+ *             4,
+ *             5,
+ *         ],
+ *         start_time: "09:00",
+ *         end_time: "18:00",
+ *     }],
+ * });
  * const exampleAlert = new logfire.Alert("exampleAlert", {
  *     projectId: exampleProject.id,
  *     description: "Alert on exception spans",
@@ -33,7 +55,15 @@ import * as utilities from "./utilities";
  *     timeWindow: "1h",
  *     frequency: "15m",
  *     environments: ["production"],
- *     channelIds: [exampleChannel.id],
+ *     channelAssignments: [
+ *         {
+ *             channel_id: exampleChannel.id,
+ *         },
+ *         {
+ *             channel_id: office.id,
+ *             schedule_id: officeHours.id,
+ *         },
+ *     ],
  *     notifyWhen: "has_matches",
  *     active: true,
  * });
@@ -81,9 +111,9 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly active: pulumi.Output<boolean>;
     /**
-     * Set of channel IDs to notify.
+     * Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `logfire.Slo`, so one value (for example a `locals` entry) can configure both.
      */
-    declare public readonly channelIds: pulumi.Output<string[]>;
+    declare public readonly channelAssignments: pulumi.Output<outputs.AlertChannelAssignment[]>;
     /**
      * Alert description.
      */
@@ -135,7 +165,7 @@ export class Alert extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as AlertState | undefined;
             resourceInputs["active"] = state?.active;
-            resourceInputs["channelIds"] = state?.channelIds;
+            resourceInputs["channelAssignments"] = state?.channelAssignments;
             resourceInputs["description"] = state?.description;
             resourceInputs["environments"] = state?.environments;
             resourceInputs["frequency"] = state?.frequency;
@@ -147,8 +177,8 @@ export class Alert extends pulumi.CustomResource {
             resourceInputs["watermark"] = state?.watermark;
         } else {
             const args = argsOrState as AlertArgs | undefined;
-            if (args?.channelIds === undefined && !opts.urn) {
-                throw new Error("Missing required property 'channelIds'");
+            if (args?.channelAssignments === undefined && !opts.urn) {
+                throw new Error("Missing required property 'channelAssignments'");
             }
             if (args?.frequency === undefined && !opts.urn) {
                 throw new Error("Missing required property 'frequency'");
@@ -166,7 +196,7 @@ export class Alert extends pulumi.CustomResource {
                 throw new Error("Missing required property 'timeWindow'");
             }
             resourceInputs["active"] = args?.active;
-            resourceInputs["channelIds"] = args?.channelIds;
+            resourceInputs["channelAssignments"] = args?.channelAssignments;
             resourceInputs["description"] = args?.description;
             resourceInputs["environments"] = args?.environments;
             resourceInputs["frequency"] = args?.frequency;
@@ -191,9 +221,9 @@ export interface AlertState {
      */
     active?: pulumi.Input<boolean>;
     /**
-     * Set of channel IDs to notify.
+     * Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `logfire.Slo`, so one value (for example a `locals` entry) can configure both.
      */
-    channelIds?: pulumi.Input<pulumi.Input<string>[]>;
+    channelAssignments?: pulumi.Input<pulumi.Input<inputs.AlertChannelAssignment>[]>;
     /**
      * Alert description.
      */
@@ -241,9 +271,9 @@ export interface AlertArgs {
      */
     active?: pulumi.Input<boolean>;
     /**
-     * Set of channel IDs to notify.
+     * Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `logfire.Slo`, so one value (for example a `locals` entry) can configure both.
      */
-    channelIds: pulumi.Input<pulumi.Input<string>[]>;
+    channelAssignments: pulumi.Input<pulumi.Input<inputs.AlertChannelAssignment>[]>;
     /**
      * Alert description.
      */
