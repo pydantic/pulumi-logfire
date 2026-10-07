@@ -34,11 +34,14 @@ rm -f .make/schema bin/pulumi-tfgen-logfire
 make schema PULUMI_CONVERT=0 PROVIDER_VERSION="$provider_version"
 make generate_sdks PULUMI_CONVERT=0 PROVIDER_VERSION="$provider_version"
 
-if ! git diff --quiet -- \
-  provider/cmd/pulumi-resource-logfire/schema.json \
-  provider/cmd/pulumi-resource-logfire/schema-embed.json \
-  provider/cmd/pulumi-resource-logfire/bridge-metadata.json \
-  sdk; then
+artifacts=(
+  provider/cmd/pulumi-resource-logfire/schema.json
+  provider/cmd/pulumi-resource-logfire/schema-embed.json
+  provider/cmd/pulumi-resource-logfire/bridge-metadata.json
+  sdk
+)
+if ! git diff --quiet -- "${artifacts[@]}" || \
+  [[ -n "$(git ls-files --others --exclude-standard -- "${artifacts[@]}")" ]]; then
   echo "[pre-commit] Generated artifacts changed after regeneration."
   echo "[pre-commit] Run the following and re-commit:"
   echo "  git add provider/cmd/pulumi-resource-logfire/schema.json provider/cmd/pulumi-resource-logfire/schema-embed.json provider/cmd/pulumi-resource-logfire/bridge-metadata.json sdk"
