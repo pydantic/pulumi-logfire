@@ -32,6 +32,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      id-token: write # For ESC secrets.
     uses: ./.github/workflows/prerequisites.yml
     secrets: inherit
     with:
@@ -45,6 +46,7 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
+      id-token: write # For ESC secrets.
     with:
       version: ${{ needs.prerequisites.outputs.version }}
       matrix: |
@@ -63,7 +65,8 @@ jobs:
     uses: ./.github/workflows/build_sdk.yml
     secrets: inherit
     permissions:
-      contents: read
+      contents: write # For Renovate SDKs.
+      id-token: write # For ESC secrets.
     with:
       version: ${{ needs.prerequisites.outputs.version }}
 
@@ -130,6 +133,7 @@ jobs:
       - build_sdk
     permissions:
       contents: read
+      id-token: write
     secrets: inherit
     with:
       version: ${{ needs.prerequisites.outputs.version }}

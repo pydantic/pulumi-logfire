@@ -41,6 +41,9 @@ jobs:
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         persist-credentials: false    
+    - id: esc-secrets
+      name: Map environment to ESC outputs
+      uses: ./.github/actions/esc-action
     - name: Configure git for private modules
       shell: bash
       env:
@@ -55,7 +58,7 @@ jobs:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
         version: 2025.11.6
-        github_token: ${{ secrets.PULUMI_BOT_TOKEN }}
+        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
         plugin_install: https://github.com/pulumi/vfox-pulumi
         cache_save: false
     - name: Create dist directory
@@ -119,6 +122,9 @@ jobs:
       with:
         # Persist credentials so we can push back to the repo
         persist-credentials: true    
+    - id: esc-secrets
+      name: Map environment to ESC outputs
+      uses: ./.github/actions/esc-action
     - name: Configure git for private modules
       shell: bash
       env:
@@ -133,7 +139,7 @@ jobs:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
         version: 2025.11.6
-        github_token: ${{ secrets.PULUMI_BOT_TOKEN }}
+        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
         plugin_install: https://github.com/pulumi/vfox-pulumi
         # only saving the cache in the prerequisites job
         cache_save: false
@@ -152,8 +158,8 @@ jobs:
         # Scoped npm packages default to private on first publish unless access is set.
         NPM_CONFIG_ACCESS: public
         PYPI_USERNAME: __token__
-        PYPI_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        PYPI_PASSWORD: ${{ steps.esc-secrets.outputs.PYPI_API_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ steps.esc-secrets.outputs.NPM_TOKEN }}
     - name: Download Go SDK
       uses: ./.github/actions/download-sdk
       with:
@@ -185,6 +191,7 @@ jobs:
     needs: publish_sdk
     permissions:
       contents: write
+      id-token: write
     uses: ./.github/workflows/verify-release.yml
     secrets: inherit
     with:
