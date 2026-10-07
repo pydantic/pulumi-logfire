@@ -199,6 +199,7 @@ class CrossBuildTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.repo = Path(self.temp.name)
+        self.env = dict(os.environ)
         (self.repo / "bin").mkdir()
         (self.repo / "scripts").mkdir()
         shutil.copy2(ROOT / "scripts/crossbuild.mk", self.repo / "scripts/crossbuild.mk")
@@ -213,8 +214,95 @@ class CrossBuildTest(unittest.TestCase):
     def make(self, target, *settings):
         return subprocess.run(
             ["make", "-s", target, "CI=true", *settings],
-            cwd=self.repo, text=True, capture_output=True,
+            cwd=self.repo, env=self.env, text=True, capture_output=True,
         )
+
+    def signing_tools(self):
+        tools = self.repo / "tools"
+        tools.mkdir()
+        self.env.update(PATH=f"{tools}:{os.environ['PATH']}",
+                        TRACE_FILE=str(self.repo / "signing.txt"))
+        scripts = {
+            "az": """#!/bin/sh
+printf '%s\n' "$1" >> "$TRACE_FILE"
+case "$1" in
+  login) exit "${LOGIN_STATUS:-0}" ;;
+  account) printf '{"accessToken":"test-token"}\n' ;;
+  logout) exit 0 ;;
+esac
+""",
+            "jq": "#!/bin/sh\ncat >/dev/null\nprintf 'test-token\\n'\n",
+            "java": """#!/bin/sh
+printf 'java\n' >> "$TRACE_FILE"
+if [ "${SIGN_STATUS:-0}" != 0 ]; then exit "$SIGN_STATUS"; fi
+for binary do :; done
+printf ' signed' >> "$binary"
+""",
+        }
+        for name, script in scripts.items():
+            tool = tools / name
+            tool.write_text(script)
+            tool.chmod(0o755)
+        (self.repo / "bin/jsign-6.0.jar").touch()
+        return ("SKIP_SIGNING=false", "AZURE_SIGNING_CLIENT_ID=test-client",
+                "AZURE_SIGNING_CLIENT_SECRET=test-secret",
+                "AZURE_SIGNING_TENANT_ID=test-tenant",
+                "AZURE_SIGNING_KEY_VAULT_URI=https://example.invalid")
+
+    def test_failed_azure_login_does_not_publish_binary(self):
+        settings = self.signing_tools()
+        self.env["LOGIN_STATUS"] = "1"
+        result = self.make("provider-windows-amd64", *settings)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual((self.repo / "signing.txt").read_text(), "login\n")
+        self.assertFalse((self.repo / "bin/windows-amd64/pulumi-resource-logfire.exe").exists())
+
+    def test_failed_signing_tool_is_retried(self):
+        settings = self.signing_tools()
+        self.env["SIGN_STATUS"] = "1"
+        result = self.make("provider-windows-amd64", *settings)
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        binary = self.repo / "bin/windows-amd64/pulumi-resource-logfire.exe"
+        self.assertFalse(binary.exists())
+        self.assertEqual((self.repo / "signing.txt").read_text(), "login\naccount\njava\n")
+        self.env["SIGN_STATUS"] = "0"
+        result = self.make("provider-windows-amd64", *settings)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(binary.read_text(), "binary signed")
+        self.assertEqual((self.repo / "signing.txt").read_text(),
+                         "login\naccount\njava\nlogin\naccount\njava\nlogout\n")
+
+    def test_successful_signing_publishes_only_completed_binary(self):
+        settings = self.signing_tools()
+        (self.repo / "README.md").write_text("readme\n")
+        (self.repo / "LICENSE").write_text("license\n")
+        result = self.make("provider-windows-amd64", *settings)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        result = self.make("provider_dist-windows-amd64", "PROVIDER_VERSION=0.1.0", *settings)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        with tarfile.open(self.repo / "bin/pulumi-resource-logfire-v0.1.0-windows-amd64.tar.gz") as archive:
+            self.assertEqual(archive.extractfile("./pulumi-resource-logfire.exe").read(), b"binary signed")
+            self.assertNotIn("./pulumi-resource-logfire.exe.unsigned", archive.getnames())
+        self.assertEqual((self.repo / "signing.txt").read_text(), "login\naccount\njava\nlogout\n")
+
+    def test_windows_build_and_package_can_skip_signing(self):
+        (self.repo / "README.md").write_text("readme\n")
+        (self.repo / "LICENSE").write_text("license\n")
+        for target in ("provider-windows-amd64", "provider_dist-windows-amd64"):
+            result = self.make(target, "PROVIDER_VERSION=0.1.0", "SKIP_SIGNING=true")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        with tarfile.open(self.repo / "bin/pulumi-resource-logfire-v0.1.0-windows-amd64.tar.gz") as archive:
+            self.assertEqual(archive.extractfile("./pulumi-resource-logfire.exe").read(), b"binary")
+        self.assertFalse((self.repo / "bin/jsign-6.0.jar").exists())
+
+    def test_partial_signing_configuration_fails(self):
+        (self.repo / "bin/jsign-6.0.jar").touch()
+        result = self.make("provider-windows-amd64", "SKIP_SIGNING=false",
+                           "AZURE_SIGNING_CLIENT_ID=test-client", "AZURE_SIGNING_CLIENT_SECRET=",
+                           "AZURE_SIGNING_TENANT_ID=", "AZURE_SIGNING_KEY_VAULT_URI=")
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Can't sign windows binaries", result.stdout)
+        self.assertFalse((self.repo / "bin/windows-amd64/pulumi-resource-logfire.exe").exists())
 
     def test_failed_windows_signing_is_retried(self):
         (self.repo / "bin/jsign-6.0.jar").touch()
