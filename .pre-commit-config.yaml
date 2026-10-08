@@ -7,7 +7,7 @@ repos:
         entry: ./scripts/precommit-check-generated.sh
         language: system
         pass_filenames: false
-        files: ^(provider/|schema/|sdk/|scripts/|Makefile|\.ci-mgmt\.yaml|README\.md|examples/|mise\.toml|\.config/)
+        files: ^(provider/|schema/|sdk/|scripts/(fix_dashboard_go_examples|precommit-check-generated)\.sh$|Makefile|\.ci-mgmt\.yaml|README\.md|examples/|mise\.toml|\.config/)
       - id: build-workflows
         name: Check build cache and generation workflow behavior
         entry: python3 scripts/test_build_workflows.py
