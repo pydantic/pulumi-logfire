@@ -47,17 +47,19 @@ jobs:
           pattern: '*-sdk.tar.gz'
           merge-multiple: true
           path: sdk
-      - name: Rehearse package publisher
+      - name: Check release packages
+        shell: bash
         env:
           PROVIDER_VERSION: ${{ inputs.version }}
           ALLOW_LOCAL_VERSION: ${{ inputs.allow-local-version }}
         run: |
           flags=()
-          if [[ "$ALLOW_LOCAL_VERSION" == true && "$PROVIDER_VERSION" == *+* ]]; then
-            flags+=(--allow-nonpublishing-local-version)
+          if [[ "$ALLOW_LOCAL_VERSION" == true ]]; then
+            flags+=(--allow-local-version)
           fi
-          scripts/rehearse_package_publisher.sh "${flags[@]}" \
-            "$PROVIDER_VERSION" sdk/nodejs.tar.gz sdk/python.tar.gz reports/package
+          mkdir -p reports
+          python3 scripts/check_packages.py "${flags[@]}" \
+            "$PROVIDER_VERSION" sdk/nodejs.tar.gz sdk/python.tar.gz 2>&1 | tee reports/packages.txt
       - name: Upload package checks
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0

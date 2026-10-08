@@ -36,3 +36,4 @@ go.work.sum
 # Build caches
 .cache
 .gocache
+__pycache__/
