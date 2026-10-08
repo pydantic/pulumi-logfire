@@ -6,21 +6,40 @@ Pulumi Terraform bridge.
 ## Local Checks
 
 ```bash
+python3 scripts/test_build_workflows.py
 (cd provider/shim && go test ./...)
 (cd provider && go test ./...)
-make schema PULUMI_CONVERT=0
-make generate_sdks PULUMI_CONVERT=0
-make build_go build_nodejs build_python PULUMI_CONVERT=0
+make schema
+make generate_sdks
+make build_go build_nodejs build_python
 ```
 
-Use `PULUMI_CONVERT=0` for normal provider updates. It keeps example conversion
-from creating unrelated diffs and matches CI.
+Normal updates use `PULUMI_CONVERT=0` by default, matching CI. To regenerate
+converted examples, set `PULUMI_CONVERT=1` explicitly.
 
 Install the local generated-artifact hook if you want it:
 
 ```bash
 pre-commit install
 ```
+
+The workflow checks cover build cache invalidation, newly generated SDK files,
+and retries after failed Windows signing. They use temporary workspaces and do
+not require cloud credentials.
+
+The `main`, `release`, and `prerelease` workflows check package names and versions,
+inspect npm package contents with `npm pack --dry-run`, and validate Python
+distributions with Twine. Releases must pass these checks before publishing.
+To check downloaded release SDK artifacts locally:
+
+```bash
+mise exec -- python3 scripts/check_packages.py 0.2.1 nodejs.tar.gz python.tar.gz
+```
+
+For branch artifacts whose version contains `+`, add
+`--allow-local-version` before the version. These artifacts are for testing and
+cannot be uploaded to PyPI. The script installs Twine in a temporary virtual
+environment. It does not upload packages.
 
 ## Updating Terraform Provider
 

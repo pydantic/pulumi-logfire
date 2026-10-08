@@ -21,20 +21,20 @@ bin/windows-amd64/$(PROVIDER).exe: GOOS := windows
 bin/windows-amd64/$(PROVIDER).exe: GOARCH := amd64
 bin/windows-arm64/$(PROVIDER).exe: GOOS := windows
 bin/windows-arm64/$(PROVIDER).exe: GOARCH := arm64
-bin/%/$(PROVIDER) bin/%/$(PROVIDER).exe: bin/jsign-6.0.jar
-	$(call build_provider_cmd,$(GOOS),$(GOARCH),$(WORKING_DIR)/$@)
+ifneq ($(SKIP_SIGNING),true)
+bin/windows-amd64/$(PROVIDER).exe bin/windows-arm64/$(PROVIDER).exe: bin/jsign-6.0.jar
+endif
+bin/%/$(PROVIDER) bin/%/$(PROVIDER).exe: .make/schema $(PROVIDER_BINARY_INPUTS) scripts/crossbuild.mk
+	$(call build_provider_cmd,$(GOOS),$(GOARCH),$(WORKING_DIR)/$@.unsigned)
 
-	@# Only sign windows binary if fully configured.
-	@# Test variables set by joining with | between and looking for || showing at least one variable is empty.
-	@# Move the binary to a temporary location and sign it there to avoid the target being up-to-date if signing fails.
+	@# Publish the final target only after all required signing steps succeed.
 	@set -e; \
-	if [[ "${GOOS}" = "windows" && "${SKIP_SIGNING}" != "true" ]]; then \
-		if [[ "|${AZURE_SIGNING_CLIENT_ID}|${AZURE_SIGNING_CLIENT_SECRET}|${AZURE_SIGNING_TENANT_ID}|${AZURE_SIGNING_KEY_VAULT_URI}|" == *"||"* ]]; then \
+	if [ "${GOOS}" = "windows" ] && [ "${SKIP_SIGNING}" != "true" ]; then \
+		if [ -z "${AZURE_SIGNING_CLIENT_ID}" ] || [ -z "${AZURE_SIGNING_CLIENT_SECRET}" ] || \
+		   [ -z "${AZURE_SIGNING_TENANT_ID}" ] || [ -z "${AZURE_SIGNING_KEY_VAULT_URI}" ]; then \
 			echo "Can't sign windows binaries as required configuration not set: AZURE_SIGNING_CLIENT_ID, AZURE_SIGNING_CLIENT_SECRET, AZURE_SIGNING_TENANT_ID, AZURE_SIGNING_KEY_VAULT_URI"; \
-			echo "To rebuild with signing delete the unsigned $@ and rebuild with the fixed configuration"; \
-			if [[ "${CI}" == "true" ]]; then exit 1; fi; \
+			if [ "${CI}" = "true" ]; then exit 1; fi; \
 		else \
-			mv $@ $@.unsigned; \
 			az login --service-principal \
 				--username "${AZURE_SIGNING_CLIENT_ID}" \
 				--password "${AZURE_SIGNING_CLIENT_SECRET}" \
@@ -47,13 +47,14 @@ bin/%/$(PROVIDER) bin/%/$(PROVIDER).exe: bin/jsign-6.0.jar
 				--url "${AZURE_SIGNING_KEY_VAULT_URI}" \
 				--storepass "$${ACCESS_TOKEN}" \
 				$@.unsigned; \
-			mv $@.unsigned $@; \
 			az logout; \
 		fi; \
-	fi
+	fi; \
+	mv $@.unsigned $@
 
 bin/jsign-6.0.jar:
-	wget https://github.com/ebourg/jsign/releases/download/6.0/jsign-6.0.jar --output-document=bin/jsign-6.0.jar
+	wget https://github.com/ebourg/jsign/releases/download/6.0/jsign-6.0.jar --output-document=$@.tmp
+	mv $@.tmp $@
 
 provider-linux-amd64: bin/linux-amd64/$(PROVIDER)
 provider-linux-arm64: bin/linux-arm64/$(PROVIDER)
@@ -69,6 +70,9 @@ bin/$(PROVIDER)-v$(PROVIDER_VERSION)-darwin-amd64.tar.gz: bin/darwin-amd64/$(PRO
 bin/$(PROVIDER)-v$(PROVIDER_VERSION)-darwin-arm64.tar.gz: bin/darwin-arm64/$(PROVIDER)
 bin/$(PROVIDER)-v$(PROVIDER_VERSION)-windows-amd64.tar.gz: bin/windows-amd64/$(PROVIDER).exe
 bin/$(PROVIDER)-v$(PROVIDER_VERSION)-windows-arm64.tar.gz: bin/windows-arm64/$(PROVIDER).exe
+PROVIDER_ARCHIVES := $(addprefix bin/$(PROVIDER)-v$(PROVIDER_VERSION)-,\
+	$(addsuffix .tar.gz,linux-amd64 linux-arm64 darwin-amd64 darwin-arm64 windows-amd64 windows-arm64))
+$(PROVIDER_ARCHIVES): README.md LICENSE scripts/crossbuild.mk
 bin/$(PROVIDER)-v$(PROVIDER_VERSION)-%.tar.gz:
 	@mkdir -p dist
 	@# $< is the last dependency (the binary path from above) e.g. bin/linux-amd64/pulumi-resource-xyz

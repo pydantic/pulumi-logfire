@@ -23,15 +23,11 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      id-token: write # For ESC secrets.
     steps:
     - name: Checkout Repo
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         persist-credentials: false    
-    - id: esc-secrets
-      name: Map environment to ESC outputs
-      uses: ./.github/actions/esc-action
     - name: Configure git for private modules
       shell: bash
       env:
@@ -46,7 +42,7 @@ jobs:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
         version: 2025.11.6
-        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
+        github_token: ${{ secrets.PULUMI_BOT_TOKEN }}
         plugin_install: https://github.com/pulumi/vfox-pulumi
         cache_save: false # A different job handles caching our tools.
     - name: disarm go:embed directives to enable lint
