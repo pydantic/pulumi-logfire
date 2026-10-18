@@ -12,6 +12,77 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
+// Manages a Logfire dashboard.
+//
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"os"
+//
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
+//
+// )
+//
+//	func readFileOrPanic(path string) pulumi.String {
+//		data, err := os.ReadFile(path)
+//		if err != nil {
+//			panic(err.Error())
+//		}
+//		return pulumi.String(string(data))
+//	}
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			exampleProject, err := logfire.NewProject(ctx, "exampleProject", nil)
+//			if err != nil {
+//				return err
+//			}
+//			_, err = logfire.NewDashboard(ctx, "exampleDashboard", &logfire.DashboardArgs{
+//				ProjectId:  exampleProject.ID(),
+//				Slug:       pulumi.String("example-dashboard"),
+//				Definition: pulumi.String(readFileOrPanic("dashboard.json")),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
+//
+// Read a dashboard definition from a file written by hand or copied from Logfire.
+// Exported metadata can remain unchanged; `projectId`, `name`, and `slug` select the
+// destination and identity.
+//
+// | Starting point | Workflow |
+// | --- | --- |
+// | Defined in IaC | Apply the definition to create a dashboard. |
+// | Existing UI dashboard | Export its JSON, match its attributes, and import before applying to retain its UUID. |
+// | Copy of a UI dashboard | Apply its exported JSON with the destination project, name, and an available slug to create a new UUID. The source dashboard remains unchanged. |
+//
+// ## Definition comparison
+//
+// Comparison ignores JSON formatting, top-level `metadata`, known defaults,
+// and grid panel `ref` and `$ref` aliases. Integer literals compare exactly.
+// Decimal and exponent literals compare at the API's float precision. Equivalent
+// spellings such as `1` and `1.0` compare equal. Content and layout changes produce
+// a plan.
+//
+// The resource's `name` and `slug` control the dashboard name and URL. Changing
+// `name` or `definition` updates the dashboard. Changing `projectId` or `slug`
+// replaces it.
+//
+// Definition updates explicitly request the file's layout, including panel visibility.
+// Name-only updates preserve saved UI positions. On older instances without layout
+// replacement support, saved UI overrides can cause an inconsistent result error
+// when applying a layout change. Re-export the dashboard to adopt its current layout.
+//
 // ## Import
 //
 // Import by project name and dashboard slug:

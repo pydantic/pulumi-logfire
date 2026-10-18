@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Check Make's cache invalidation in temporary workspaces without SDK toolchains."""
 
+import json
 import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -83,6 +85,25 @@ class BuildDependenciesTest(unittest.TestCase):
     def test_dashboard_helper_regenerates_go_sdk(self):
         self.assert_rebuild("scripts/fix_dashboard_go_examples.sh", ".make/generate_go")
 
+    def test_dashboard_example_helper(self):
+        source = ('func readFileOrPanic(path string) pulumi.StringPtrInput {\n'
+                  '    return pulumi.String("data")\n}\n')
+        expected = ('func readFileOrPanic(path string) pulumi.String {\n'
+                    '    return pulumi.String("data")\n}\n')
+        for name in ("dashboard.go", "schema.json"):
+            with self.subTest(name=name):
+                example = self.repo / name
+                content = json.dumps({"description": source}) if name.endswith(".json") else source
+                example.write_text(content)
+                subprocess.run(
+                    ["bash", str(self.repo / "scripts/fix_dashboard_go_examples.sh"), str(example)],
+                    check=True, capture_output=True, text=True,
+                )
+                actual = example.read_text()
+                if name.endswith(".json"):
+                    actual = json.loads(actual)["description"]
+                self.assertEqual(actual, expected)
+
     def test_readme_regenerates_python_sdk(self):
         self.assert_rebuild("README.md", ".make/generate_python")
 
@@ -156,15 +177,19 @@ class GeneratedArtifactsHookTest(unittest.TestCase):
         (self.repo / "sdk/existing.py").write_text("original\n")
         (self.repo / "Makefile").write_text("PROVIDER_VERSION ?= 0.1.0\n")
         (self.repo / ".ci-mgmt.yaml").write_text("major-version: 0\n")
-        subprocess.run(["git", "init", "-q", str(self.repo)], check=True)
-        subprocess.run(["git", "add", "."], cwd=self.repo, check=True)
+        self.env = dict(os.environ)
+        git_vars = subprocess.check_output(["git", "rev-parse", "--local-env-vars"], text=True)
+        for name in git_vars.splitlines():
+            self.env.pop(name, None)
+        subprocess.run(["git", "init", "-q", str(self.repo)], env=self.env, check=True)
+        subprocess.run(["git", "add", "."], cwd=self.repo, env=self.env, check=True)
         fake_tools = self.repo / "fake-tools"
         fake_tools.mkdir()
         for name in ("mise", "make"):
             tool = fake_tools / name
             tool.write_text("#!/bin/sh\nexit 0\n")
             tool.chmod(0o755)
-        self.env = dict(os.environ, PATH=f"{fake_tools}:{os.environ['PATH']}")
+        self.env["PATH"] = f"{fake_tools}:{self.env['PATH']}"
 
     def hook(self):
         return subprocess.run(
@@ -174,6 +199,16 @@ class GeneratedArtifactsHookTest(unittest.TestCase):
 
     def test_staged_generated_files_are_accepted(self):
         result = self.hook()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_hook_git_environment_is_ignored(self):
+        foreign = self.repo / "foreign.git"
+        subprocess.run(["git", "init", "--bare", "-q", str(foreign)], env=self.env, check=True)
+        result = subprocess.run(
+            [sys.executable, __file__,
+             "GeneratedArtifactsHookTest.test_staged_generated_files_are_accepted"],
+            env=dict(self.env, GIT_DIR=str(foreign)), text=True, capture_output=True,
+        )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_new_generated_files_require_staging(self):

@@ -169,6 +169,48 @@ class Dashboard(pulumi.CustomResource):
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
+        Manages a Logfire dashboard.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example_project = logfire.Project("exampleProject")
+        example_dashboard = logfire.Dashboard("exampleDashboard",
+            project_id=example_project.id,
+            slug="example-dashboard",
+            definition=(lambda path: open(path).read())("dashboard.json"))
+        ```
+
+        Read a dashboard definition from a file written by hand or copied from Logfire.
+        Exported metadata can remain unchanged; `project_id`, `name`, and `slug` select the
+        destination and identity.
+
+        | Starting point | Workflow |
+        | --- | --- |
+        | Defined in IaC | Apply the definition to create a dashboard. |
+        | Existing UI dashboard | Export its JSON, match its attributes, and import before applying to retain its UUID. |
+        | Copy of a UI dashboard | Apply its exported JSON with the destination project, name, and an available slug to create a new UUID. The source dashboard remains unchanged. |
+
+        ## Definition comparison
+
+        Comparison ignores JSON formatting, top-level `metadata`, known defaults,
+        and grid panel `ref` and `$ref` aliases. Integer literals compare exactly.
+        Decimal and exponent literals compare at the API's float precision. Equivalent
+        spellings such as `1` and `1.0` compare equal. Content and layout changes produce
+        a plan.
+
+        The resource's `name` and `slug` control the dashboard name and URL. Changing
+        `name` or `definition` updates the dashboard. Changing `project_id` or `slug`
+        replaces it.
+
+        Definition updates explicitly request the file's layout, including panel visibility.
+        Name-only updates preserve saved UI positions. On older instances without layout
+        replacement support, saved UI overrides can cause an inconsistent result error
+        when applying a layout change. Re-export the dashboard to adopt its current layout.
+
         ## Import
 
         Import by project name and dashboard slug:
@@ -192,6 +234,48 @@ class Dashboard(pulumi.CustomResource):
                  args: DashboardArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
+        Manages a Logfire dashboard.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_logfire as logfire
+
+        example_project = logfire.Project("exampleProject")
+        example_dashboard = logfire.Dashboard("exampleDashboard",
+            project_id=example_project.id,
+            slug="example-dashboard",
+            definition=(lambda path: open(path).read())("dashboard.json"))
+        ```
+
+        Read a dashboard definition from a file written by hand or copied from Logfire.
+        Exported metadata can remain unchanged; `project_id`, `name`, and `slug` select the
+        destination and identity.
+
+        | Starting point | Workflow |
+        | --- | --- |
+        | Defined in IaC | Apply the definition to create a dashboard. |
+        | Existing UI dashboard | Export its JSON, match its attributes, and import before applying to retain its UUID. |
+        | Copy of a UI dashboard | Apply its exported JSON with the destination project, name, and an available slug to create a new UUID. The source dashboard remains unchanged. |
+
+        ## Definition comparison
+
+        Comparison ignores JSON formatting, top-level `metadata`, known defaults,
+        and grid panel `ref` and `$ref` aliases. Integer literals compare exactly.
+        Decimal and exponent literals compare at the API's float precision. Equivalent
+        spellings such as `1` and `1.0` compare equal. Content and layout changes produce
+        a plan.
+
+        The resource's `name` and `slug` control the dashboard name and URL. Changing
+        `name` or `definition` updates the dashboard. Changing `project_id` or `slug`
+        replaces it.
+
+        Definition updates explicitly request the file's layout, including panel visibility.
+        Name-only updates preserve saved UI positions. On older instances without layout
+        replacement support, saved UI overrides can cause an inconsistent result error
+        when applying a layout change. Re-export the dashboard to adopt its current layout.
+
         ## Import
 
         Import by project name and dashboard slug:

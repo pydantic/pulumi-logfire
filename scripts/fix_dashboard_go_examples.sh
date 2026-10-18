@@ -2,6 +2,7 @@
 set -euo pipefail
 
 for file in "$@"; do
+  perl -0pi -e 's/func readFileOrPanic\(path string\) pulumi\.StringPtrInput/func readFileOrPanic(path string) pulumi.String/g' "$file"
   case "$file" in
     *.json)
       perl -0pi -e 's/std\.File\(ctx, map\[string\]interface\{\}\{/std.File(ctx, \\u0026std.FileArgs{/g; s/\\"input\\": \\"dashboard\.json\\",/Input: \\"dashboard.json\\",/g; s/Definition: invokeFile\.Result,/Definition: pulumi.String(invokeFile.Result),/g' "$file"
