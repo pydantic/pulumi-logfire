@@ -2,10 +2,74 @@ package logfire
 
 import (
 	"bytes"
+	"encoding/json"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
+
+	"github.com/spf13/afero"
+
+	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfgen"
 )
+
+func TestGeneratedSchema(t *testing.T) {
+	provider := Provider()
+	generator, err := tfgen.NewGenerator(tfgen.GeneratorOptions{
+		Package:      provider.Name,
+		Version:      provider.Version,
+		ProviderInfo: provider,
+		Language:     tfgen.Schema,
+		Root:         afero.NewMemMapFs(),
+		SkipExamples: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	generated, err := generator.Generate()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Run("dashboard documentation", func(t *testing.T) {
+		description := generated.PackageSpec.Resources["logfire:index/dashboard:Dashboard"].Description
+		for _, want := range []string{
+			"Manages a Logfire dashboard.",
+			"## Example Usage",
+			"Copy of a UI dashboard",
+			"## Definition comparison",
+		} {
+			if !strings.Contains(description, want) {
+				t.Errorf("dashboard description is missing %q", want)
+			}
+		}
+	})
+
+	t.Run("channel configuration", func(t *testing.T) {
+		config := generated.PackageSpec.Types["logfire:index/ChannelConfig:ChannelConfig"]
+		if got := config.Properties["includeAgentPrompt"].Type; got != "boolean" {
+			t.Errorf("includeAgentPrompt type = %q, want boolean", got)
+		}
+		if !slices.Equal(config.Required, []string{"type"}) {
+			t.Errorf("required inputs = %v, want [type]", config.Required)
+		}
+		var nodejs struct {
+			RequiredOutputs []string `json:"requiredOutputs"`
+		}
+		requiredOutputs := config.Required
+		if language, ok := config.Language["nodejs"]; ok {
+			if err := json.Unmarshal(language, &nodejs); err != nil {
+				t.Fatal(err)
+			}
+			if nodejs.RequiredOutputs != nil {
+				requiredOutputs = nodejs.RequiredOutputs
+			}
+		}
+		if !slices.Equal(requiredOutputs, []string{"type"}) {
+			t.Errorf("required outputs = %v, want [type]", requiredOutputs)
+		}
+	})
+}
 
 func TestDashboardDocsEditRule(t *testing.T) {
 	provider := Provider()
