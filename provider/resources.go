@@ -104,6 +104,10 @@ func Provider() tfbridge.ProviderInfo {
 				return append([]tfbridge.DocsEdit{{
 					Path: "dashboard.md",
 					Edit: func(_ string, content []byte) ([]byte, error) {
+						content = bytes.ReplaceAll(content, []byte("Terraform workflow"), []byte("Workflow"))
+						content = bytes.ReplaceAll(content,
+							[]byte("Use `file()` to read a dashboard definition"),
+							[]byte("Read a dashboard definition from a file"))
 						return bytes.ReplaceAll(
 							content,
 							[]byte(`file("${path.module}/dashboard.json")`),
@@ -167,6 +171,16 @@ func Provider() tfbridge.ProviderInfo {
 	// and [tfbridge.ProviderInfo.DataSources].
 	prov.MustComputeTokens(tokens.SingleModule("logfire_", mainMod,
 		tokens.MakeStandard(mainPkg)))
+
+	prov.Resources["logfire_channel"].Fields = map[string]*tfbridge.SchemaInfo{
+		"config": {
+			Elem: &tfbridge.SchemaInfo{
+				Fields: map[string]*tfbridge.SchemaInfo{
+					"include_agent_prompt": {MarkAsOptional: tfbridge.True()},
+				},
+			},
+		},
+	}
 
 	prov.MustApplyAutoAliases()
 	prov.SetAutonaming(255, "-")

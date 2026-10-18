@@ -55,7 +55,7 @@ export interface ChannelConfig {
     /**
      * Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
      */
-    includeAgentPrompt: boolean;
+    includeAgentPrompt?: boolean;
     /**
      * ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
      */

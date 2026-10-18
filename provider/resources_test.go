@@ -36,6 +36,7 @@ func TestGeneratedSchema(t *testing.T) {
 		for _, want := range []string{
 			"Manages a Logfire dashboard.",
 			"## Example Usage",
+			"Read a dashboard definition from a file",
 			"Copy of a UI dashboard",
 			"## Definition comparison",
 		} {
