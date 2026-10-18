@@ -169,21 +169,6 @@ class Dashboard(pulumi.CustomResource):
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire dashboard.
-
-        ## Example Usage
-
-        ```python
-        import pulumi
-        import pulumi_logfire as logfire
-
-        example_project = logfire.Project("exampleProject")
-        example_dashboard = logfire.Dashboard("exampleDashboard",
-            project_id=example_project.id,
-            slug="example-dashboard",
-            definition=(lambda path: open(path).read())("dashboard.json"))
-        ```
-
         ## Import
 
         Import by project name and dashboard slug:
@@ -207,21 +192,6 @@ class Dashboard(pulumi.CustomResource):
                  args: DashboardArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire dashboard.
-
-        ## Example Usage
-
-        ```python
-        import pulumi
-        import pulumi_logfire as logfire
-
-        example_project = logfire.Project("exampleProject")
-        example_dashboard = logfire.Dashboard("exampleDashboard",
-            project_id=example_project.id,
-            slug="example-dashboard",
-            definition=(lambda path: open(path).read())("dashboard.json"))
-        ```
-
         ## Import
 
         Import by project name and dashboard slug:

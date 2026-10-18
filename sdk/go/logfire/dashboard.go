@@ -12,50 +12,6 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
-// Manages a Logfire dashboard.
-//
-// ## Example Usage
-//
-// ```go
-// package main
-//
-// import (
-//
-//	"os"
-//
-//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-//	"github.com/pydantic/pulumi-logfire/sdk/go/logfire"
-//
-// )
-//
-//	func readFileOrPanic(path string) pulumi.StringPtrInput {
-//		data, err := os.ReadFile(path)
-//		if err != nil {
-//			panic(err.Error())
-//		}
-//		return pulumi.String(string(data))
-//	}
-//
-//	func main() {
-//		pulumi.Run(func(ctx *pulumi.Context) error {
-//			exampleProject, err := logfire.NewProject(ctx, "exampleProject", nil)
-//			if err != nil {
-//				return err
-//			}
-//			_, err = logfire.NewDashboard(ctx, "exampleDashboard", &logfire.DashboardArgs{
-//				ProjectId:  exampleProject.ID(),
-//				Slug:       pulumi.String("example-dashboard"),
-//				Definition: pulumi.String(readFileOrPanic("dashboard.json")),
-//			})
-//			if err != nil {
-//				return err
-//			}
-//			return nil
-//		})
-//	}
-//
-// ```
-//
 // ## Import
 //
 // Import by project name and dashboard slug:

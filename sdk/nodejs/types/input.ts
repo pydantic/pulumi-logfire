@@ -53,7 +53,7 @@ export interface ChannelConfig {
      */
     format?: pulumi.Input<string>;
     /**
-     * Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+     * Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
      */
     includeAgentPrompt?: pulumi.Input<boolean>;
     /**
