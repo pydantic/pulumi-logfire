@@ -215,7 +215,7 @@ class ChannelConfig(dict):
         :param _builtins.str auth_key: Opsgenie API key.
         :param _builtins.str channel_id: Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
         :param _builtins.str format: Webhook payload format.
-        :param _builtins.bool include_agent_prompt: Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+        :param _builtins.bool include_agent_prompt: Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
         :param _builtins.str install_id: ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
         :param _builtins.str region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
         :param _builtins.str routing_key: PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
@@ -278,7 +278,7 @@ class ChannelConfig(dict):
     @pulumi.getter(name="includeAgentPrompt")
     def include_agent_prompt(self) -> Optional[_builtins.bool]:
         """
-        Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+        Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
         """
         return pulumi.get(self, "include_agent_prompt")
 

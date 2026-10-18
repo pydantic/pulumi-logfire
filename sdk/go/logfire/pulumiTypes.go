@@ -339,7 +339,7 @@ type ChannelConfig struct {
 	ChannelId *string `pulumi:"channelId"`
 	// Webhook payload format.
 	Format *string `pulumi:"format"`
-	// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+	// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
 	IncludeAgentPrompt *bool `pulumi:"includeAgentPrompt"`
 	// ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
 	InstallId *string `pulumi:"installId"`
@@ -373,7 +373,7 @@ type ChannelConfigArgs struct {
 	ChannelId pulumi.StringPtrInput `pulumi:"channelId"`
 	// Webhook payload format.
 	Format pulumi.StringPtrInput `pulumi:"format"`
-	// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+	// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
 	IncludeAgentPrompt pulumi.BoolPtrInput `pulumi:"includeAgentPrompt"`
 	// ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
 	InstallId pulumi.StringPtrInput `pulumi:"installId"`
@@ -481,7 +481,7 @@ func (o ChannelConfigOutput) Format() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.Format }).(pulumi.StringPtrOutput)
 }
 
-// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
 func (o ChannelConfigOutput) IncludeAgentPrompt() pulumi.BoolPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *bool { return v.IncludeAgentPrompt }).(pulumi.BoolPtrOutput)
 }
@@ -570,7 +570,7 @@ func (o ChannelConfigPtrOutput) Format() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
-// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` when omitted.
+// Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
 func (o ChannelConfigPtrOutput) IncludeAgentPrompt() pulumi.BoolPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *bool {
 		if v == nil {
