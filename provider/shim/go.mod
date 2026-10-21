@@ -2,6 +2,8 @@ module github.com/pydantic/pulumi-logfire/provider/shim
 
 go 1.25.8
 
+toolchain go1.27.3
+
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.19.0
 	github.com/pydantic/terraform-provider-logfire v0.2.2
