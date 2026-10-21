@@ -16,6 +16,12 @@ updates:
       "terraform-plugin":
         patterns:
           - "github.com/hashicorp/terraform-plugin-*"
+    ignore:
+      # The Upgrade Bridge workflow owns these versions because the bridge, the
+      # Pulumi SDK, and the generated SDKs must move together.
+      - dependency-name: "github.com/pulumi/pulumi-terraform-bridge/v3"
+      - dependency-name: "github.com/pulumi/pulumi/pkg/v3"
+      - dependency-name: "github.com/pulumi/pulumi/sdk/v3"
   - package-ecosystem: "github-actions"
     directory: "/"
     groups:
