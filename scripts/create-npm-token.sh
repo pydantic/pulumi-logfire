@@ -30,13 +30,26 @@ fi
 echo "Creating npm granular access token..."
 echo ""
 
-# Use `script` to preserve a TTY so npm can prompt for the password and OTP.
-script -q "$TOKEN_FILE" sh -c "cd '$WORKDIR' && npm token create \
+NPM_COMMAND="cd '$WORKDIR' && npm token create \
   --name 'pulumi-logfire CI publish $(date +%Y-%m-%d)' \
   --expires 90 \
   --packages '$PACKAGE' \
   --packages-and-scopes-permission read-write \
   --bypass-2fa"
+
+# Use `script` to preserve a TTY so npm can prompt for the password and OTP.
+# BSD/macOS and util-linux take the command and transcript in different orders.
+if [ "$(uname -s)" = "Linux" ]; then
+    script -q -c "$NPM_COMMAND" "$TOKEN_FILE"
+else
+    script -q "$TOKEN_FILE" sh -c "$NPM_COMMAND"
+fi
+
+# npm prints the token to stdout, the same stream it uses for prompts. Clear the
+# screen and scrollback once it is captured. Terminal recordings can still see it.
+if [ -t 1 ]; then
+    printf '\033[3J\033[H\033[2J'
+fi
 
 echo ""
 
