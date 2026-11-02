@@ -35,7 +35,8 @@ NPM_COMMAND="cd '$WORKDIR' && npm token create \
   --expires 90 \
   --packages '$PACKAGE' \
   --packages-and-scopes-permission read-write \
-  --bypass-2fa"
+  --bypass-2fa \
+  --registry https://registry.npmjs.org/"
 
 # Use `script` to preserve a TTY so npm can prompt for the password and OTP.
 # BSD/macOS and util-linux take the command and transcript in different orders.
