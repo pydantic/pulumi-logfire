@@ -28,7 +28,7 @@ const channel = new logfire.Channel("alerts", {
     config: {
         type: "webhook",
         format: "auto",
-        url: "https://example.invalid/webhook",
+        url: "https://example.com/logfire-webhook",
     },
 }, { provider });
 

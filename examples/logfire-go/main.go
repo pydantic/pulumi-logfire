@@ -43,7 +43,7 @@ func main() {
 			Config: logfire.ChannelConfigArgs{
 				Type:   pulumi.String("webhook"),
 				Format: pulumi.String("auto"),
-				Url:    pulumi.String("https://example.invalid/webhook"),
+				Url:    pulumi.String("https://example.com/logfire-webhook"),
 			},
 		}, pulumi.Provider(provider))
 		if err != nil {
