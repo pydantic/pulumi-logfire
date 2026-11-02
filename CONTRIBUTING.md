@@ -50,3 +50,9 @@ run `go mod tidy` in both directories, then regenerate schema and SDKs.
 
 Tag `main` with `vX.Y.Z`, push the tag, and watch the `release` workflow. Verify
 the GitHub release, npm package, PyPI package, and `sdk/vX.Y.Z` Go tag.
+
+### Rotating the npm token
+
+`NPM_TOKEN` is a 90 day granular token. Run `scripts/create-npm-token.sh` after
+`npm login`. The script prompts for your password and OTP and updates the
+repository secret that `publish.yml` reads.
