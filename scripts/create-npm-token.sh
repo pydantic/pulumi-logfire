@@ -18,6 +18,14 @@ command -v gh >/dev/null || { echo "gh CLI is required."; exit 1; }
 command -v npm >/dev/null || { echo "npm CLI is required."; exit 1; }
 command -v script >/dev/null || { echo "script command is required to preserve interactive npm prompts."; exit 1; }
 
+NPM_VERSION=$(npm --version)
+NPM_MAJOR=${NPM_VERSION%%.*}
+if [ "$NPM_MAJOR" -lt 11 ]; then
+    echo "npm 11 or newer is required to create a granular token. Found $NPM_VERSION." >&2
+    echo "Run this script through mise: mise exec -- $0" >&2
+    exit 1
+fi
+
 echo "Checking GitHub authentication..."
 gh auth status --hostname github.com >/dev/null
 
