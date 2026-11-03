@@ -35,8 +35,14 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &FrontendApplicationToken{}
 	case "logfire:index/gatewayApiKey:GatewayApiKey":
 		r = &GatewayApiKey{}
+	case "logfire:index/gatewayEndpoint:GatewayEndpoint":
+		r = &GatewayEndpoint{}
+	case "logfire:index/gatewayProjectSpendingLimits:GatewayProjectSpendingLimits":
+		r = &GatewayProjectSpendingLimits{}
 	case "logfire:index/gatewayProvider:GatewayProvider":
 		r = &GatewayProvider{}
+	case "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits":
+		r = &GatewaySpendingLimits{}
 	case "logfire:index/organization:Organization":
 		r = &Organization{}
 	case "logfire:index/project:Project":
@@ -117,7 +123,22 @@ func init() {
 	)
 	pulumi.RegisterResourceModule(
 		"logfire",
+		"index/gatewayEndpoint",
+		&module{version},
+	)
+	pulumi.RegisterResourceModule(
+		"logfire",
+		"index/gatewayProjectSpendingLimits",
+		&module{version},
+	)
+	pulumi.RegisterResourceModule(
+		"logfire",
 		"index/gatewayProvider",
+		&module{version},
+	)
+	pulumi.RegisterResourceModule(
+		"logfire",
+		"index/gatewaySpendingLimits",
 		&module{version},
 	)
 	pulumi.RegisterResourceModule(

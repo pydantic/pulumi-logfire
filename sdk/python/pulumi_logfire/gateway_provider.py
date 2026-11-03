@@ -24,13 +24,15 @@ class GatewayProviderArgs:
                  vendor: pulumi.Input[_builtins.str],
                  bedrock_api: Optional[pulumi.Input[_builtins.str]] = None,
                  bedrock_region: Optional[pulumi.Input[_builtins.str]] = None,
+                 endpoint: Optional[pulumi.Input[_builtins.str]] = None,
                  require_pricing: Optional[pulumi.Input[_builtins.bool]] = None):
         """
         The set of arguments for constructing a GatewayProvider resource.
         :param pulumi.Input[_builtins.str] slug: Organization-unique provider slug. Changing it replaces the provider.
-        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         :param pulumi.Input[_builtins.str] bedrock_api: Bedrock API variant: runtime or mantle. Required only for bedrock; can be updated in place.
         :param pulumi.Input[_builtins.str] bedrock_region: AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.
+        :param pulumi.Input[_builtins.str] endpoint: Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
         :param pulumi.Input[_builtins.bool] require_pricing: Require known model pricing before forwarding requests. Defaults to true.
         """
         pulumi.set(__self__, "api_key", api_key)
@@ -40,6 +42,8 @@ class GatewayProviderArgs:
             pulumi.set(__self__, "bedrock_api", bedrock_api)
         if bedrock_region is not None:
             pulumi.set(__self__, "bedrock_region", bedrock_region)
+        if endpoint is not None:
+            pulumi.set(__self__, "endpoint", endpoint)
         if require_pricing is not None:
             pulumi.set(__self__, "require_pricing", require_pricing)
 
@@ -68,7 +72,7 @@ class GatewayProviderArgs:
     @pulumi.getter
     def vendor(self) -> pulumi.Input[_builtins.str]:
         """
-        Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         """
         return pulumi.get(self, "vendor")
 
@@ -101,6 +105,18 @@ class GatewayProviderArgs:
         pulumi.set(self, "bedrock_region", value)
 
     @_builtins.property
+    @pulumi.getter
+    def endpoint(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+        """
+        return pulumi.get(self, "endpoint")
+
+    @endpoint.setter
+    def endpoint(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "endpoint", value)
+
+    @_builtins.property
     @pulumi.getter(name="requirePricing")
     def require_pricing(self) -> Optional[pulumi.Input[_builtins.bool]]:
         """
@@ -120,6 +136,7 @@ class _GatewayProviderState:
                  bedrock_api: Optional[pulumi.Input[_builtins.str]] = None,
                  bedrock_region: Optional[pulumi.Input[_builtins.str]] = None,
                  created_at: Optional[pulumi.Input[_builtins.str]] = None,
+                 endpoint: Optional[pulumi.Input[_builtins.str]] = None,
                  require_pricing: Optional[pulumi.Input[_builtins.bool]] = None,
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
                  vendor: Optional[pulumi.Input[_builtins.str]] = None):
@@ -128,9 +145,10 @@ class _GatewayProviderState:
         :param pulumi.Input[_builtins.str] bedrock_api: Bedrock API variant: runtime or mantle. Required only for bedrock; can be updated in place.
         :param pulumi.Input[_builtins.str] bedrock_region: AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the provider was created.
+        :param pulumi.Input[_builtins.str] endpoint: Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
         :param pulumi.Input[_builtins.bool] require_pricing: Require known model pricing before forwarding requests. Defaults to true.
         :param pulumi.Input[_builtins.str] slug: Organization-unique provider slug. Changing it replaces the provider.
-        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         """
         if api_key is not None:
             pulumi.set(__self__, "api_key", api_key)
@@ -140,6 +158,8 @@ class _GatewayProviderState:
             pulumi.set(__self__, "bedrock_region", bedrock_region)
         if created_at is not None:
             pulumi.set(__self__, "created_at", created_at)
+        if endpoint is not None:
+            pulumi.set(__self__, "endpoint", endpoint)
         if require_pricing is not None:
             pulumi.set(__self__, "require_pricing", require_pricing)
         if slug is not None:
@@ -193,6 +213,18 @@ class _GatewayProviderState:
         pulumi.set(self, "created_at", value)
 
     @_builtins.property
+    @pulumi.getter
+    def endpoint(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+        """
+        return pulumi.get(self, "endpoint")
+
+    @endpoint.setter
+    def endpoint(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "endpoint", value)
+
+    @_builtins.property
     @pulumi.getter(name="requirePricing")
     def require_pricing(self) -> Optional[pulumi.Input[_builtins.bool]]:
         """
@@ -220,7 +252,7 @@ class _GatewayProviderState:
     @pulumi.getter
     def vendor(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         """
         return pulumi.get(self, "vendor")
 
@@ -238,6 +270,7 @@ class GatewayProvider(pulumi.CustomResource):
                  api_key: Optional[pulumi.Input[_builtins.str]] = None,
                  bedrock_api: Optional[pulumi.Input[_builtins.str]] = None,
                  bedrock_region: Optional[pulumi.Input[_builtins.str]] = None,
+                 endpoint: Optional[pulumi.Input[_builtins.str]] = None,
                  require_pricing: Optional[pulumi.Input[_builtins.bool]] = None,
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
                  vendor: Optional[pulumi.Input[_builtins.str]] = None,
@@ -289,9 +322,10 @@ class GatewayProvider(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] bedrock_api: Bedrock API variant: runtime or mantle. Required only for bedrock; can be updated in place.
         :param pulumi.Input[_builtins.str] bedrock_region: AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.
+        :param pulumi.Input[_builtins.str] endpoint: Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
         :param pulumi.Input[_builtins.bool] require_pricing: Require known model pricing before forwarding requests. Defaults to true.
         :param pulumi.Input[_builtins.str] slug: Organization-unique provider slug. Changing it replaces the provider.
-        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         """
         ...
     @overload
@@ -360,6 +394,7 @@ class GatewayProvider(pulumi.CustomResource):
                  api_key: Optional[pulumi.Input[_builtins.str]] = None,
                  bedrock_api: Optional[pulumi.Input[_builtins.str]] = None,
                  bedrock_region: Optional[pulumi.Input[_builtins.str]] = None,
+                 endpoint: Optional[pulumi.Input[_builtins.str]] = None,
                  require_pricing: Optional[pulumi.Input[_builtins.bool]] = None,
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
                  vendor: Optional[pulumi.Input[_builtins.str]] = None,
@@ -377,6 +412,7 @@ class GatewayProvider(pulumi.CustomResource):
             __props__.__dict__["api_key"] = None if api_key is None else pulumi.Output.secret(api_key)
             __props__.__dict__["bedrock_api"] = bedrock_api
             __props__.__dict__["bedrock_region"] = bedrock_region
+            __props__.__dict__["endpoint"] = endpoint
             __props__.__dict__["require_pricing"] = require_pricing
             if slug is None and not opts.urn:
                 raise TypeError("Missing required property 'slug'")
@@ -401,6 +437,7 @@ class GatewayProvider(pulumi.CustomResource):
             bedrock_api: Optional[pulumi.Input[_builtins.str]] = None,
             bedrock_region: Optional[pulumi.Input[_builtins.str]] = None,
             created_at: Optional[pulumi.Input[_builtins.str]] = None,
+            endpoint: Optional[pulumi.Input[_builtins.str]] = None,
             require_pricing: Optional[pulumi.Input[_builtins.bool]] = None,
             slug: Optional[pulumi.Input[_builtins.str]] = None,
             vendor: Optional[pulumi.Input[_builtins.str]] = None) -> 'GatewayProvider':
@@ -414,9 +451,10 @@ class GatewayProvider(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] bedrock_api: Bedrock API variant: runtime or mantle. Required only for bedrock; can be updated in place.
         :param pulumi.Input[_builtins.str] bedrock_region: AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the provider was created.
+        :param pulumi.Input[_builtins.str] endpoint: Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
         :param pulumi.Input[_builtins.bool] require_pricing: Require known model pricing before forwarding requests. Defaults to true.
         :param pulumi.Input[_builtins.str] slug: Organization-unique provider slug. Changing it replaces the provider.
-        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        :param pulumi.Input[_builtins.str] vendor: Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
 
@@ -426,6 +464,7 @@ class GatewayProvider(pulumi.CustomResource):
         __props__.__dict__["bedrock_api"] = bedrock_api
         __props__.__dict__["bedrock_region"] = bedrock_region
         __props__.__dict__["created_at"] = created_at
+        __props__.__dict__["endpoint"] = endpoint
         __props__.__dict__["require_pricing"] = require_pricing
         __props__.__dict__["slug"] = slug
         __props__.__dict__["vendor"] = vendor
@@ -461,6 +500,14 @@ class GatewayProvider(pulumi.CustomResource):
         return pulumi.get(self, "created_at")
 
     @_builtins.property
+    @pulumi.getter
+    def endpoint(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+        """
+        return pulumi.get(self, "endpoint")
+
+    @_builtins.property
     @pulumi.getter(name="requirePricing")
     def require_pricing(self) -> pulumi.Output[_builtins.bool]:
         """
@@ -480,7 +527,7 @@ class GatewayProvider(pulumi.CustomResource):
     @pulumi.getter
     def vendor(self) -> pulumi.Output[_builtins.str]:
         """
-        Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+        Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
         """
         return pulumi.get(self, "vendor")
 

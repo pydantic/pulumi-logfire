@@ -640,6 +640,130 @@ func (o ChannelConfigPtrOutput) Url() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+type GatewayEndpointProvider struct {
+	// Whether the Gateway routes to this provider. Defaults to true.
+	Active *bool `pulumi:"active"`
+	// The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+	Priority *int `pulumi:"priority"`
+	// UUID of a `GatewayProvider` in the same organization.
+	ProviderId string `pulumi:"providerId"`
+	// Positive relative weight among providers with the same priority. Defaults to 1.
+	Weight *float64 `pulumi:"weight"`
+}
+
+// GatewayEndpointProviderInput is an input type that accepts GatewayEndpointProviderArgs and GatewayEndpointProviderOutput values.
+// You can construct a concrete instance of `GatewayEndpointProviderInput` via:
+//
+//	GatewayEndpointProviderArgs{...}
+type GatewayEndpointProviderInput interface {
+	pulumi.Input
+
+	ToGatewayEndpointProviderOutput() GatewayEndpointProviderOutput
+	ToGatewayEndpointProviderOutputWithContext(context.Context) GatewayEndpointProviderOutput
+}
+
+type GatewayEndpointProviderArgs struct {
+	// Whether the Gateway routes to this provider. Defaults to true.
+	Active pulumi.BoolPtrInput `pulumi:"active"`
+	// The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+	Priority pulumi.IntPtrInput `pulumi:"priority"`
+	// UUID of a `GatewayProvider` in the same organization.
+	ProviderId pulumi.StringInput `pulumi:"providerId"`
+	// Positive relative weight among providers with the same priority. Defaults to 1.
+	Weight pulumi.Float64PtrInput `pulumi:"weight"`
+}
+
+func (GatewayEndpointProviderArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GatewayEndpointProvider)(nil)).Elem()
+}
+
+func (i GatewayEndpointProviderArgs) ToGatewayEndpointProviderOutput() GatewayEndpointProviderOutput {
+	return i.ToGatewayEndpointProviderOutputWithContext(context.Background())
+}
+
+func (i GatewayEndpointProviderArgs) ToGatewayEndpointProviderOutputWithContext(ctx context.Context) GatewayEndpointProviderOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GatewayEndpointProviderOutput)
+}
+
+// GatewayEndpointProviderArrayInput is an input type that accepts GatewayEndpointProviderArray and GatewayEndpointProviderArrayOutput values.
+// You can construct a concrete instance of `GatewayEndpointProviderArrayInput` via:
+//
+//	GatewayEndpointProviderArray{ GatewayEndpointProviderArgs{...} }
+type GatewayEndpointProviderArrayInput interface {
+	pulumi.Input
+
+	ToGatewayEndpointProviderArrayOutput() GatewayEndpointProviderArrayOutput
+	ToGatewayEndpointProviderArrayOutputWithContext(context.Context) GatewayEndpointProviderArrayOutput
+}
+
+type GatewayEndpointProviderArray []GatewayEndpointProviderInput
+
+func (GatewayEndpointProviderArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GatewayEndpointProvider)(nil)).Elem()
+}
+
+func (i GatewayEndpointProviderArray) ToGatewayEndpointProviderArrayOutput() GatewayEndpointProviderArrayOutput {
+	return i.ToGatewayEndpointProviderArrayOutputWithContext(context.Background())
+}
+
+func (i GatewayEndpointProviderArray) ToGatewayEndpointProviderArrayOutputWithContext(ctx context.Context) GatewayEndpointProviderArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GatewayEndpointProviderArrayOutput)
+}
+
+type GatewayEndpointProviderOutput struct{ *pulumi.OutputState }
+
+func (GatewayEndpointProviderOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GatewayEndpointProvider)(nil)).Elem()
+}
+
+func (o GatewayEndpointProviderOutput) ToGatewayEndpointProviderOutput() GatewayEndpointProviderOutput {
+	return o
+}
+
+func (o GatewayEndpointProviderOutput) ToGatewayEndpointProviderOutputWithContext(ctx context.Context) GatewayEndpointProviderOutput {
+	return o
+}
+
+// Whether the Gateway routes to this provider. Defaults to true.
+func (o GatewayEndpointProviderOutput) Active() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v GatewayEndpointProvider) *bool { return v.Active }).(pulumi.BoolPtrOutput)
+}
+
+// The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+func (o GatewayEndpointProviderOutput) Priority() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v GatewayEndpointProvider) *int { return v.Priority }).(pulumi.IntPtrOutput)
+}
+
+// UUID of a `GatewayProvider` in the same organization.
+func (o GatewayEndpointProviderOutput) ProviderId() pulumi.StringOutput {
+	return o.ApplyT(func(v GatewayEndpointProvider) string { return v.ProviderId }).(pulumi.StringOutput)
+}
+
+// Positive relative weight among providers with the same priority. Defaults to 1.
+func (o GatewayEndpointProviderOutput) Weight() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v GatewayEndpointProvider) *float64 { return v.Weight }).(pulumi.Float64PtrOutput)
+}
+
+type GatewayEndpointProviderArrayOutput struct{ *pulumi.OutputState }
+
+func (GatewayEndpointProviderArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GatewayEndpointProvider)(nil)).Elem()
+}
+
+func (o GatewayEndpointProviderArrayOutput) ToGatewayEndpointProviderArrayOutput() GatewayEndpointProviderArrayOutput {
+	return o
+}
+
+func (o GatewayEndpointProviderArrayOutput) ToGatewayEndpointProviderArrayOutputWithContext(ctx context.Context) GatewayEndpointProviderArrayOutput {
+	return o
+}
+
+func (o GatewayEndpointProviderArrayOutput) Index(i pulumi.IntInput) GatewayEndpointProviderOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) GatewayEndpointProvider {
+		return vs[0].([]GatewayEndpointProvider)[vs[1].(int)]
+	}).(GatewayEndpointProviderOutput)
+}
+
 type ScheduleWindow struct {
 	// ISO weekday numbers: `1` is Monday and `7` is Sunday.
 	Days []int `pulumi:"days"`
@@ -1837,6 +1961,8 @@ func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayPtrInput)(nil)).Elem(), ApiKeyGatewayArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigInput)(nil)).Elem(), ChannelConfigArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigPtrInput)(nil)).Elem(), ChannelConfigArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GatewayEndpointProviderInput)(nil)).Elem(), GatewayEndpointProviderArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GatewayEndpointProviderArrayInput)(nil)).Elem(), GatewayEndpointProviderArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ScheduleWindowInput)(nil)).Elem(), ScheduleWindowArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ScheduleWindowArrayInput)(nil)).Elem(), ScheduleWindowArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsInput)(nil)).Elem(), SloAlertsArgs{})
@@ -1859,6 +1985,8 @@ func init() {
 	pulumi.RegisterOutputType(ApiKeyGatewayPtrOutput{})
 	pulumi.RegisterOutputType(ChannelConfigOutput{})
 	pulumi.RegisterOutputType(ChannelConfigPtrOutput{})
+	pulumi.RegisterOutputType(GatewayEndpointProviderOutput{})
+	pulumi.RegisterOutputType(GatewayEndpointProviderArrayOutput{})
 	pulumi.RegisterOutputType(ScheduleWindowOutput{})
 	pulumi.RegisterOutputType(ScheduleWindowArrayOutput{})
 	pulumi.RegisterOutputType(SloAlertsOutput{})

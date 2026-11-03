@@ -63,11 +63,13 @@ type GatewayProvider struct {
 	BedrockRegion pulumi.StringPtrOutput `pulumi:"bedrockRegion"`
 	// Timestamp when the provider was created.
 	CreatedAt pulumi.StringOutput `pulumi:"createdAt"`
+	// Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+	Endpoint pulumi.StringPtrOutput `pulumi:"endpoint"`
 	// Require known model pricing before forwarding requests. Defaults to true.
 	RequirePricing pulumi.BoolOutput `pulumi:"requirePricing"`
 	// Organization-unique provider slug. Changing it replaces the provider.
 	Slug pulumi.StringOutput `pulumi:"slug"`
-	// Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+	// Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
 	Vendor pulumi.StringOutput `pulumi:"vendor"`
 }
 
@@ -124,11 +126,13 @@ type gatewayProviderState struct {
 	BedrockRegion *string `pulumi:"bedrockRegion"`
 	// Timestamp when the provider was created.
 	CreatedAt *string `pulumi:"createdAt"`
+	// Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+	Endpoint *string `pulumi:"endpoint"`
 	// Require known model pricing before forwarding requests. Defaults to true.
 	RequirePricing *bool `pulumi:"requirePricing"`
 	// Organization-unique provider slug. Changing it replaces the provider.
 	Slug *string `pulumi:"slug"`
-	// Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+	// Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
 	Vendor *string `pulumi:"vendor"`
 }
 
@@ -140,11 +144,13 @@ type GatewayProviderState struct {
 	BedrockRegion pulumi.StringPtrInput
 	// Timestamp when the provider was created.
 	CreatedAt pulumi.StringPtrInput
+	// Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+	Endpoint pulumi.StringPtrInput
 	// Require known model pricing before forwarding requests. Defaults to true.
 	RequirePricing pulumi.BoolPtrInput
 	// Organization-unique provider slug. Changing it replaces the provider.
 	Slug pulumi.StringPtrInput
-	// Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+	// Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
 	Vendor pulumi.StringPtrInput
 }
 
@@ -158,11 +164,13 @@ type gatewayProviderArgs struct {
 	BedrockApi *string `pulumi:"bedrockApi"`
 	// AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.
 	BedrockRegion *string `pulumi:"bedrockRegion"`
+	// Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+	Endpoint *string `pulumi:"endpoint"`
 	// Require known model pricing before forwarding requests. Defaults to true.
 	RequirePricing *bool `pulumi:"requirePricing"`
 	// Organization-unique provider slug. Changing it replaces the provider.
 	Slug string `pulumi:"slug"`
-	// Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+	// Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
 	Vendor string `pulumi:"vendor"`
 }
 
@@ -173,11 +181,13 @@ type GatewayProviderArgs struct {
 	BedrockApi pulumi.StringPtrInput
 	// AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.
 	BedrockRegion pulumi.StringPtrInput
+	// Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+	Endpoint pulumi.StringPtrInput
 	// Require known model pricing before forwarding requests. Defaults to true.
 	RequirePricing pulumi.BoolPtrInput
 	// Organization-unique provider slug. Changing it replaces the provider.
 	Slug pulumi.StringInput
-	// Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+	// Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
 	Vendor pulumi.StringInput
 }
 
@@ -287,6 +297,11 @@ func (o GatewayProviderOutput) CreatedAt() pulumi.StringOutput {
 	return o.ApplyT(func(v *GatewayProvider) pulumi.StringOutput { return v.CreatedAt }).(pulumi.StringOutput)
 }
 
+// Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+func (o GatewayProviderOutput) Endpoint() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *GatewayProvider) pulumi.StringPtrOutput { return v.Endpoint }).(pulumi.StringPtrOutput)
+}
+
 // Require known model pricing before forwarding requests. Defaults to true.
 func (o GatewayProviderOutput) RequirePricing() pulumi.BoolOutput {
 	return o.ApplyT(func(v *GatewayProvider) pulumi.BoolOutput { return v.RequirePricing }).(pulumi.BoolOutput)
@@ -297,7 +312,7 @@ func (o GatewayProviderOutput) Slug() pulumi.StringOutput {
 	return o.ApplyT(func(v *GatewayProvider) pulumi.StringOutput { return v.Slug }).(pulumi.StringOutput)
 }
 
-// Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+// Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
 func (o GatewayProviderOutput) Vendor() pulumi.StringOutput {
 	return o.ApplyT(func(v *GatewayProvider) pulumi.StringOutput { return v.Vendor }).(pulumi.StringOutput)
 }

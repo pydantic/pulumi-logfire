@@ -154,6 +154,30 @@
                 "type"
             ]
         },
+        "logfire:index/GatewayEndpointProvider:GatewayEndpointProvider": {
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "description": "Whether the Gateway routes to this provider. Defaults to true.\n"
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.\n"
+                },
+                "providerId": {
+                    "type": "string",
+                    "description": "UUID of a \u003cspan pulumi-lang-nodejs=\"`logfire.GatewayProvider`\" pulumi-lang-dotnet=\"`logfire.GatewayProvider`\" pulumi-lang-go=\"`GatewayProvider`\" pulumi-lang-python=\"`GatewayProvider`\" pulumi-lang-yaml=\"`logfire.GatewayProvider`\" pulumi-lang-java=\"`logfire.GatewayProvider`\"\u003e`logfire.GatewayProvider`\u003c/span\u003e in the same organization.\n"
+                },
+                "weight": {
+                    "type": "number",
+                    "description": "Positive relative weight among providers with the same priority. Defaults to 1.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "providerId"
+            ]
+        },
         "logfire:index/ScheduleWindow:ScheduleWindow": {
             "properties": {
                 "days": {
@@ -1240,6 +1264,148 @@
                 "type": "object"
             }
         },
+        "logfire:index/gatewayEndpoint:GatewayEndpoint": {
+            "description": "Manages an organization-owned AI Gateway endpoint and the providers it routes to. Requires Growth, Enterprise Cloud, or self-hosted and a token with organization:read_gateway and organization:write_gateway scopes (organization:read and organization:write are also accepted). Endpoints that use built-in providers or more than 100 providers are not supported. Import accepts the endpoint UUID or its organization-unique slug.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst _default = new logfire.GatewayEndpoint(\"default\", {\n    slug: \"default\",\n    description: \"Prefer OpenAI and fall back to Anthropic.\",\n    providers: [\n        {\n            provider_id: logfire_gateway_provider.openai.id,\n            priority: 10,\n        },\n        {\n            provider_id: logfire_gateway_provider.anthropic.id,\n        },\n    ],\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\ndefault = logfire.GatewayEndpoint(\"default\",\n    slug=\"default\",\n    description=\"Prefer OpenAI and fall back to Anthropic.\",\n    providers=[\n        {\n            \"provider_id\": logfire_gateway_provider[\"openai\"][\"id\"],\n            \"priority\": 10,\n        },\n        {\n            \"provider_id\": logfire_gateway_provider[\"anthropic\"][\"id\"],\n        },\n    ])\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var @default = new Logfire.GatewayEndpoint(\"default\", new()\n    {\n        Slug = \"default\",\n        Description = \"Prefer OpenAI and fall back to Anthropic.\",\n        Providers = new[]\n        {\n            new Logfire.Inputs.GatewayEndpointProviderArgs\n            {\n                Provider_id = logfire_gateway_provider.Openai.Id,\n                Priority = 10,\n            },\n            new Logfire.Inputs.GatewayEndpointProviderArgs\n            {\n                Provider_id = logfire_gateway_provider.Anthropic.Id,\n            },\n        },\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewGatewayEndpoint(ctx, \"default\", \u0026logfire.GatewayEndpointArgs{\n\t\t\tSlug:        pulumi.String(\"default\"),\n\t\t\tDescription: pulumi.String(\"Prefer OpenAI and fall back to Anthropic.\"),\n\t\t\tProviders: logfire.GatewayEndpointProviderArray{\n\t\t\t\t\u0026logfire.GatewayEndpointProviderArgs{\n\t\t\t\t\tProvider_id: logfire_gateway_provider.Openai.Id,\n\t\t\t\t\tPriority:    pulumi.Int(10),\n\t\t\t\t},\n\t\t\t\t\u0026logfire.GatewayEndpointProviderArgs{\n\t\t\t\t\tProvider_id: logfire_gateway_provider.Anthropic.Id,\n\t\t\t\t},\n\t\t\t},\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.GatewayEndpoint;\nimport com.pulumi.logfire.GatewayEndpointArgs;\nimport com.pulumi.logfire.inputs.GatewayEndpointProviderArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var default_ = new GatewayEndpoint(\"default\", GatewayEndpointArgs.builder()\n            .slug(\"default\")\n            .description(\"Prefer OpenAI and fall back to Anthropic.\")\n            .providers(            \n                GatewayEndpointProviderArgs.builder()\n                    .provider_id(logfire_gateway_provider.openai().id())\n                    .priority(10)\n                    .build(),\n                GatewayEndpointProviderArgs.builder()\n                    .provider_id(logfire_gateway_provider.anthropic().id())\n                    .build())\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  default:\n    type: logfire:GatewayEndpoint\n    properties:\n      slug: default\n      description: Prefer OpenAI and fall back to Anthropic.\n      providers:\n        - provider_id: ${logfire_gateway_provider.openai.id}\n          priority: 10\n        - provider_id: ${logfire_gateway_provider.anthropic.id}\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Routing\n\n\u003cspan pulumi-lang-nodejs=\"`providers`\" pulumi-lang-dotnet=\"`Providers`\" pulumi-lang-go=\"`providers`\" pulumi-lang-python=\"`providers`\" pulumi-lang-yaml=\"`providers`\" pulumi-lang-java=\"`providers`\"\u003e`providers`\u003c/span\u003e is the complete set of providers the endpoint routes to. The Gateway\ntries providers with a higher \u003cspan pulumi-lang-nodejs=\"`priority`\" pulumi-lang-dotnet=\"`Priority`\" pulumi-lang-go=\"`priority`\" pulumi-lang-python=\"`priority`\" pulumi-lang-yaml=\"`priority`\" pulumi-lang-java=\"`priority`\"\u003e`priority`\u003c/span\u003e first. Providers with the same priority\nare tried in a random order that follows their \u003cspan pulumi-lang-nodejs=\"`weight`\" pulumi-lang-dotnet=\"`Weight`\" pulumi-lang-go=\"`weight`\" pulumi-lang-python=\"`weight`\" pulumi-lang-yaml=\"`weight`\" pulumi-lang-java=\"`weight`\"\u003e`weight`\u003c/span\u003e. An inactive provider\nstays assigned but receives no requests. At least one provider must be active.\n\nA change to any provider replaces the whole set in one request, so the endpoint\nnever routes to a partial configuration. Logfire stores \u003cspan pulumi-lang-nodejs=\"`weight`\" pulumi-lang-dotnet=\"`Weight`\" pulumi-lang-go=\"`weight`\" pulumi-lang-python=\"`weight`\" pulumi-lang-yaml=\"`weight`\" pulumi-lang-java=\"`weight`\"\u003e`weight`\u003c/span\u003e as a 32-bit\nfloat. The provider keeps the configured value when it matches what Logfire stored.\n\nIf a routing policy uses a provider, the API refuses to remove or pause it.\nUpdate the routing policy first.\n\nIf the organization has a provider with the same slug as the endpoint, the API\nrefuses to delete the endpoint with a conflict error, because that provider would\nthen be reachable directly. Remove that provider first, then destroy the endpoint.\n\n## Failed creates\n\nCreation is not retried automatically. A failed request can still leave an\nendpoint stored. Check the endpoint list before retrying. If the slug exists,\nimport it by slug and apply the configuration again. A conflicting slug is never\nadopted automatically.\n\n## Supported configuration\n\nThe resource manages endpoints whose providers all belong to the organization.\nEndpoints that use a built-in provider, or more than 100 providers, return a\nconflict error. Manage those in the Logfire UI.\n\n## Import\n\nImport an endpoint by slug or UUID using the same organization's management token:\n\nterraform\n\nimport {\n\n  to = logfire_gateway_endpoint.default\n\n  id = \"default\"\n\n}\n\nOr use the command line:\n\nImport an existing Gateway endpoint by its organization-unique slug, or by its UUID.\n\nBy slug:\n\n```sh\n$ pulumi import logfire:index/gatewayEndpoint:GatewayEndpoint default' \"default\"\n```\n\nBy UUID:\n\n```sh\n$ pulumi import logfire:index/gatewayEndpoint:GatewayEndpoint default' \"018f45c0-3cab-7b2f-a8f7-8a0b55a7ed00\"\n```\n\nAn import leaves `priority`, `weight`, and `active` null when Logfire reports\n\ntheir defaults. If your configuration spells out a default, such as\n\n`weight = 1`, the first plan after the import shows a change. Applying it sends\n\nthe same providers again and changes nothing.\n\n",
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "description": "Timestamp when the endpoint was created.\n"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Endpoint description.\n"
+                },
+                "providers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/logfire:index/GatewayEndpointProvider:GatewayEndpointProvider"
+                    },
+                    "description": "Complete set of providers the endpoint routes to. A change replaces the whole set in one request. At least one provider must be active.\n"
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "Organization-unique endpoint slug. Changing it replaces the endpoint.\n"
+                }
+            },
+            "required": [
+                "createdAt",
+                "providers",
+                "slug"
+            ],
+            "inputProperties": {
+                "description": {
+                    "type": "string",
+                    "description": "Endpoint description.\n"
+                },
+                "providers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/logfire:index/GatewayEndpointProvider:GatewayEndpointProvider"
+                    },
+                    "description": "Complete set of providers the endpoint routes to. A change replaces the whole set in one request. At least one provider must be active.\n"
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "Organization-unique endpoint slug. Changing it replaces the endpoint.\n"
+                }
+            },
+            "requiredInputs": [
+                "providers",
+                "slug"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering GatewayEndpoint resources.\n",
+                "properties": {
+                    "createdAt": {
+                        "type": "string",
+                        "description": "Timestamp when the endpoint was created.\n"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Endpoint description.\n"
+                    },
+                    "providers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/logfire:index/GatewayEndpointProvider:GatewayEndpointProvider"
+                        },
+                        "description": "Complete set of providers the endpoint routes to. A change replaces the whole set in one request. At least one provider must be active.\n"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "description": "Organization-unique endpoint slug. Changing it replaces the endpoint.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "logfire:index/gatewayProjectSpendingLimits:GatewayProjectSpendingLimits": {
+            "description": "\n\n## Import\n\nImport the limits of a project by the lowercase project UUID:\n\nterraform\n\nimport {\n\n  to = logfire_gateway_project_spending_limits.example\n\n  id = \"018f45c0-3cab-7b2f-a8f7-8a0b55a7ed00\"\n\n}\n\nOr use the command line:\n\nImport the spending limits of a project by the project UUID.\n\n```sh\n$ pulumi import logfire:index/gatewayProjectSpendingLimits:GatewayProjectSpendingLimits example' \"018f45c0-3cab-7b2f-a8f7-8a0b55a7ed00\"\n```\n\n",
+            "properties": {
+                "dailyUsd": {
+                    "type": "integer",
+                    "description": "The daily limit in whole US dollars. A day starts at 00:00 UTC. Omit it to have no daily limit.\n"
+                },
+                "monthlyUsd": {
+                    "type": "integer",
+                    "description": "The monthly limit in whole US dollars. A month starts on the 1st at 00:00 UTC. Omit it to have no monthly limit.\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "The UUID of the project that the limits apply to. Changing it replaces the resource.\n"
+                },
+                "weeklyUsd": {
+                    "type": "integer",
+                    "description": "The weekly limit in whole US dollars. A week starts on Monday at 00:00 UTC. Omit it to have no weekly limit.\n"
+                }
+            },
+            "required": [
+                "projectId"
+            ],
+            "inputProperties": {
+                "dailyUsd": {
+                    "type": "integer",
+                    "description": "The daily limit in whole US dollars. A day starts at 00:00 UTC. Omit it to have no daily limit.\n"
+                },
+                "monthlyUsd": {
+                    "type": "integer",
+                    "description": "The monthly limit in whole US dollars. A month starts on the 1st at 00:00 UTC. Omit it to have no monthly limit.\n"
+                },
+                "projectId": {
+                    "type": "string",
+                    "description": "The UUID of the project that the limits apply to. Changing it replaces the resource.\n"
+                },
+                "weeklyUsd": {
+                    "type": "integer",
+                    "description": "The weekly limit in whole US dollars. A week starts on Monday at 00:00 UTC. Omit it to have no weekly limit.\n"
+                }
+            },
+            "requiredInputs": [
+                "projectId"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering GatewayProjectSpendingLimits resources.\n",
+                "properties": {
+                    "dailyUsd": {
+                        "type": "integer",
+                        "description": "The daily limit in whole US dollars. A day starts at 00:00 UTC. Omit it to have no daily limit.\n"
+                    },
+                    "monthlyUsd": {
+                        "type": "integer",
+                        "description": "The monthly limit in whole US dollars. A month starts on the 1st at 00:00 UTC. Omit it to have no monthly limit.\n"
+                    },
+                    "projectId": {
+                        "type": "string",
+                        "description": "The UUID of the project that the limits apply to. Changing it replaces the resource.\n"
+                    },
+                    "weeklyUsd": {
+                        "type": "integer",
+                        "description": "The weekly limit in whole US dollars. A week starts on Monday at 00:00 UTC. Omit it to have no weekly limit.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "logfire:index/gatewayProvider:GatewayProvider": {
             "description": "\n\n## Import\n\nImport a provider by UUID using the same organization's management token:\n\nterraform\n\nimport {\n\n  to = logfire_gateway_provider.openai\n\n  id = \"018f45c0-3cab-7b2f-a8f7-8a0b55a7ed11\"\n\n}\n\nOr use the command line:\n\nImport an existing Gateway provider by its UUID, or by its organization-unique slug.\n\nThe UUID comes from the provider list endpoint:\n\n  curl -s -H \"Authorization: Bearer $LOGFIRE_API_KEY\" \\\n\n    \"$LOGFIRE_BASE_URL/api/v1/gateway/providers/\" | jq '.providers[] | {id, slug}'\n\nBy slug:\n\n```sh\n$ pulumi import logfire:index/gatewayProvider:GatewayProvider openai' \"openai\"\n```\n\nBy UUID:\n\n```sh\n$ pulumi import logfire:index/gatewayProvider:GatewayProvider openai' \"018f45c0-3cab-7b2f-a8f7-8a0b55a7ed11\"\n```\n\nImport reads public configuration only. Set `api_key` in your configuration;\n\nthe next apply writes that key to the imported provider. Import does not recover\n\nthe existing secret.\n\n",
             "properties": {
@@ -1259,6 +1425,10 @@
                     "type": "string",
                     "description": "Timestamp when the provider was created.\n"
                 },
+                "endpoint": {
+                    "type": "string",
+                    "description": "Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.\n"
+                },
                 "requirePricing": {
                     "type": "boolean",
                     "description": "Require known model pricing before forwarding requests. Defaults to true.\n"
@@ -1269,7 +1439,7 @@
                 },
                 "vendor": {
                     "type": "string",
-                    "description": "Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.\n"
+                    "description": "Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.\n"
                 }
             },
             "required": [
@@ -1292,6 +1462,10 @@
                     "type": "string",
                     "description": "AWS region used to derive the Bedrock endpoint, for example us-east-1. Required only for bedrock; can be updated in place.\n"
                 },
+                "endpoint": {
+                    "type": "string",
+                    "description": "Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.\n"
+                },
                 "requirePricing": {
                     "type": "boolean",
                     "description": "Require known model pricing before forwarding requests. Defaults to true.\n"
@@ -1302,7 +1476,7 @@
                 },
                 "vendor": {
                     "type": "string",
-                    "description": "Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.\n"
+                    "description": "Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.\n"
                 }
             },
             "requiredInputs": [
@@ -1329,6 +1503,10 @@
                         "type": "string",
                         "description": "Timestamp when the provider was created.\n"
                     },
+                    "endpoint": {
+                        "type": "string",
+                        "description": "Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.\n"
+                    },
                     "requirePricing": {
                         "type": "boolean",
                         "description": "Require known model pricing before forwarding requests. Defaults to true.\n"
@@ -1339,7 +1517,56 @@
                     },
                     "vendor": {
                         "type": "string",
-                        "description": "Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.\n"
+                        "description": "Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits": {
+            "description": "Manages the AI Gateway spending limits of the organization. An organization limit caps the Gateway spend of every project and credential in the organization. Requires a plan that includes the AI Gateway and a token with `organization:read_gateway` and `organization:write_gateway` scopes (`organization:read` and `organization:write` are also accepted).\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\n// Cap the Gateway spend of the whole organization. A window you omit has no limit.\nconst _this = new logfire.GatewaySpendingLimits(\"this\", {\n    dailyUsd: 500,\n    monthlyUsd: 10000,\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\n# Cap the Gateway spend of the whole organization. A window you omit has no limit.\nthis = logfire.GatewaySpendingLimits(\"this\",\n    daily_usd=500,\n    monthly_usd=10000)\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    // Cap the Gateway spend of the whole organization. A window you omit has no limit.\n    var @this = new Logfire.GatewaySpendingLimits(\"this\", new()\n    {\n        DailyUsd = 500,\n        MonthlyUsd = 10000,\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t// Cap the Gateway spend of the whole organization. A window you omit has no limit.\n\t\t_, err := logfire.NewGatewaySpendingLimits(ctx, \"this\", \u0026logfire.GatewaySpendingLimitsArgs{\n\t\t\tDailyUsd:   pulumi.Int(500),\n\t\t\tMonthlyUsd: pulumi.Int(10000),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.GatewaySpendingLimits;\nimport com.pulumi.logfire.GatewaySpendingLimitsArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        // Cap the Gateway spend of the whole organization. A window you omit has no limit.\n        var this_ = new GatewaySpendingLimits(\"this\", GatewaySpendingLimitsArgs.builder()\n            .dailyUsd(500)\n            .monthlyUsd(10000)\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  # Cap the Gateway spend of the whole organization. A window you omit has no limit.\n  this:\n    type: logfire:GatewaySpendingLimits\n    properties:\n      dailyUsd: 500\n      monthlyUsd: 10000\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Ownership\n\nThe resource owns all three windows. A window you omit has no limit, and\ndestroying the resource removes every organization limit.\n\nCreating the resource replaces any limits set in the Logfire UI. To keep them,\nimport the resource first and copy the imported values into your configuration.\n\nDeclare at most one of this resource for each organization. The resource manages\nthe organization of the provider's credentials and stores no organization ID. If\nthe provider switches to another organization's credentials, the next plan reads\nand manages that organization's limits.\n\n## Import\n\nThe organization has one set of spending limits, so the import ID is always\n\n`organization`:\n\nterraform\n\nimport {\n\n  to = logfire_gateway_spending_limits.this\n\n  id = \"organization\"\n\n}\n\nOr use the command line:\n\nThe organization has one set of spending limits, so the import ID is always \"organization\".\n\n```sh\n$ pulumi import logfire:index/gatewaySpendingLimits:GatewaySpendingLimits this' \"organization\"\n```\n\n",
+            "properties": {
+                "dailyUsd": {
+                    "type": "integer",
+                    "description": "The daily limit in whole US dollars. A day starts at 00:00 UTC. Omit it to have no daily limit.\n"
+                },
+                "monthlyUsd": {
+                    "type": "integer",
+                    "description": "The monthly limit in whole US dollars. A month starts on the 1st at 00:00 UTC. Omit it to have no monthly limit.\n"
+                },
+                "weeklyUsd": {
+                    "type": "integer",
+                    "description": "The weekly limit in whole US dollars. A week starts on Monday at 00:00 UTC. Omit it to have no weekly limit.\n"
+                }
+            },
+            "inputProperties": {
+                "dailyUsd": {
+                    "type": "integer",
+                    "description": "The daily limit in whole US dollars. A day starts at 00:00 UTC. Omit it to have no daily limit.\n"
+                },
+                "monthlyUsd": {
+                    "type": "integer",
+                    "description": "The monthly limit in whole US dollars. A month starts on the 1st at 00:00 UTC. Omit it to have no monthly limit.\n"
+                },
+                "weeklyUsd": {
+                    "type": "integer",
+                    "description": "The weekly limit in whole US dollars. A week starts on Monday at 00:00 UTC. Omit it to have no weekly limit.\n"
+                }
+            },
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering GatewaySpendingLimits resources.\n",
+                "properties": {
+                    "dailyUsd": {
+                        "type": "integer",
+                        "description": "The daily limit in whole US dollars. A day starts at 00:00 UTC. Omit it to have no daily limit.\n"
+                    },
+                    "monthlyUsd": {
+                        "type": "integer",
+                        "description": "The monthly limit in whole US dollars. A month starts on the 1st at 00:00 UTC. Omit it to have no monthly limit.\n"
+                    },
+                    "weeklyUsd": {
+                        "type": "integer",
+                        "description": "The weekly limit in whole US dollars. A week starts on Monday at 00:00 UTC. Omit it to have no weekly limit.\n"
                     }
                 },
                 "type": "object"

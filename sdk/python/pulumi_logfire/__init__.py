@@ -13,7 +13,10 @@ from .dashboard import *
 from .frontend_application import *
 from .frontend_application_token import *
 from .gateway_api_key import *
+from .gateway_endpoint import *
+from .gateway_project_spending_limits import *
 from .gateway_provider import *
+from .gateway_spending_limits import *
 from .get_pagerduty_service import *
 from .organization import *
 from .project import *
@@ -93,10 +96,34 @@ _utilities.register(
  },
  {
   "pkg": "logfire",
+  "mod": "index/gatewayEndpoint",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/gatewayEndpoint:GatewayEndpoint": "GatewayEndpoint"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/gatewayProjectSpendingLimits",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/gatewayProjectSpendingLimits:GatewayProjectSpendingLimits": "GatewayProjectSpendingLimits"
+  }
+ },
+ {
+  "pkg": "logfire",
   "mod": "index/gatewayProvider",
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/gatewayProvider:GatewayProvider": "GatewayProvider"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/gatewaySpendingLimits",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits": "GatewaySpendingLimits"
   }
  },
  {

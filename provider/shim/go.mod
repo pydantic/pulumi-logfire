@@ -1,12 +1,12 @@
 module github.com/pydantic/pulumi-logfire/provider/shim
 
-go 1.25.8
+go 1.26.0
 
 toolchain go1.27.3
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.19.0
-	github.com/pydantic/terraform-provider-logfire v0.2.3
+	github.com/pydantic/terraform-provider-logfire v0.2.4
 )
 
 require (
@@ -21,7 +21,7 @@ require (
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	golang.org/x/net v0.57.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.40.0 // indirect
+	golang.org/x/net v0.61.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
 )
