@@ -40,10 +40,25 @@ export type GatewayApiKey = import("./gatewayApiKey").GatewayApiKey;
 export const GatewayApiKey: typeof import("./gatewayApiKey").GatewayApiKey = null as any;
 utilities.lazyLoad(exports, ["GatewayApiKey"], () => require("./gatewayApiKey"));
 
+export { GatewayEndpointArgs, GatewayEndpointState } from "./gatewayEndpoint";
+export type GatewayEndpoint = import("./gatewayEndpoint").GatewayEndpoint;
+export const GatewayEndpoint: typeof import("./gatewayEndpoint").GatewayEndpoint = null as any;
+utilities.lazyLoad(exports, ["GatewayEndpoint"], () => require("./gatewayEndpoint"));
+
+export { GatewayProjectSpendingLimitsArgs, GatewayProjectSpendingLimitsState } from "./gatewayProjectSpendingLimits";
+export type GatewayProjectSpendingLimits = import("./gatewayProjectSpendingLimits").GatewayProjectSpendingLimits;
+export const GatewayProjectSpendingLimits: typeof import("./gatewayProjectSpendingLimits").GatewayProjectSpendingLimits = null as any;
+utilities.lazyLoad(exports, ["GatewayProjectSpendingLimits"], () => require("./gatewayProjectSpendingLimits"));
+
 export { GatewayProviderArgs, GatewayProviderState } from "./gatewayProvider";
 export type GatewayProvider = import("./gatewayProvider").GatewayProvider;
 export const GatewayProvider: typeof import("./gatewayProvider").GatewayProvider = null as any;
 utilities.lazyLoad(exports, ["GatewayProvider"], () => require("./gatewayProvider"));
+
+export { GatewaySpendingLimitsArgs, GatewaySpendingLimitsState } from "./gatewaySpendingLimits";
+export type GatewaySpendingLimits = import("./gatewaySpendingLimits").GatewaySpendingLimits;
+export const GatewaySpendingLimits: typeof import("./gatewaySpendingLimits").GatewaySpendingLimits = null as any;
+utilities.lazyLoad(exports, ["GatewaySpendingLimits"], () => require("./gatewaySpendingLimits"));
 
 export { GetPagerdutyServiceArgs, GetPagerdutyServiceResult, GetPagerdutyServiceOutputArgs } from "./getPagerdutyService";
 export const getPagerdutyService: typeof import("./getPagerdutyService").getPagerdutyService = null as any;
@@ -111,8 +126,14 @@ const _module = {
                 return new FrontendApplicationToken(name, <any>undefined, { urn })
             case "logfire:index/gatewayApiKey:GatewayApiKey":
                 return new GatewayApiKey(name, <any>undefined, { urn })
+            case "logfire:index/gatewayEndpoint:GatewayEndpoint":
+                return new GatewayEndpoint(name, <any>undefined, { urn })
+            case "logfire:index/gatewayProjectSpendingLimits:GatewayProjectSpendingLimits":
+                return new GatewayProjectSpendingLimits(name, <any>undefined, { urn })
             case "logfire:index/gatewayProvider:GatewayProvider":
                 return new GatewayProvider(name, <any>undefined, { urn })
+            case "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits":
+                return new GatewaySpendingLimits(name, <any>undefined, { urn })
             case "logfire:index/organization:Organization":
                 return new Organization(name, <any>undefined, { urn })
             case "logfire:index/project:Project":
@@ -137,7 +158,10 @@ pulumi.runtime.registerResourceModule("logfire", "index/dashboard", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/frontendApplication", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/frontendApplicationToken", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/gatewayApiKey", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/gatewayEndpoint", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/gatewayProjectSpendingLimits", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/gatewayProvider", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/gatewaySpendingLimits", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)

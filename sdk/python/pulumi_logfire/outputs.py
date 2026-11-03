@@ -19,6 +19,7 @@ __all__ = [
     'AlertChannelAssignment',
     'ApiKeyGateway',
     'ChannelConfig',
+    'GatewayEndpointProvider',
     'ScheduleWindow',
     'SloAlerts',
     'SloAlertsFast',
@@ -321,6 +322,77 @@ class ChannelConfig(dict):
         Webhook URL endpoint.
         """
         return pulumi.get(self, "url")
+
+
+@pulumi.output_type
+class GatewayEndpointProvider(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "providerId":
+            suggest = "provider_id"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GatewayEndpointProvider. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GatewayEndpointProvider.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GatewayEndpointProvider.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 provider_id: _builtins.str,
+                 active: Optional[_builtins.bool] = None,
+                 priority: Optional[_builtins.int] = None,
+                 weight: Optional[_builtins.float] = None):
+        """
+        :param _builtins.str provider_id: UUID of a `GatewayProvider` in the same organization.
+        :param _builtins.bool active: Whether the Gateway routes to this provider. Defaults to true.
+        :param _builtins.int priority: The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+        :param _builtins.float weight: Positive relative weight among providers with the same priority. Defaults to 1.
+        """
+        pulumi.set(__self__, "provider_id", provider_id)
+        if active is not None:
+            pulumi.set(__self__, "active", active)
+        if priority is not None:
+            pulumi.set(__self__, "priority", priority)
+        if weight is not None:
+            pulumi.set(__self__, "weight", weight)
+
+    @_builtins.property
+    @pulumi.getter(name="providerId")
+    def provider_id(self) -> _builtins.str:
+        """
+        UUID of a `GatewayProvider` in the same organization.
+        """
+        return pulumi.get(self, "provider_id")
+
+    @_builtins.property
+    @pulumi.getter
+    def active(self) -> Optional[_builtins.bool]:
+        """
+        Whether the Gateway routes to this provider. Defaults to true.
+        """
+        return pulumi.get(self, "active")
+
+    @_builtins.property
+    @pulumi.getter
+    def priority(self) -> Optional[_builtins.int]:
+        """
+        The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+        """
+        return pulumi.get(self, "priority")
+
+    @_builtins.property
+    @pulumi.getter
+    def weight(self) -> Optional[_builtins.float]:
+        """
+        Positive relative weight among providers with the same priority. Defaults to 1.
+        """
+        return pulumi.get(self, "weight")
 
 
 @pulumi.output_type

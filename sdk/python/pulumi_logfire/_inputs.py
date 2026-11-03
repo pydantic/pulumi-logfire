@@ -21,6 +21,8 @@ __all__ = [
     'ApiKeyGatewayArgsDict',
     'ChannelConfigArgs',
     'ChannelConfigArgsDict',
+    'GatewayEndpointProviderArgs',
+    'GatewayEndpointProviderArgsDict',
     'ScheduleWindowArgs',
     'ScheduleWindowArgsDict',
     'SloAlertsArgs',
@@ -413,6 +415,97 @@ class ChannelConfigArgs:
     @url.setter
     def url(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "url", value)
+
+
+if not MYPY:
+    class GatewayEndpointProviderArgsDict(TypedDict):
+        provider_id: pulumi.Input[_builtins.str]
+        """
+        UUID of a `GatewayProvider` in the same organization.
+        """
+        active: NotRequired[pulumi.Input[_builtins.bool]]
+        """
+        Whether the Gateway routes to this provider. Defaults to true.
+        """
+        priority: NotRequired[pulumi.Input[_builtins.int]]
+        """
+        The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+        """
+        weight: NotRequired[pulumi.Input[_builtins.float]]
+        """
+        Positive relative weight among providers with the same priority. Defaults to 1.
+        """
+elif False:
+    GatewayEndpointProviderArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class GatewayEndpointProviderArgs:
+    def __init__(__self__, *,
+                 provider_id: pulumi.Input[_builtins.str],
+                 active: Optional[pulumi.Input[_builtins.bool]] = None,
+                 priority: Optional[pulumi.Input[_builtins.int]] = None,
+                 weight: Optional[pulumi.Input[_builtins.float]] = None):
+        """
+        :param pulumi.Input[_builtins.str] provider_id: UUID of a `GatewayProvider` in the same organization.
+        :param pulumi.Input[_builtins.bool] active: Whether the Gateway routes to this provider. Defaults to true.
+        :param pulumi.Input[_builtins.int] priority: The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+        :param pulumi.Input[_builtins.float] weight: Positive relative weight among providers with the same priority. Defaults to 1.
+        """
+        pulumi.set(__self__, "provider_id", provider_id)
+        if active is not None:
+            pulumi.set(__self__, "active", active)
+        if priority is not None:
+            pulumi.set(__self__, "priority", priority)
+        if weight is not None:
+            pulumi.set(__self__, "weight", weight)
+
+    @_builtins.property
+    @pulumi.getter(name="providerId")
+    def provider_id(self) -> pulumi.Input[_builtins.str]:
+        """
+        UUID of a `GatewayProvider` in the same organization.
+        """
+        return pulumi.get(self, "provider_id")
+
+    @provider_id.setter
+    def provider_id(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "provider_id", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def active(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Whether the Gateway routes to this provider. Defaults to true.
+        """
+        return pulumi.get(self, "active")
+
+    @active.setter
+    def active(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "active", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def priority(self) -> Optional[pulumi.Input[_builtins.int]]:
+        """
+        The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+        """
+        return pulumi.get(self, "priority")
+
+    @priority.setter
+    def priority(self, value: Optional[pulumi.Input[_builtins.int]]):
+        pulumi.set(self, "priority", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def weight(self) -> Optional[pulumi.Input[_builtins.float]]:
+        """
+        Positive relative weight among providers with the same priority. Defaults to 1.
+        """
+        return pulumi.get(self, "weight")
+
+    @weight.setter
+    def weight(self, value: Optional[pulumi.Input[_builtins.float]]):
+        pulumi.set(self, "weight", value)
 
 
 if not MYPY:

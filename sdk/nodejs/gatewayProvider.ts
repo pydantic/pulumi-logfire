@@ -89,6 +89,10 @@ export class GatewayProvider extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly createdAt: pulumi.Output<string>;
     /**
+     * Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+     */
+    declare public readonly endpoint: pulumi.Output<string | undefined>;
+    /**
      * Require known model pricing before forwarding requests. Defaults to true.
      */
     declare public readonly requirePricing: pulumi.Output<boolean>;
@@ -97,7 +101,7 @@ export class GatewayProvider extends pulumi.CustomResource {
      */
     declare public readonly slug: pulumi.Output<string>;
     /**
-     * Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+     * Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
      */
     declare public readonly vendor: pulumi.Output<string>;
 
@@ -118,6 +122,7 @@ export class GatewayProvider extends pulumi.CustomResource {
             resourceInputs["bedrockApi"] = state?.bedrockApi;
             resourceInputs["bedrockRegion"] = state?.bedrockRegion;
             resourceInputs["createdAt"] = state?.createdAt;
+            resourceInputs["endpoint"] = state?.endpoint;
             resourceInputs["requirePricing"] = state?.requirePricing;
             resourceInputs["slug"] = state?.slug;
             resourceInputs["vendor"] = state?.vendor;
@@ -135,6 +140,7 @@ export class GatewayProvider extends pulumi.CustomResource {
             resourceInputs["apiKey"] = args?.apiKey ? pulumi.secret(args.apiKey) : undefined;
             resourceInputs["bedrockApi"] = args?.bedrockApi;
             resourceInputs["bedrockRegion"] = args?.bedrockRegion;
+            resourceInputs["endpoint"] = args?.endpoint;
             resourceInputs["requirePricing"] = args?.requirePricing;
             resourceInputs["slug"] = args?.slug;
             resourceInputs["vendor"] = args?.vendor;
@@ -165,6 +171,10 @@ export interface GatewayProviderState {
      */
     createdAt?: pulumi.Input<string>;
     /**
+     * Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+     */
+    endpoint?: pulumi.Input<string>;
+    /**
      * Require known model pricing before forwarding requests. Defaults to true.
      */
     requirePricing?: pulumi.Input<boolean>;
@@ -173,7 +183,7 @@ export interface GatewayProviderState {
      */
     slug?: pulumi.Input<string>;
     /**
-     * Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+     * Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
      */
     vendor?: pulumi.Input<string>;
 }
@@ -192,6 +202,10 @@ export interface GatewayProviderArgs {
      */
     bedrockRegion?: pulumi.Input<string>;
     /**
+     * Upstream endpoint URL, for example https://my-resource.openai.azure.com or https://us-central1-aiplatform.googleapis.com. Required only for azure and google-vertex; can be updated in place.
+     */
+    endpoint?: pulumi.Input<string>;
+    /**
      * Require known model pricing before forwarding requests. Defaults to true.
      */
     requirePricing?: pulumi.Input<boolean>;
@@ -200,7 +214,7 @@ export interface GatewayProviderArgs {
      */
     slug: pulumi.Input<string>;
     /**
-     * Upstream vendor: openai, anthropic, bedrock, doubleword, groq, huggingface, or mistral. Changing it replaces the provider.
+     * Upstream vendor: openai, anthropic, azure, bedrock, doubleword, google-vertex, groq, huggingface, or mistral. Changing it replaces the provider.
      */
     vendor: pulumi.Input<string>;
 }

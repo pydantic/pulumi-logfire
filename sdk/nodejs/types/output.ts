@@ -82,6 +82,25 @@ export interface ChannelConfig {
     url?: string;
 }
 
+export interface GatewayEndpointProvider {
+    /**
+     * Whether the Gateway routes to this provider. Defaults to true.
+     */
+    active?: boolean;
+    /**
+     * The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+     */
+    priority?: number;
+    /**
+     * UUID of a `logfire.GatewayProvider` in the same organization.
+     */
+    providerId: string;
+    /**
+     * Positive relative weight among providers with the same priority. Defaults to 1.
+     */
+    weight?: number;
+}
+
 export interface ScheduleWindow {
     /**
      * ISO weekday numbers: `1` is Monday and `7` is Sunday.

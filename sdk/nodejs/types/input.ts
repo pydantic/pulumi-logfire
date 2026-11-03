@@ -82,6 +82,25 @@ export interface ChannelConfig {
     url?: pulumi.Input<string>;
 }
 
+export interface GatewayEndpointProvider {
+    /**
+     * Whether the Gateway routes to this provider. Defaults to true.
+     */
+    active?: pulumi.Input<boolean>;
+    /**
+     * The Gateway tries providers with a higher priority first. Providers with the same priority are tried in a random order that follows their weights. Defaults to 0.
+     */
+    priority?: pulumi.Input<number>;
+    /**
+     * UUID of a `logfire.GatewayProvider` in the same organization.
+     */
+    providerId: pulumi.Input<string>;
+    /**
+     * Positive relative weight among providers with the same priority. Defaults to 1.
+     */
+    weight?: pulumi.Input<number>;
+}
+
 export interface ScheduleWindow {
     /**
      * ISO weekday numbers: `1` is Monday and `7` is Sunday.
