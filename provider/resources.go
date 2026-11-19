@@ -184,9 +184,15 @@ func Provider() tfbridge.ProviderInfo {
 		},
 	}
 
+	// Names are lowercase slugs. The autonamer appends a "-" and seven random characters, so the
+	// prefix leaves eight of the 50 characters the platform allows.
+	invalidSlugChars := regexp.MustCompile(`[^a-z0-9]+`)
 	for _, res := range []string{"logfire_project", "logfire_organization"} {
 		prov.Resources[res].Fields = map[string]*tfbridge.SchemaInfo{
-			"name": tfbridge.AutoNameTransform("name", maxSlugLength, slugify),
+			"name": tfbridge.AutoNameTransform("name", 50, func(name string) string {
+				name = invalidSlugChars.ReplaceAllString(strings.ToLower(name), "-")
+				return strings.Trim(name[:min(len(name), 42)], "-")
+			}),
 		}
 	}
 
@@ -194,24 +200,6 @@ func Provider() tfbridge.ProviderInfo {
 	prov.SetAutonaming(255, "-")
 
 	return prov
-}
-
-const (
-	// maxSlugLength is the platform limit for project and organization names.
-	maxSlugLength = 50
-	// autonameSuffixLength is the separator plus the seven random characters.
-	autonameSuffixLength = 8
-)
-
-var invalidSlugChars = regexp.MustCompile(`[^a-z0-9]+`)
-
-// slugify turns a Pulumi resource name into the prefix of a valid project or organization name.
-func slugify(name string) string {
-	name = invalidSlugChars.ReplaceAllString(strings.ToLower(name), "-")
-	if len(name) > maxSlugLength-autonameSuffixLength {
-		name = name[:maxSlugLength-autonameSuffixLength]
-	}
-	return strings.Trim(name, "-")
 }
 
 func replaceImportSection(content []byte, section string) []byte {
