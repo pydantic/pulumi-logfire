@@ -184,14 +184,18 @@ func Provider() tfbridge.ProviderInfo {
 		},
 	}
 
-	// Names are lowercase slugs. The autonamer appends a "-" and seven random characters, so the
-	// prefix leaves eight of the 50 characters the platform allows.
+	// Names are lowercase slugs of at most 42 characters, so the autonamer's "-" and seven random
+	// characters fit in the 50 the platform allows. An autonaming pattern passes the whole proposed
+	// name, random part included, so shortening keeps the last eight characters.
 	invalidSlugChars := regexp.MustCompile(`[^a-z0-9]+`)
 	for _, res := range []string{"logfire_project", "logfire_organization"} {
 		prov.Resources[res].Fields = map[string]*tfbridge.SchemaInfo{
 			"name": tfbridge.AutoNameTransform("name", 50, func(name string) string {
-				name = invalidSlugChars.ReplaceAllString(strings.ToLower(name), "-")
-				return strings.Trim(name[:min(len(name), 42)], "-")
+				name = strings.ToLower(name)
+				if len(name) > 42 {
+					name = name[:34] + name[len(name)-8:]
+				}
+				return strings.Trim(invalidSlugChars.ReplaceAllString(name, "-"), "-")
 			}),
 		}
 	}

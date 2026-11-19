@@ -205,5 +205,30 @@ func TestAutonamedSlugs(t *testing.T) {
 				}
 			})
 		}
+
+		// An autonaming pattern proposes the full name. Two that differ only in the random
+		// suffix must stay distinct after shortening.
+		seen := map[string]bool{}
+		for _, proposed := range []string{strings.Repeat("a", 40) + "-1234567", strings.Repeat("a", 40) + "-1abcdef"} {
+			resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
+				Urn:        string(resource.NewURN("stack", "project", "", typ, "named")),
+				RandomSeed: []byte("seed"),
+				Autonaming: &pulumirpc.CheckRequest_AutonamingOptions{
+					ProposedName: proposed, Mode: pulumirpc.CheckRequest_AutonamingOptions_PROPOSE,
+				},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			checked, err := plugin.UnmarshalProperties(resp.Inputs, plugin.MarshalOptions{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			name := checked["name"].StringValue()
+			if !slug.MatchString(name) || len(name) > 50 || seen[name] {
+				t.Errorf("proposed name %q became %q", proposed, name)
+			}
+			seen[name] = true
+		}
 	}
 }
