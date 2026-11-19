@@ -2,15 +2,23 @@ package logfire
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
 
+	pfbridge "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfgen"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
+	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 )
 
 func TestGeneratedSchema(t *testing.T) {
@@ -156,4 +164,46 @@ func applyDocEdits(t *testing.T, path string, content []byte) string {
 		}
 	}
 	return string(content)
+}
+
+func TestAutonamedSlugs(t *testing.T) {
+	schema, err := os.ReadFile("cmd/pulumi-resource-logfire/schema.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	server, err := pfbridge.NewProviderServer(context.Background(), nil, Provider(),
+		pfbridge.ProviderMetadata{PackageSchema: schema})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	slug := regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+	for _, typ := range []tokens.Type{"logfire:index/project:Project", "logfire:index/organization:Organization"} {
+		for _, logicalName := range []string{"myProject", "My_Org.1", "plain"} {
+			t.Run(string(typ)+"/"+logicalName, func(t *testing.T) {
+				inputs, err := plugin.MarshalProperties(resource.PropertyMap{}, plugin.MarshalOptions{})
+				if err != nil {
+					t.Fatal(err)
+				}
+				resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
+					Urn:        string(resource.NewURN("stack", "project", "", typ, logicalName)),
+					News:       inputs,
+					RandomSeed: []byte("seed"),
+				})
+				if err != nil {
+					t.Fatal(err)
+				}
+				for _, failure := range resp.Failures {
+					t.Errorf("check failed: %s", failure.Reason)
+				}
+				checked, err := plugin.UnmarshalProperties(resp.Inputs, plugin.MarshalOptions{})
+				if err != nil {
+					t.Fatal(err)
+				}
+				if name := checked["name"].StringValue(); !slug.MatchString(name) || len(name) > 50 {
+					t.Errorf("generated name %q is not a valid slug of at most 50 characters", name)
+				}
+			})
+		}
+	}
 }
