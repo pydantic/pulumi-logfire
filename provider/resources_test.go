@@ -179,7 +179,7 @@ func TestAutonamedSlugs(t *testing.T) {
 
 	slug := regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
 	for _, typ := range []tokens.Type{"logfire:index/project:Project", "logfire:index/organization:Organization"} {
-		for _, logicalName := range []string{"myProject", "My_Org.1", "plain"} {
+		for _, logicalName := range []string{"myProject", "My_Org.1", "plain", strings.Repeat("long-", 12)} {
 			t.Run(string(typ)+"/"+logicalName, func(t *testing.T) {
 				inputs, err := plugin.MarshalProperties(resource.PropertyMap{}, plugin.MarshalOptions{})
 				if err != nil {
