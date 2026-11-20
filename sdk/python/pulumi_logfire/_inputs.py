@@ -17,6 +17,8 @@ from . import _utilities
 __all__ = [
     'AlertChannelAssignmentArgs',
     'AlertChannelAssignmentArgsDict',
+    'AlertInstancePolicyArgs',
+    'AlertInstancePolicyArgsDict',
     'ApiKeyGatewayArgs',
     'ApiKeyGatewayArgsDict',
     'ChannelConfigArgs',
@@ -92,6 +94,94 @@ class AlertChannelAssignmentArgs:
     @schedule_id.setter
     def schedule_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "schedule_id", value)
+
+
+if not MYPY:
+    class AlertInstancePolicyArgsDict(TypedDict):
+        identity_columns: pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]
+        """
+        Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+        """
+        missing_behavior: pulumi.Input[_builtins.str]
+        """
+        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        """
+        missing_runs: pulumi.Input[_builtins.int]
+        """
+        Consecutive runs without the occurrence, 1 to 100, before it closes.
+        """
+        pending_runs: pulumi.Input[_builtins.int]
+        """
+        Consecutive matching runs, 1 to 100, before a new occurrence fires.
+        """
+elif False:
+    AlertInstancePolicyArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class AlertInstancePolicyArgs:
+    def __init__(__self__, *,
+                 identity_columns: pulumi.Input[Sequence[pulumi.Input[_builtins.str]]],
+                 missing_behavior: pulumi.Input[_builtins.str],
+                 missing_runs: pulumi.Input[_builtins.int],
+                 pending_runs: pulumi.Input[_builtins.int]):
+        """
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] identity_columns: Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+        :param pulumi.Input[_builtins.str] missing_behavior: The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        :param pulumi.Input[_builtins.int] missing_runs: Consecutive runs without the occurrence, 1 to 100, before it closes.
+        :param pulumi.Input[_builtins.int] pending_runs: Consecutive matching runs, 1 to 100, before a new occurrence fires.
+        """
+        pulumi.set(__self__, "identity_columns", identity_columns)
+        pulumi.set(__self__, "missing_behavior", missing_behavior)
+        pulumi.set(__self__, "missing_runs", missing_runs)
+        pulumi.set(__self__, "pending_runs", pending_runs)
+
+    @_builtins.property
+    @pulumi.getter(name="identityColumns")
+    def identity_columns(self) -> pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]:
+        """
+        Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+        """
+        return pulumi.get(self, "identity_columns")
+
+    @identity_columns.setter
+    def identity_columns(self, value: pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]):
+        pulumi.set(self, "identity_columns", value)
+
+    @_builtins.property
+    @pulumi.getter(name="missingBehavior")
+    def missing_behavior(self) -> pulumi.Input[_builtins.str]:
+        """
+        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        """
+        return pulumi.get(self, "missing_behavior")
+
+    @missing_behavior.setter
+    def missing_behavior(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "missing_behavior", value)
+
+    @_builtins.property
+    @pulumi.getter(name="missingRuns")
+    def missing_runs(self) -> pulumi.Input[_builtins.int]:
+        """
+        Consecutive runs without the occurrence, 1 to 100, before it closes.
+        """
+        return pulumi.get(self, "missing_runs")
+
+    @missing_runs.setter
+    def missing_runs(self, value: pulumi.Input[_builtins.int]):
+        pulumi.set(self, "missing_runs", value)
+
+    @_builtins.property
+    @pulumi.getter(name="pendingRuns")
+    def pending_runs(self) -> pulumi.Input[_builtins.int]:
+        """
+        Consecutive matching runs, 1 to 100, before a new occurrence fires.
+        """
+        return pulumi.get(self, "pending_runs")
+
+    @pending_runs.setter
+    def pending_runs(self, value: pulumi.Input[_builtins.int]):
+        pulumi.set(self, "pending_runs", value)
 
 
 if not MYPY:
@@ -210,11 +300,15 @@ if not MYPY:
     class ChannelConfigArgsDict(TypedDict):
         type: pulumi.Input[_builtins.str]
         """
-        Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+        Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         """
         auth_key: NotRequired[pulumi.Input[_builtins.str]]
         """
         Opsgenie API key.
+        """
+        base_url: NotRequired[pulumi.Input[_builtins.str]]
+        """
+        Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
         """
         channel_id: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -231,6 +325,10 @@ if not MYPY:
         install_id: NotRequired[pulumi.Input[_builtins.str]]
         """
         ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
+        """
+        recipients: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+        """
+        Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
         """
         region: NotRequired[pulumi.Input[_builtins.str]]
         """
@@ -256,21 +354,25 @@ class ChannelConfigArgs:
     def __init__(__self__, *,
                  type: pulumi.Input[_builtins.str],
                  auth_key: Optional[pulumi.Input[_builtins.str]] = None,
+                 base_url: Optional[pulumi.Input[_builtins.str]] = None,
                  channel_id: Optional[pulumi.Input[_builtins.str]] = None,
                  format: Optional[pulumi.Input[_builtins.str]] = None,
                  include_agent_prompt: Optional[pulumi.Input[_builtins.bool]] = None,
                  install_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 recipients: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  region: Optional[pulumi.Input[_builtins.str]] = None,
                  routing_key: Optional[pulumi.Input[_builtins.str]] = None,
                  service_id: Optional[pulumi.Input[_builtins.str]] = None,
                  url: Optional[pulumi.Input[_builtins.str]] = None):
         """
-        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+        :param pulumi.Input[_builtins.str] type: Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         :param pulumi.Input[_builtins.str] auth_key: Opsgenie API key.
+        :param pulumi.Input[_builtins.str] base_url: Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
         :param pulumi.Input[_builtins.str] channel_id: Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
         :param pulumi.Input[_builtins.str] format: Webhook payload format.
         :param pulumi.Input[_builtins.bool] include_agent_prompt: Whether Slack issue notifications include the "Ask your agent" MCP prompt line. Defaults to `true` for new Slack channels. Omitting it on an existing channel retains the current setting; set it to `true` explicitly to re-enable the prompt.
         :param pulumi.Input[_builtins.str] install_id: ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] recipients: Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
         :param pulumi.Input[_builtins.str] region: PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
         :param pulumi.Input[_builtins.str] routing_key: PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
         :param pulumi.Input[_builtins.str] service_id: Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
@@ -279,6 +381,8 @@ class ChannelConfigArgs:
         pulumi.set(__self__, "type", type)
         if auth_key is not None:
             pulumi.set(__self__, "auth_key", auth_key)
+        if base_url is not None:
+            pulumi.set(__self__, "base_url", base_url)
         if channel_id is not None:
             pulumi.set(__self__, "channel_id", channel_id)
         if format is not None:
@@ -287,6 +391,8 @@ class ChannelConfigArgs:
             pulumi.set(__self__, "include_agent_prompt", include_agent_prompt)
         if install_id is not None:
             pulumi.set(__self__, "install_id", install_id)
+        if recipients is not None:
+            pulumi.set(__self__, "recipients", recipients)
         if region is not None:
             pulumi.set(__self__, "region", region)
         if routing_key is not None:
@@ -300,7 +406,7 @@ class ChannelConfigArgs:
     @pulumi.getter
     def type(self) -> pulumi.Input[_builtins.str]:
         """
-        Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+        Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
         """
         return pulumi.get(self, "type")
 
@@ -319,6 +425,18 @@ class ChannelConfigArgs:
     @auth_key.setter
     def auth_key(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "auth_key", value)
+
+    @_builtins.property
+    @pulumi.getter(name="baseUrl")
+    def base_url(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
+        """
+        return pulumi.get(self, "base_url")
+
+    @base_url.setter
+    def base_url(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "base_url", value)
 
     @_builtins.property
     @pulumi.getter(name="channelId")
@@ -367,6 +485,18 @@ class ChannelConfigArgs:
     @install_id.setter
     def install_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "install_id", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def recipients(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
+        """
+        Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
+        """
+        return pulumi.get(self, "recipients")
+
+    @recipients.setter
+    def recipients(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
+        pulumi.set(self, "recipients", value)
 
     @_builtins.property
     @pulumi.getter

@@ -7,6 +7,8 @@ import * as utilities from "./utilities";
 /**
  * Manages a Logfire dashboard.
  *
+ * The provider marks the dashboard as managed by the tool that applies it, and Logfire shows a Managed badge on it. A new dashboard is also locked against edits in the Logfire UI and through the Logfire MCP server unless `managedAllowEdits` is `true`. The lock does not cover the dashboards API, which the provider uses. A Logfire instance without managed dashboards ignores the marker. An existing dashboard gets the marker on its next update.
+ *
  * ## Example Usage
  *
  * ```typescript
@@ -91,6 +93,10 @@ export class Dashboard extends pulumi.CustomResource {
      */
     declare public readonly definition: pulumi.Output<string>;
     /**
+     * Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+     */
+    declare public readonly managedAllowEdits: pulumi.Output<boolean | undefined>;
+    /**
      * Dashboard display name.
      */
     declare public readonly name: pulumi.Output<string>;
@@ -117,6 +123,7 @@ export class Dashboard extends pulumi.CustomResource {
         if (opts.id) {
             const state = argsOrState as DashboardState | undefined;
             resourceInputs["definition"] = state?.definition;
+            resourceInputs["managedAllowEdits"] = state?.managedAllowEdits;
             resourceInputs["name"] = state?.name;
             resourceInputs["projectId"] = state?.projectId;
             resourceInputs["slug"] = state?.slug;
@@ -132,6 +139,7 @@ export class Dashboard extends pulumi.CustomResource {
                 throw new Error("Missing required property 'slug'");
             }
             resourceInputs["definition"] = args?.definition;
+            resourceInputs["managedAllowEdits"] = args?.managedAllowEdits;
             resourceInputs["name"] = args?.name;
             resourceInputs["projectId"] = args?.projectId;
             resourceInputs["slug"] = args?.slug;
@@ -149,6 +157,10 @@ export interface DashboardState {
      * Dashboard definition JSON payload.
      */
     definition?: pulumi.Input<string>;
+    /**
+     * Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+     */
+    managedAllowEdits?: pulumi.Input<boolean>;
     /**
      * Dashboard display name.
      */
@@ -171,6 +183,10 @@ export interface DashboardArgs {
      * Dashboard definition JSON payload.
      */
     definition: pulumi.Input<string>;
+    /**
+     * Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+     */
+    managedAllowEdits?: pulumi.Input<boolean>;
     /**
      * Dashboard display name.
      */
