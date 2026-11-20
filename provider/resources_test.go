@@ -198,7 +198,7 @@ func TestAutonamedSlugs(t *testing.T) {
 
 	slug := regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
 	for _, typ := range []tokens.Type{"logfire:index/project:Project", "logfire:index/organization:Organization"} {
-		for _, logicalName := range []string{"myProject", "My_Org.1", "plain", strings.Repeat("long-", 12)} {
+		for _, logicalName := range []string{"myProject", "My_Org.1", "plain", strings.Repeat("long-", 12), "東京"} {
 			t.Run(string(typ)+"/"+logicalName, func(t *testing.T) {
 				inputs, err := plugin.MarshalProperties(resource.PropertyMap{}, plugin.MarshalOptions{})
 				if err != nil {
@@ -225,10 +225,16 @@ func TestAutonamedSlugs(t *testing.T) {
 			})
 		}
 
-		// An autonaming pattern proposes the full name. Two that differ only in the random
-		// suffix must stay distinct after shortening.
+		// An autonaming pattern proposes the full name. A valid proposal passes through
+		// unchanged, and two that differ only in the random suffix stay distinct after
+		// conversion and shortening.
+		valid := strings.Repeat("a", 34) + "x" + "1abcdef" + "-sharedx"
 		seen := map[string]bool{}
-		for _, proposed := range []string{strings.Repeat("a", 40) + "-1234567", strings.Repeat("a", 40) + "-1abcdef"} {
+		for _, proposed := range []string{
+			strings.Repeat("a", 40) + "-1234567", strings.Repeat("a", 40) + "-1abcdef",
+			strings.Repeat("A", 50) + "-1234567", strings.Repeat("A", 50) + "-1abcdef",
+			valid, strings.Repeat("a", 34) + "y" + "1abcdef" + "-sharedx",
+		} {
 			resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
 				Urn:        string(resource.NewURN("stack", "project", "", typ, "named")),
 				RandomSeed: []byte("seed"),
@@ -246,6 +252,9 @@ func TestAutonamedSlugs(t *testing.T) {
 			name := checked["name"].StringValue()
 			if !slug.MatchString(name) || len(name) > 50 || seen[name] {
 				t.Errorf("proposed name %q became %q", proposed, name)
+			}
+			if proposed == valid && name != valid {
+				t.Errorf("valid proposed name %q became %q", proposed, name)
 			}
 			seen[name] = true
 		}

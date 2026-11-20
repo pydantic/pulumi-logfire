@@ -16,6 +16,7 @@ package logfire
 
 import (
 	"bytes"
+	"context"
 	"path"
 	"regexp"
 	"strings"
@@ -25,6 +26,7 @@ import (
 
 	pfbridge "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
+	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/info"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 
@@ -209,20 +211,8 @@ func Provider() tfbridge.ProviderInfo {
 		"managed_allow_edits": {MarkAsOptional: tfbridge.True()},
 	}
 
-	// Names are lowercase slugs of at most 42 characters, so the autonamer's "-" and seven random
-	// characters fit in the 50 the platform allows. An autonaming pattern passes the whole proposed
-	// name, random part included, so shortening keeps the last eight characters.
-	invalidSlugChars := regexp.MustCompile(`[^a-z0-9]+`)
-	for _, res := range []string{"logfire_project", "logfire_organization"} {
-		prov.Resources[res].Fields = map[string]*tfbridge.SchemaInfo{
-			"name": tfbridge.AutoNameTransform("name", 50, func(name string) string {
-				name = strings.ToLower(name)
-				if len(name) > 42 {
-					name = name[:34] + name[len(name)-8:]
-				}
-				return strings.Trim(invalidSlugChars.ReplaceAllString(name, "-"), "-")
-			}),
-		}
+	for res, fallback := range map[string]string{"logfire_project": "project", "logfire_organization": "organization"} {
+		prov.Resources[res].Fields = map[string]*tfbridge.SchemaInfo{"name": slugAutoName(fallback)}
 	}
 
 	prov.MustApplyAutoAliases()
@@ -263,4 +253,60 @@ func replaceImportSection(content []byte, section string) []byte {
 	out = append(out, []byte(section)...)
 	out = append(out, content[end:]...)
 	return out
+}
+
+// Logfire project and organization names are lowercase slugs of at most 50 characters.
+const maxSlugLen = 50
+
+var (
+	validSlug        = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+	invalidSlugChars = regexp.MustCompile(`[^a-z0-9]+`)
+)
+
+// slugAutoName generates a valid slug when a resource omits `name`. By default the bridge appends
+// "-" and seven random characters to the logical name, so that part keeps at most 42 characters.
+// An autonaming pattern proposes the whole name, random part included. A proposal that is
+// already a valid slug passes through unchanged. Another is converted, and if it is too long it
+// keeps its first 42 and last 8 characters, so a random suffix survives. A logical name with no
+// usable characters, such as "東京", falls back to the resource kind.
+func slugAutoName(fallback string) *tfbridge.SchemaInfo {
+	return &tfbridge.SchemaInfo{
+		Name: "name",
+		Default: &tfbridge.DefaultInfo{
+			AutoNamed: true,
+			ComputeDefault: func(ctx context.Context, opts tfbridge.ComputeDefaultOptions) (interface{}, error) {
+				transform := func(name string) string {
+					s := slugify(name)
+					if len(s) > maxSlugLen-8 {
+						s = strings.TrimRight(s[:maxSlugLen-8], "-")
+					}
+					if s == "" {
+						return fallback
+					}
+					return s
+				}
+				if opts.Autonaming != nil && opts.Autonaming.Mode == info.ComputeDefaultAutonamingModePropose {
+					transform = func(name string) string {
+						if validSlug.MatchString(name) && len(name) <= maxSlugLen {
+							return name
+						}
+						s := slugify(name)
+						if len(s) > maxSlugLen {
+							s = slugify(s[:maxSlugLen-8] + s[len(s)-8:])
+						}
+						return s
+					}
+				}
+				return tfbridge.ComputeAutoNameDefault(ctx, tfbridge.AutoNameOptions{
+					Separator: "-", Maxlen: maxSlugLen, Randlen: 7, Transform: transform,
+				}, opts)
+			},
+		},
+	}
+}
+
+// slugify lowercases name and turns each run of other characters into one hyphen. The result is
+// ASCII, so byte offsets are character offsets.
+func slugify(name string) string {
+	return strings.Trim(invalidSlugChars.ReplaceAllString(strings.ToLower(name), "-"), "-")
 }
