@@ -9,6 +9,13 @@
                     },
                     "environments": {
                         "maxItemsOne": false
+                    },
+                    "instance_policy": {
+                        "fields": {
+                            "identity_columns": {
+                                "maxItemsOne": false
+                            }
+                        }
                     }
                 }
             },
@@ -21,7 +28,16 @@
                 }
             },
             "logfire_channel": {
-                "current": "logfire:index/channel:Channel"
+                "current": "logfire:index/channel:Channel",
+                "fields": {
+                    "config": {
+                        "fields": {
+                            "recipients": {
+                                "maxItemsOne": false
+                            }
+                        }
+                    }
+                }
             },
             "logfire_dashboard": {
                 "current": "logfire:index/dashboard:Dashboard"

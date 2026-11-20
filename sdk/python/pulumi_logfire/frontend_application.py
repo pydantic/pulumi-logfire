@@ -29,7 +29,7 @@ class FrontendApplicationArgs:
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the application.
         :param pulumi.Input[_builtins.bool] adopt_existing_service_name: Allow creation when telemetry already reports under `name`. Set this before replacing `service_namespace` or `environment` without changing `name`.
         :param pulumi.Input[_builtins.str] environment: Immutable value used to overwrite `deployment.environment.name` when set.
-        :param pulumi.Input[_builtins.str] name: Immutable application name. Logfire overwrites `service.name` with this value.
+        :param pulumi.Input[_builtins.str] name: Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         :param pulumi.Input[_builtins.str] service_namespace: Immutable value used to overwrite `service.namespace` when set.
         """
         pulumi.set(__self__, "project_id", project_id)
@@ -82,7 +82,7 @@ class FrontendApplicationArgs:
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Immutable application name. Logfire overwrites `service.name` with this value.
+        Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         """
         return pulumi.get(self, "name")
 
@@ -119,7 +119,7 @@ class _FrontendApplicationState:
         :param pulumi.Input[_builtins.bool] adopt_existing_service_name: Allow creation when telemetry already reports under `name`. Set this before replacing `service_namespace` or `environment` without changing `name`.
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the application was created.
         :param pulumi.Input[_builtins.str] environment: Immutable value used to overwrite `deployment.environment.name` when set.
-        :param pulumi.Input[_builtins.str] name: Immutable application name. Logfire overwrites `service.name` with this value.
+        :param pulumi.Input[_builtins.str] name: Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the application.
         :param pulumi.Input[_builtins.str] service_namespace: Immutable value used to overwrite `service.namespace` when set.
         :param pulumi.Input[_builtins.str] token: An active restricted browser token. The provider recovers this value on refresh and import.
@@ -182,7 +182,7 @@ class _FrontendApplicationState:
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Immutable application name. Logfire overwrites `service.name` with this value.
+        Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         """
         return pulumi.get(self, "name")
 
@@ -280,7 +280,7 @@ class FrontendApplication(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] adopt_existing_service_name: Allow creation when telemetry already reports under `name`. Set this before replacing `service_namespace` or `environment` without changing `name`.
         :param pulumi.Input[_builtins.str] environment: Immutable value used to overwrite `deployment.environment.name` when set.
-        :param pulumi.Input[_builtins.str] name: Immutable application name. Logfire overwrites `service.name` with this value.
+        :param pulumi.Input[_builtins.str] name: Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the application.
         :param pulumi.Input[_builtins.str] service_namespace: Immutable value used to overwrite `service.namespace` when set.
         """
@@ -384,7 +384,7 @@ class FrontendApplication(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] adopt_existing_service_name: Allow creation when telemetry already reports under `name`. Set this before replacing `service_namespace` or `environment` without changing `name`.
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the application was created.
         :param pulumi.Input[_builtins.str] environment: Immutable value used to overwrite `deployment.environment.name` when set.
-        :param pulumi.Input[_builtins.str] name: Immutable application name. Logfire overwrites `service.name` with this value.
+        :param pulumi.Input[_builtins.str] name: Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         :param pulumi.Input[_builtins.str] project_id: UUID of the project that owns the application.
         :param pulumi.Input[_builtins.str] service_namespace: Immutable value used to overwrite `service.namespace` when set.
         :param pulumi.Input[_builtins.str] token: An active restricted browser token. The provider recovers this value on refresh and import.
@@ -432,7 +432,7 @@ class FrontendApplication(pulumi.CustomResource):
     @pulumi.getter
     def name(self) -> pulumi.Output[_builtins.str]:
         """
-        Immutable application name. Logfire overwrites `service.name` with this value.
+        Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
         """
         return pulumi.get(self, "name")
 
