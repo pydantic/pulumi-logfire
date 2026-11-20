@@ -264,8 +264,9 @@ func TestAutonamedSlugs(t *testing.T) {
 		}
 		// An invalid proposal fails at preview instead of being converted. A long one becomes a
 		// missing name.
+		const notSlug = "lowercase"
 		for proposed, value := range map[string]string{
-			"My_Project-1abcdef": "lowercase", "Admin": "lowercase", "foo_bar": "lowercase",
+			"My_Project-1abcdef": notSlug, "Admin": notSlug, "foo_bar": notSlug,
 			"A": "length", "東京": "東京",
 			strings.Repeat("a", 51): "Missing required property",
 		} {
