@@ -267,8 +267,9 @@ var invalidSlugChars = regexp.MustCompile(`[^a-z0-9]+`)
 // An autonaming pattern proposes the whole name, random part included. A proposal is lowercased and
 // each run of other characters becomes a hyphen. It is never shortened, because the provider cannot
 // tell which characters are random, and dropping them could give two resources one name. A proposal
-// that is still invalid goes on to the provider's validation and to Logfire, which report the name.
-// The bridge would turn an error here into a missing `name`, which says less.
+// longer than 50 characters fails at preview, where the bridge reports it as a missing `name`. It
+// must not reach Logfire, which rejects it only after a delete-before-create replacement deleted
+// the old resource. A proposal that is otherwise invalid fails the provider's validation.
 func slugAutoName(fallback string) *tfbridge.SchemaInfo {
 	return &tfbridge.SchemaInfo{
 		Name: "name",
@@ -287,7 +288,6 @@ func slugAutoName(fallback string) *tfbridge.SchemaInfo {
 					return s
 				}
 				if opts.Autonaming != nil && opts.Autonaming.Mode == info.ComputeDefaultAutonamingModePropose {
-					options.Maxlen = 0
 					options.Transform = func(name string) string {
 						if s := slugify(name); s != "" {
 							return s

@@ -241,8 +241,9 @@ func TestAutonamedSlugs(t *testing.T) {
 		// Without a pattern, the logical name becomes a slug and gets a random suffix.
 		for logicalName, stem := range map[string]string{
 			"myProject": "myproject", "My_Org.1": "my-org-1", "plain": "plain", "A": "a",
-			strings.Repeat("long-", 12): strings.Repeat("long-", 8) + "lo",
-			"東京":                        fallback,
+			strings.Repeat("long-", 12):    strings.Repeat("long-", 8) + "lo",
+			strings.Repeat("a", 41) + "-b": strings.Repeat("a", 41),
+			"東京":                           fallback,
 		} {
 			name, err := check(t, typ, logicalName, nil, nil)
 			if err != nil || !suffix.MatchString(name) || strings.TrimSuffix(name, name[len(name)-8:]) != stem {
@@ -261,14 +262,13 @@ func TestAutonamedSlugs(t *testing.T) {
 		for proposed, want := range map[string]string{
 			strings.Repeat("a", 34) + "x1abcdef-sharedx": strings.Repeat("a", 34) + "x1abcdef-sharedx",
 			"My_Project-1abcdef":                         "my-project-1abcdef",
-			long:                                         long,
 		} {
 			if name, err := check(t, typ, "named", nil, propose(proposed)); err != nil || name != want {
 				t.Errorf("%s: proposed name %q became %q, error %v; want %q", typ, proposed, name, err, want)
 			}
 		}
-		// A proposal that is still invalid fails validation with the value it produced.
-		for proposed, value := range map[string]string{"A": "length", "東京": "東京"} {
+		// A proposal that is still invalid fails at preview. A long one becomes a missing name.
+		for proposed, value := range map[string]string{"A": "length", "東京": "東京", long: "Missing required property"} {
 			name, err := check(t, typ, "named", nil, propose(proposed))
 			if err == nil || !strings.Contains(err.Error(), value) {
 				t.Errorf("%s: proposed name %q became %q, error %v; want a validation error naming %q",
