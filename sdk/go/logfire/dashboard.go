@@ -14,6 +14,8 @@ import (
 
 // Manages a Logfire dashboard.
 //
+// The provider marks the dashboard as managed by the tool that applies it, and Logfire shows a Managed badge on it. A new dashboard is also locked against edits in the Logfire UI and through the Logfire MCP server unless `managedAllowEdits` is `true`. The lock does not cover the dashboards API, which the provider uses. A Logfire instance without managed dashboards ignores the marker. An existing dashboard gets the marker on its next update.
+//
 // ## Example Usage
 //
 // ```go
@@ -96,6 +98,8 @@ type Dashboard struct {
 
 	// Dashboard definition JSON payload.
 	Definition pulumi.StringOutput `pulumi:"definition"`
+	// Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+	ManagedAllowEdits pulumi.BoolPtrOutput `pulumi:"managedAllowEdits"`
 	// Dashboard display name.
 	Name pulumi.StringOutput `pulumi:"name"`
 	// Project UUID used for API paths.
@@ -145,6 +149,8 @@ func GetDashboard(ctx *pulumi.Context,
 type dashboardState struct {
 	// Dashboard definition JSON payload.
 	Definition *string `pulumi:"definition"`
+	// Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+	ManagedAllowEdits *bool `pulumi:"managedAllowEdits"`
 	// Dashboard display name.
 	Name *string `pulumi:"name"`
 	// Project UUID used for API paths.
@@ -156,6 +162,8 @@ type dashboardState struct {
 type DashboardState struct {
 	// Dashboard definition JSON payload.
 	Definition pulumi.StringPtrInput
+	// Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+	ManagedAllowEdits pulumi.BoolPtrInput
 	// Dashboard display name.
 	Name pulumi.StringPtrInput
 	// Project UUID used for API paths.
@@ -171,6 +179,8 @@ func (DashboardState) ElementType() reflect.Type {
 type dashboardArgs struct {
 	// Dashboard definition JSON payload.
 	Definition string `pulumi:"definition"`
+	// Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+	ManagedAllowEdits *bool `pulumi:"managedAllowEdits"`
 	// Dashboard display name.
 	Name *string `pulumi:"name"`
 	// Project UUID used for API paths.
@@ -183,6 +193,8 @@ type dashboardArgs struct {
 type DashboardArgs struct {
 	// Dashboard definition JSON payload.
 	Definition pulumi.StringInput
+	// Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+	ManagedAllowEdits pulumi.BoolPtrInput
 	// Dashboard display name.
 	Name pulumi.StringPtrInput
 	// Project UUID used for API paths.
@@ -281,6 +293,11 @@ func (o DashboardOutput) ToDashboardOutputWithContext(ctx context.Context) Dashb
 // Dashboard definition JSON payload.
 func (o DashboardOutput) Definition() pulumi.StringOutput {
 	return o.ApplyT(func(v *Dashboard) pulumi.StringOutput { return v.Definition }).(pulumi.StringOutput)
+}
+
+// Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+func (o DashboardOutput) ManagedAllowEdits() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *Dashboard) pulumi.BoolPtrOutput { return v.ManagedAllowEdits }).(pulumi.BoolPtrOutput)
 }
 
 // Dashboard display name.

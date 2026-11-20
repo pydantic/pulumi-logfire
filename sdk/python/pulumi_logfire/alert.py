@@ -30,18 +30,20 @@ class AlertArgs:
                  active: Optional[pulumi.Input[_builtins.bool]] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 instance_policy: Optional[pulumi.Input['AlertInstancePolicyArgs']] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Alert resource.
         :param pulumi.Input[Sequence[pulumi.Input['AlertChannelAssignmentArgs']]] channel_assignments: Channels to notify, each with an optional delivery schedule. Set it to `[]` to notify no channel. This is the same type as `alerts.<tier>.channel_assignments` on `Slo`, so one value (for example a `locals` entry) can configure both.
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
-        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
+        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
         :param pulumi.Input[_builtins.str] time_window: Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
         :param pulumi.Input[_builtins.bool] active: Whether the alert is active (defaults to true on creation).
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
+        :param pulumi.Input['AlertInstancePolicyArgs'] instance_policy: Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
         """
         pulumi.set(__self__, "channel_assignments", channel_assignments)
@@ -56,6 +58,8 @@ class AlertArgs:
             pulumi.set(__self__, "description", description)
         if environments is not None:
             pulumi.set(__self__, "environments", environments)
+        if instance_policy is not None:
+            pulumi.set(__self__, "instance_policy", instance_policy)
         if name is not None:
             pulumi.set(__self__, "name", name)
 
@@ -87,7 +91,7 @@ class AlertArgs:
     @pulumi.getter(name="notifyWhen")
     def notify_when(self) -> pulumi.Input[_builtins.str]:
         """
-        Notification rule. Must match API enum.
+        Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         """
         return pulumi.get(self, "notify_when")
 
@@ -168,6 +172,18 @@ class AlertArgs:
         pulumi.set(self, "environments", value)
 
     @_builtins.property
+    @pulumi.getter(name="instancePolicy")
+    def instance_policy(self) -> Optional[pulumi.Input['AlertInstancePolicyArgs']]:
+        """
+        Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
+        """
+        return pulumi.get(self, "instance_policy")
+
+    @instance_policy.setter
+    def instance_policy(self, value: Optional[pulumi.Input['AlertInstancePolicyArgs']]):
+        pulumi.set(self, "instance_policy", value)
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -188,6 +204,7 @@ class _AlertState:
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
+                 instance_policy: Optional[pulumi.Input['AlertInstancePolicyArgs']] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  notify_when: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
@@ -201,8 +218,9 @@ class _AlertState:
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
+        :param pulumi.Input['AlertInstancePolicyArgs'] instance_policy: Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
-        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
+        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
         :param pulumi.Input[_builtins.str] time_window: Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
@@ -218,6 +236,8 @@ class _AlertState:
             pulumi.set(__self__, "environments", environments)
         if frequency is not None:
             pulumi.set(__self__, "frequency", frequency)
+        if instance_policy is not None:
+            pulumi.set(__self__, "instance_policy", instance_policy)
         if name is not None:
             pulumi.set(__self__, "name", name)
         if notify_when is not None:
@@ -292,6 +312,18 @@ class _AlertState:
         pulumi.set(self, "frequency", value)
 
     @_builtins.property
+    @pulumi.getter(name="instancePolicy")
+    def instance_policy(self) -> Optional[pulumi.Input['AlertInstancePolicyArgs']]:
+        """
+        Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
+        """
+        return pulumi.get(self, "instance_policy")
+
+    @instance_policy.setter
+    def instance_policy(self, value: Optional[pulumi.Input['AlertInstancePolicyArgs']]):
+        pulumi.set(self, "instance_policy", value)
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -307,7 +339,7 @@ class _AlertState:
     @pulumi.getter(name="notifyWhen")
     def notify_when(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Notification rule. Must match API enum.
+        Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         """
         return pulumi.get(self, "notify_when")
 
@@ -375,6 +407,7 @@ class Alert(pulumi.CustomResource):
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
+                 instance_policy: Optional[pulumi.Input[Union['AlertInstancePolicyArgs', 'AlertInstancePolicyArgsDict']]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  notify_when: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
@@ -458,8 +491,9 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
+        :param pulumi.Input[Union['AlertInstancePolicyArgs', 'AlertInstancePolicyArgsDict']] instance_policy: Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
-        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
+        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
         :param pulumi.Input[_builtins.str] time_window: Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
@@ -560,6 +594,7 @@ class Alert(pulumi.CustomResource):
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  frequency: Optional[pulumi.Input[_builtins.str]] = None,
+                 instance_policy: Optional[pulumi.Input[Union['AlertInstancePolicyArgs', 'AlertInstancePolicyArgsDict']]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  notify_when: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
@@ -583,6 +618,7 @@ class Alert(pulumi.CustomResource):
             if frequency is None and not opts.urn:
                 raise TypeError("Missing required property 'frequency'")
             __props__.__dict__["frequency"] = frequency
+            __props__.__dict__["instance_policy"] = instance_policy
             __props__.__dict__["name"] = name
             if notify_when is None and not opts.urn:
                 raise TypeError("Missing required property 'notify_when'")
@@ -612,6 +648,7 @@ class Alert(pulumi.CustomResource):
             description: Optional[pulumi.Input[_builtins.str]] = None,
             environments: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
             frequency: Optional[pulumi.Input[_builtins.str]] = None,
+            instance_policy: Optional[pulumi.Input[Union['AlertInstancePolicyArgs', 'AlertInstancePolicyArgsDict']]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
             notify_when: Optional[pulumi.Input[_builtins.str]] = None,
             project_id: Optional[pulumi.Input[_builtins.str]] = None,
@@ -630,8 +667,9 @@ class Alert(pulumi.CustomResource):
         :param pulumi.Input[_builtins.str] description: Alert description.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] environments: Deployment environments to scope the query to. Empty = all environments (no filter).
         :param pulumi.Input[_builtins.str] frequency: Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
+        :param pulumi.Input[Union['AlertInstancePolicyArgs', 'AlertInstancePolicyArgsDict']] instance_policy: Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
         :param pulumi.Input[_builtins.str] name: Alert name (unique per project).
-        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum.
+        :param pulumi.Input[_builtins.str] notify_when: Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         :param pulumi.Input[_builtins.str] project_id: Project ID (UUID) used for alert API paths.
         :param pulumi.Input[_builtins.str] query: SQL / query string used by the alert.
         :param pulumi.Input[_builtins.str] time_window: Lookback window, as a duration from `1m` to `30d` (for example `20m`, `1h30m`, `7d`). The API caps this relative to `frequency` - a longer window requires a less frequent evaluation - and reports that itself. Equivalent spellings are accepted and kept as written.
@@ -646,6 +684,7 @@ class Alert(pulumi.CustomResource):
         __props__.__dict__["description"] = description
         __props__.__dict__["environments"] = environments
         __props__.__dict__["frequency"] = frequency
+        __props__.__dict__["instance_policy"] = instance_policy
         __props__.__dict__["name"] = name
         __props__.__dict__["notify_when"] = notify_when
         __props__.__dict__["project_id"] = project_id
@@ -695,6 +734,14 @@ class Alert(pulumi.CustomResource):
         return pulumi.get(self, "frequency")
 
     @_builtins.property
+    @pulumi.getter(name="instancePolicy")
+    def instance_policy(self) -> pulumi.Output[Optional['outputs.AlertInstancePolicy']]:
+        """
+        Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alert_instances_not_enabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuity_runs` is not exposed. A new policy gets the value of `missing_runs`, and a change keeps the stored value unless it is lower than `missing_runs`.
+        """
+        return pulumi.get(self, "instance_policy")
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> pulumi.Output[_builtins.str]:
         """
@@ -706,7 +753,7 @@ class Alert(pulumi.CustomResource):
     @pulumi.getter(name="notifyWhen")
     def notify_when(self) -> pulumi.Output[_builtins.str]:
         """
-        Notification rule. Must match API enum.
+        Notification rule. Must match API enum. 'instances_changed' needs `instance_policy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
         """
         return pulumi.get(self, "notify_when")
 

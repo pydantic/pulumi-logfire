@@ -105,6 +105,7 @@ func Provider() tfbridge.ProviderInfo {
 					Path: "dashboard.md",
 					Edit: func(_ string, content []byte) ([]byte, error) {
 						content = bytes.ReplaceAll(content, []byte("Terraform workflow"), []byte("Workflow"))
+						content = bytes.ReplaceAll(content, []byte("Terraform then warns"), []byte("Pulumi then warns"))
 						content = bytes.ReplaceAll(content,
 							[]byte("Use `file()` to read a dashboard definition"),
 							[]byte("Read a dashboard definition from a file"))
@@ -115,9 +116,28 @@ func Provider() tfbridge.ProviderInfo {
 						), nil
 					},
 				}, {
+					Path: "frontend_application.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						return bytes.ReplaceAll(content,
+							[]byte("Terraform keeps the configured name"),
+							[]byte("Pulumi keeps the configured name")), nil
+					},
+				}, {
 					Path: "alert.md",
 					Edit: func(_ string, content []byte) ([]byte, error) {
+						// Keep API values out of the bridge's property-name rewriter.
+						content = bytes.ReplaceAll(content, []byte("`instances_changed`"), []byte(`'instances\_changed'`))
+						content = bytes.ReplaceAll(content, []byte("`no_longer_matching`"), []byte(`'no\_longer\_matching'`))
+						content = withoutExample(content, "\n# Track each failing service as its own occurrence.", "\n```")
 						return replaceImportSection(content, alertImportSection), nil
+					},
+				}, {
+					Path: "channel.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						content = withoutExample(content, "\nvariable \"opsgenie_auth_key\" {", "\nvariable \"pagerduty_routing_key\" {")
+						return withoutExample(content,
+							"\nresource \"logfire_channel\" \"opsgenie_eu\" {",
+							"\nresource \"logfire_channel\" \"pagerduty\" {"), nil
 					},
 				}, {
 					Path: "dashboard.md",
@@ -176,16 +196,34 @@ func Provider() tfbridge.ProviderInfo {
 		"config": {
 			Elem: &tfbridge.SchemaInfo{
 				Fields: map[string]*tfbridge.SchemaInfo{
+					"base_url":             {MarkAsOptional: tfbridge.True()},
 					"include_agent_prompt": {MarkAsOptional: tfbridge.True()},
 				},
 			},
 		},
 	}
 
+	prov.Resources["logfire_dashboard"].Fields = map[string]*tfbridge.SchemaInfo{
+		"managed_allow_edits": {MarkAsOptional: tfbridge.True()},
+	}
+
 	prov.MustApplyAutoAliases()
 	prov.SetAutonaming(255, "-")
 
 	return prov
+}
+
+// withoutExample drops examples whose nested arguments the legacy converter misgenerates.
+func withoutExample(content []byte, start, next string) []byte {
+	prefix, example, found := bytes.Cut(content, []byte(start))
+	if !found {
+		return content
+	}
+	_, suffix, found := bytes.Cut(example, []byte(next))
+	if !found {
+		return content
+	}
+	return bytes.Join([][]byte{prefix, suffix}, []byte(next))
 }
 
 func replaceImportSection(content []byte, section string) []byte {

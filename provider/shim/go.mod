@@ -6,7 +6,7 @@ toolchain go1.27.3
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.19.0
-	github.com/pydantic/terraform-provider-logfire v0.2.4
+	github.com/pydantic/terraform-provider-logfire v0.3.0
 )
 
 require (
@@ -24,4 +24,5 @@ require (
 	golang.org/x/net v0.61.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
+	golang.org/x/time v0.16.0 // indirect
 )

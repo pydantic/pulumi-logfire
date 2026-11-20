@@ -63,7 +63,7 @@ type FrontendApplication struct {
 	CreatedAt pulumi.StringOutput `pulumi:"createdAt"`
 	// Immutable value used to overwrite `deployment.environment.name` when set.
 	Environment pulumi.StringPtrOutput `pulumi:"environment"`
-	// Immutable application name. Logfire overwrites `service.name` with this value.
+	// Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
 	Name pulumi.StringOutput `pulumi:"name"`
 	// UUID of the project that owns the application.
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
@@ -118,7 +118,7 @@ type frontendApplicationState struct {
 	CreatedAt *string `pulumi:"createdAt"`
 	// Immutable value used to overwrite `deployment.environment.name` when set.
 	Environment *string `pulumi:"environment"`
-	// Immutable application name. Logfire overwrites `service.name` with this value.
+	// Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
 	Name *string `pulumi:"name"`
 	// UUID of the project that owns the application.
 	ProjectId *string `pulumi:"projectId"`
@@ -137,7 +137,7 @@ type FrontendApplicationState struct {
 	CreatedAt pulumi.StringPtrInput
 	// Immutable value used to overwrite `deployment.environment.name` when set.
 	Environment pulumi.StringPtrInput
-	// Immutable application name. Logfire overwrites `service.name` with this value.
+	// Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
 	Name pulumi.StringPtrInput
 	// UUID of the project that owns the application.
 	ProjectId pulumi.StringPtrInput
@@ -158,7 +158,7 @@ type frontendApplicationArgs struct {
 	AdoptExistingServiceName *bool `pulumi:"adoptExistingServiceName"`
 	// Immutable value used to overwrite `deployment.environment.name` when set.
 	Environment *string `pulumi:"environment"`
-	// Immutable application name. Logfire overwrites `service.name` with this value.
+	// Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
 	Name *string `pulumi:"name"`
 	// UUID of the project that owns the application.
 	ProjectId string `pulumi:"projectId"`
@@ -172,7 +172,7 @@ type FrontendApplicationArgs struct {
 	AdoptExistingServiceName pulumi.BoolPtrInput
 	// Immutable value used to overwrite `deployment.environment.name` when set.
 	Environment pulumi.StringPtrInput
-	// Immutable application name. Logfire overwrites `service.name` with this value.
+	// Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
 	Name pulumi.StringPtrInput
 	// UUID of the project that owns the application.
 	ProjectId pulumi.StringInput
@@ -282,7 +282,7 @@ func (o FrontendApplicationOutput) Environment() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *FrontendApplication) pulumi.StringPtrOutput { return v.Environment }).(pulumi.StringPtrOutput)
 }
 
-// Immutable application name. Logfire overwrites `service.name` with this value.
+// Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
 func (o FrontendApplicationOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *FrontendApplication) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
 }
