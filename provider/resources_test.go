@@ -228,36 +228,51 @@ func TestAutonamedSlugs(t *testing.T) {
 		return checked["name"].StringValue(), nil
 	}
 	propose := func(name string) *pulumirpc.CheckRequest_AutonamingOptions {
-		return &pulumirpc.CheckRequest_AutonamingOptions{ProposedName: name, Mode: pulumirpc.CheckRequest_AutonamingOptions_PROPOSE}
+		return &pulumirpc.CheckRequest_AutonamingOptions{
+			ProposedName: name, Mode: pulumirpc.CheckRequest_AutonamingOptions_PROPOSE,
+		}
 	}
 
-	defaultName := regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*-[0-9a-f]{7}$`)
-	for _, typ := range []tokens.Type{"logfire:index/project:Project", "logfire:index/organization:Organization"} {
+	suffix := regexp.MustCompile(`-[0-9a-f]{7}$`)
+	for typ, fallback := range map[tokens.Type]string{
+		"logfire:index/project:Project":           "project",
+		"logfire:index/organization:Organization": "organization",
+	} {
 		// Without a pattern, the logical name becomes a slug and gets a random suffix.
-		for _, logicalName := range []string{"myProject", "My_Org.1", "plain", "A", strings.Repeat("long-", 12), "東京"} {
+		for logicalName, stem := range map[string]string{
+			"myProject": "myproject", "My_Org.1": "my-org-1", "plain": "plain", "A": "a",
+			strings.Repeat("long-", 12): strings.Repeat("long-", 8) + "lo",
+			"東京":                        fallback,
+		} {
 			name, err := check(t, typ, logicalName, nil, nil)
-			if err != nil || !defaultName.MatchString(name) || len(name) > 50 {
-				t.Errorf("%s %q: generated name %q, error %v", typ, logicalName, name, err)
+			if err != nil || !suffix.MatchString(name) || strings.TrimSuffix(name, name[len(name)-8:]) != stem {
+				t.Errorf("%s %q: generated name %q, error %v; want %q and a random suffix", typ, logicalName, name, err, stem)
 			}
 		}
 
 		// A name in prior state is kept instead of a new one.
-		if name, err := check(t, typ, "named", resource.PropertyMap{"name": resource.NewStringProperty("kept-name")}, nil); err != nil || name != "kept-name" {
+		kept := resource.PropertyMap{"name": resource.NewStringProperty("kept-name")}
+		if name, err := check(t, typ, "named", kept, nil); err != nil || name != "kept-name" {
 			t.Errorf("%s: prior name became %q, error %v", typ, name, err)
 		}
 
 		// A pattern's proposal is converted but never shortened.
+		long := strings.Repeat("a", 42) + "-1234567-service"
 		for proposed, want := range map[string]string{
 			strings.Repeat("a", 34) + "x1abcdef-sharedx": strings.Repeat("a", 34) + "x1abcdef-sharedx",
 			"My_Project-1abcdef":                         "my-project-1abcdef",
+			long:                                         long,
 		} {
 			if name, err := check(t, typ, "named", nil, propose(proposed)); err != nil || name != want {
 				t.Errorf("%s: proposed name %q became %q, error %v; want %q", typ, proposed, name, err, want)
 			}
 		}
-		for _, proposed := range []string{"A", "東京", strings.Repeat("a", 42) + "-1234567-service"} {
-			if name, err := check(t, typ, "named", nil, propose(proposed)); err == nil {
-				t.Errorf("%s: proposed name %q became %q; want an error", typ, proposed, name)
+		// A proposal that is still invalid fails validation with the value it produced.
+		for proposed, value := range map[string]string{"A": "length", "東京": "東京"} {
+			name, err := check(t, typ, "named", nil, propose(proposed))
+			if err == nil || !strings.Contains(err.Error(), value) {
+				t.Errorf("%s: proposed name %q became %q, error %v; want a validation error naming %q",
+					typ, proposed, name, err, value)
 			}
 		}
 	}
