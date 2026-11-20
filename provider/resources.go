@@ -135,7 +135,9 @@ func Provider() tfbridge.ProviderInfo {
 					Path: "channel.md",
 					Edit: func(_ string, content []byte) ([]byte, error) {
 						content = withoutExample(content, "\nvariable \"opsgenie_auth_key\" {", "\nvariable \"pagerduty_routing_key\" {")
-						return withoutExample(content, "\nresource \"logfire_channel\" \"opsgenie_eu\" {", "\nresource \"logfire_channel\" \"pagerduty\" {"), nil
+						return withoutExample(content,
+							"\nresource \"logfire_channel\" \"opsgenie_eu\" {",
+							"\nresource \"logfire_channel\" \"pagerduty\" {"), nil
 					},
 				}, {
 					Path: "dashboard.md",
