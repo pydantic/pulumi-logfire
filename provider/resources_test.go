@@ -2,15 +2,24 @@ package logfire
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
+	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
 
+	pfbridge "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfgen"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
+	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 )
 
 func TestGeneratedSchema(t *testing.T) {
@@ -175,4 +184,97 @@ func applyDocEdits(t *testing.T, path string, content []byte) string {
 		}
 	}
 	return string(content)
+}
+
+func TestAutonamedSlugs(t *testing.T) {
+	schema, err := os.ReadFile("cmd/pulumi-resource-logfire/schema.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	server, err := pfbridge.NewProviderServer(context.Background(), nil, Provider(),
+		pfbridge.ProviderMetadata{PackageSchema: schema})
+	if err != nil {
+		t.Fatal(err)
+	}
+	check := func(t *testing.T, typ tokens.Type, logicalName string, olds resource.PropertyMap,
+		autonaming *pulumirpc.CheckRequest_AutonamingOptions,
+	) (string, error) {
+		t.Helper()
+		inputs, err := plugin.MarshalProperties(resource.PropertyMap{}, plugin.MarshalOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		oldInputs, err := plugin.MarshalProperties(olds, plugin.MarshalOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
+			Urn:        string(resource.NewURN("stack", "project", "", typ, logicalName)),
+			Olds:       oldInputs,
+			News:       inputs,
+			RandomSeed: []byte("seed"),
+			Autonaming: autonaming,
+		})
+		if err != nil {
+			return "", err
+		}
+		if len(resp.Failures) > 0 {
+			return "", fmt.Errorf("check failed: %s", resp.Failures[0].Reason)
+		}
+		checked, err := plugin.UnmarshalProperties(resp.Inputs, plugin.MarshalOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		return checked["name"].StringValue(), nil
+	}
+	propose := func(name string) *pulumirpc.CheckRequest_AutonamingOptions {
+		return &pulumirpc.CheckRequest_AutonamingOptions{
+			ProposedName: name, Mode: pulumirpc.CheckRequest_AutonamingOptions_PROPOSE,
+		}
+	}
+
+	suffix := regexp.MustCompile(`-[0-9a-f]{7}$`)
+	for typ, fallback := range map[tokens.Type]string{
+		"logfire:index/project:Project":           "project",
+		"logfire:index/organization:Organization": "organization",
+	} {
+		// Without a pattern, the logical name becomes a slug and gets a random suffix.
+		for logicalName, stem := range map[string]string{
+			"myProject": "myproject", "My_Org.1": "my-org-1", "plain": "plain", "A": "a",
+			strings.Repeat("long-", 12):    strings.Repeat("long-", 8) + "lo",
+			strings.Repeat("a", 41) + "-b": strings.Repeat("a", 41),
+			"東京":                           fallback,
+		} {
+			name, err := check(t, typ, logicalName, nil, nil)
+			if err != nil || !suffix.MatchString(name) || strings.TrimSuffix(name, name[len(name)-8:]) != stem {
+				t.Errorf("%s %q: generated name %q, error %v; want %q and a random suffix", typ, logicalName, name, err, stem)
+			}
+		}
+
+		// A name in prior state is kept instead of a new one.
+		kept := resource.PropertyMap{"name": resource.NewStringProperty("kept-name")}
+		if name, err := check(t, typ, "named", kept, nil); err != nil || name != "kept-name" {
+			t.Errorf("%s: prior name became %q, error %v", typ, name, err)
+		}
+
+		// A pattern's proposal is used as given. A valid one at the length limit passes.
+		valid := strings.Repeat("a", 34) + "x1abcdef-sharedx"
+		if name, err := check(t, typ, "named", nil, propose(valid)); err != nil || name != valid {
+			t.Errorf("%s: proposed name %q became %q, error %v", typ, valid, name, err)
+		}
+		// An invalid proposal fails at preview instead of being converted. A long one becomes a
+		// missing name.
+		const notSlug = "lowercase"
+		for proposed, value := range map[string]string{
+			"My_Project-1abcdef": notSlug, "Admin": notSlug, "foo_bar": notSlug,
+			"A": "length", "東京": "東京",
+			strings.Repeat("a", 51): "Missing required property",
+		} {
+			name, err := check(t, typ, "named", nil, propose(proposed))
+			if err == nil || !strings.Contains(err.Error(), value) {
+				t.Errorf("%s: proposed name %q became %q, error %v; want an error containing %q",
+					typ, proposed, name, err, value)
+			}
+		}
+	}
 }

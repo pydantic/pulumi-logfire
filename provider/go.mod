@@ -139,7 +139,7 @@ require (
 	github.com/pulumi/inflector v0.2.1 // indirect
 	github.com/pulumi/pulumi-java/pkg v1.12.0 // indirect
 	github.com/pulumi/pulumi-yaml v1.19.1 // indirect
-	github.com/pulumi/pulumi/sdk/v3 v3.209.0 // indirect
+	github.com/pulumi/pulumi/sdk/v3 v3.209.0
 	github.com/pulumi/schema-tools v0.1.2 // indirect
 	github.com/pydantic/pulumi-logfire/provider/shim v0.0.0
 	github.com/rivo/uniseg v0.4.4 // indirect
