@@ -16,6 +16,25 @@ export interface AlertChannelAssignment {
     scheduleId?: string;
 }
 
+export interface AlertInstancePolicy {
+    /**
+     * Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+     */
+    identityColumns: string[];
+    /**
+     * The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+     */
+    missingBehavior: string;
+    /**
+     * Consecutive runs without the occurrence, 1 to 100, before it closes.
+     */
+    missingRuns: number;
+    /**
+     * Consecutive matching runs, 1 to 100, before a new occurrence fires.
+     */
+    pendingRuns: number;
+}
+
 export interface ApiKeyGateway {
     /**
      * Whether gateway responses are cached. Null inherits the project default.
@@ -45,6 +64,10 @@ export interface ChannelConfig {
      */
     authKey?: string;
     /**
+     * Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
+     */
+    baseUrl?: string;
+    /**
      * Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
      */
     channelId?: string;
@@ -61,6 +84,10 @@ export interface ChannelConfig {
      */
     installId?: string;
     /**
+     * Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
+     */
+    recipients?: string[];
+    /**
      * PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
      */
     region?: string;
@@ -73,7 +100,7 @@ export interface ChannelConfig {
      */
     serviceId?: string;
     /**
-     * Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+     * Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
      */
     type: string;
     /**

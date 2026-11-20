@@ -22,6 +22,8 @@ import (
 )
 
 func TestGeneratedSchema(t *testing.T) {
+	const booleanType = "boolean"
+
 	provider := Provider()
 	generator, err := tfgen.NewGenerator(tfgen.GeneratorOptions{
 		Package:      provider.Name,
@@ -54,9 +56,26 @@ func TestGeneratedSchema(t *testing.T) {
 		}
 	})
 
+	t.Run("dashboard managed edits", func(t *testing.T) {
+		const property = "managedAllowEdits"
+		dashboard := generated.PackageSpec.Resources["logfire:index/dashboard:Dashboard"]
+		if got := dashboard.InputProperties[property].Type; got != booleanType {
+			t.Errorf("%s input type = %q, want boolean", property, got)
+		}
+		if got := dashboard.Properties[property].Type; got != booleanType {
+			t.Errorf("%s output type = %q, want boolean", property, got)
+		}
+		if slices.Contains(dashboard.RequiredInputs, property) {
+			t.Errorf("%s input must be optional", property)
+		}
+		if slices.Contains(dashboard.Required, property) {
+			t.Errorf("%s output must be optional", property)
+		}
+	})
+
 	t.Run("channel configuration", func(t *testing.T) {
 		config := generated.PackageSpec.Types["logfire:index/ChannelConfig:ChannelConfig"]
-		if got := config.Properties["includeAgentPrompt"].Type; got != "boolean" {
+		if got := config.Properties["includeAgentPrompt"].Type; got != booleanType {
 			t.Errorf("includeAgentPrompt type = %q, want boolean", got)
 		}
 		if !slices.Equal(config.Required, []string{"type"}) {

@@ -71,7 +71,7 @@ export class FrontendApplication extends pulumi.CustomResource {
      */
     declare public readonly environment: pulumi.Output<string | undefined>;
     /**
-     * Immutable application name. Logfire overwrites `service.name` with this value.
+     * Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
      */
     declare public readonly name: pulumi.Output<string>;
     /**
@@ -150,7 +150,7 @@ export interface FrontendApplicationState {
      */
     environment?: pulumi.Input<string>;
     /**
-     * Immutable application name. Logfire overwrites `service.name` with this value.
+     * Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
      */
     name?: pulumi.Input<string>;
     /**
@@ -184,7 +184,7 @@ export interface FrontendApplicationArgs {
      */
     environment?: pulumi.Input<string>;
     /**
-     * Immutable application name. Logfire overwrites `service.name` with this value.
+     * Application name. Logfire overwrites `service.name` with this value. The API cannot rename an application, so changing this replaces it, unless the new value is its current name in Logfire. After a rename in the Logfire UI, Pulumi keeps the configured name and plans no change. Update this value to the new name to follow the rename without a replacement.
      */
     name?: pulumi.Input<string>;
     /**

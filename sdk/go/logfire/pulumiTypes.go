@@ -119,6 +119,200 @@ func (o AlertChannelAssignmentArrayOutput) Index(i pulumi.IntInput) AlertChannel
 	}).(AlertChannelAssignmentOutput)
 }
 
+type AlertInstancePolicy struct {
+	// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+	IdentityColumns []string `pulumi:"identityColumns"`
+	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+	MissingBehavior string `pulumi:"missingBehavior"`
+	// Consecutive runs without the occurrence, 1 to 100, before it closes.
+	MissingRuns int `pulumi:"missingRuns"`
+	// Consecutive matching runs, 1 to 100, before a new occurrence fires.
+	PendingRuns int `pulumi:"pendingRuns"`
+}
+
+// AlertInstancePolicyInput is an input type that accepts AlertInstancePolicyArgs and AlertInstancePolicyOutput values.
+// You can construct a concrete instance of `AlertInstancePolicyInput` via:
+//
+//	AlertInstancePolicyArgs{...}
+type AlertInstancePolicyInput interface {
+	pulumi.Input
+
+	ToAlertInstancePolicyOutput() AlertInstancePolicyOutput
+	ToAlertInstancePolicyOutputWithContext(context.Context) AlertInstancePolicyOutput
+}
+
+type AlertInstancePolicyArgs struct {
+	// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+	IdentityColumns pulumi.StringArrayInput `pulumi:"identityColumns"`
+	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+	MissingBehavior pulumi.StringInput `pulumi:"missingBehavior"`
+	// Consecutive runs without the occurrence, 1 to 100, before it closes.
+	MissingRuns pulumi.IntInput `pulumi:"missingRuns"`
+	// Consecutive matching runs, 1 to 100, before a new occurrence fires.
+	PendingRuns pulumi.IntInput `pulumi:"pendingRuns"`
+}
+
+func (AlertInstancePolicyArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*AlertInstancePolicy)(nil)).Elem()
+}
+
+func (i AlertInstancePolicyArgs) ToAlertInstancePolicyOutput() AlertInstancePolicyOutput {
+	return i.ToAlertInstancePolicyOutputWithContext(context.Background())
+}
+
+func (i AlertInstancePolicyArgs) ToAlertInstancePolicyOutputWithContext(ctx context.Context) AlertInstancePolicyOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(AlertInstancePolicyOutput)
+}
+
+func (i AlertInstancePolicyArgs) ToAlertInstancePolicyPtrOutput() AlertInstancePolicyPtrOutput {
+	return i.ToAlertInstancePolicyPtrOutputWithContext(context.Background())
+}
+
+func (i AlertInstancePolicyArgs) ToAlertInstancePolicyPtrOutputWithContext(ctx context.Context) AlertInstancePolicyPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(AlertInstancePolicyOutput).ToAlertInstancePolicyPtrOutputWithContext(ctx)
+}
+
+// AlertInstancePolicyPtrInput is an input type that accepts AlertInstancePolicyArgs, AlertInstancePolicyPtr and AlertInstancePolicyPtrOutput values.
+// You can construct a concrete instance of `AlertInstancePolicyPtrInput` via:
+//
+//	        AlertInstancePolicyArgs{...}
+//
+//	or:
+//
+//	        nil
+type AlertInstancePolicyPtrInput interface {
+	pulumi.Input
+
+	ToAlertInstancePolicyPtrOutput() AlertInstancePolicyPtrOutput
+	ToAlertInstancePolicyPtrOutputWithContext(context.Context) AlertInstancePolicyPtrOutput
+}
+
+type alertInstancePolicyPtrType AlertInstancePolicyArgs
+
+func AlertInstancePolicyPtr(v *AlertInstancePolicyArgs) AlertInstancePolicyPtrInput {
+	return (*alertInstancePolicyPtrType)(v)
+}
+
+func (*alertInstancePolicyPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**AlertInstancePolicy)(nil)).Elem()
+}
+
+func (i *alertInstancePolicyPtrType) ToAlertInstancePolicyPtrOutput() AlertInstancePolicyPtrOutput {
+	return i.ToAlertInstancePolicyPtrOutputWithContext(context.Background())
+}
+
+func (i *alertInstancePolicyPtrType) ToAlertInstancePolicyPtrOutputWithContext(ctx context.Context) AlertInstancePolicyPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(AlertInstancePolicyPtrOutput)
+}
+
+type AlertInstancePolicyOutput struct{ *pulumi.OutputState }
+
+func (AlertInstancePolicyOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*AlertInstancePolicy)(nil)).Elem()
+}
+
+func (o AlertInstancePolicyOutput) ToAlertInstancePolicyOutput() AlertInstancePolicyOutput {
+	return o
+}
+
+func (o AlertInstancePolicyOutput) ToAlertInstancePolicyOutputWithContext(ctx context.Context) AlertInstancePolicyOutput {
+	return o
+}
+
+func (o AlertInstancePolicyOutput) ToAlertInstancePolicyPtrOutput() AlertInstancePolicyPtrOutput {
+	return o.ToAlertInstancePolicyPtrOutputWithContext(context.Background())
+}
+
+func (o AlertInstancePolicyOutput) ToAlertInstancePolicyPtrOutputWithContext(ctx context.Context) AlertInstancePolicyPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v AlertInstancePolicy) *AlertInstancePolicy {
+		return &v
+	}).(AlertInstancePolicyPtrOutput)
+}
+
+// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+func (o AlertInstancePolicyOutput) IdentityColumns() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v AlertInstancePolicy) []string { return v.IdentityColumns }).(pulumi.StringArrayOutput)
+}
+
+// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+func (o AlertInstancePolicyOutput) MissingBehavior() pulumi.StringOutput {
+	return o.ApplyT(func(v AlertInstancePolicy) string { return v.MissingBehavior }).(pulumi.StringOutput)
+}
+
+// Consecutive runs without the occurrence, 1 to 100, before it closes.
+func (o AlertInstancePolicyOutput) MissingRuns() pulumi.IntOutput {
+	return o.ApplyT(func(v AlertInstancePolicy) int { return v.MissingRuns }).(pulumi.IntOutput)
+}
+
+// Consecutive matching runs, 1 to 100, before a new occurrence fires.
+func (o AlertInstancePolicyOutput) PendingRuns() pulumi.IntOutput {
+	return o.ApplyT(func(v AlertInstancePolicy) int { return v.PendingRuns }).(pulumi.IntOutput)
+}
+
+type AlertInstancePolicyPtrOutput struct{ *pulumi.OutputState }
+
+func (AlertInstancePolicyPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**AlertInstancePolicy)(nil)).Elem()
+}
+
+func (o AlertInstancePolicyPtrOutput) ToAlertInstancePolicyPtrOutput() AlertInstancePolicyPtrOutput {
+	return o
+}
+
+func (o AlertInstancePolicyPtrOutput) ToAlertInstancePolicyPtrOutputWithContext(ctx context.Context) AlertInstancePolicyPtrOutput {
+	return o
+}
+
+func (o AlertInstancePolicyPtrOutput) Elem() AlertInstancePolicyOutput {
+	return o.ApplyT(func(v *AlertInstancePolicy) AlertInstancePolicy {
+		if v != nil {
+			return *v
+		}
+		var ret AlertInstancePolicy
+		return ret
+	}).(AlertInstancePolicyOutput)
+}
+
+// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
+func (o AlertInstancePolicyPtrOutput) IdentityColumns() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *AlertInstancePolicy) []string {
+		if v == nil {
+			return nil
+		}
+		return v.IdentityColumns
+	}).(pulumi.StringArrayOutput)
+}
+
+// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+func (o AlertInstancePolicyPtrOutput) MissingBehavior() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *AlertInstancePolicy) *string {
+		if v == nil {
+			return nil
+		}
+		return &v.MissingBehavior
+	}).(pulumi.StringPtrOutput)
+}
+
+// Consecutive runs without the occurrence, 1 to 100, before it closes.
+func (o AlertInstancePolicyPtrOutput) MissingRuns() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *AlertInstancePolicy) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.MissingRuns
+	}).(pulumi.IntPtrOutput)
+}
+
+// Consecutive matching runs, 1 to 100, before a new occurrence fires.
+func (o AlertInstancePolicyPtrOutput) PendingRuns() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *AlertInstancePolicy) *int {
+		if v == nil {
+			return nil
+		}
+		return &v.PendingRuns
+	}).(pulumi.IntPtrOutput)
+}
+
 type ApiKeyGateway struct {
 	// Whether gateway responses are cached. Null inherits the project default.
 	CacheEnabled *bool `pulumi:"cacheEnabled"`
@@ -335,6 +529,8 @@ func (o ApiKeyGatewayPtrOutput) SpendingLimitWeekly() pulumi.IntPtrOutput {
 type ChannelConfig struct {
 	// Opsgenie API key.
 	AuthKey *string `pulumi:"authKey"`
+	// Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
+	BaseUrl *string `pulumi:"baseUrl"`
 	// Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
 	ChannelId *string `pulumi:"channelId"`
 	// Webhook payload format.
@@ -343,13 +539,15 @@ type ChannelConfig struct {
 	IncludeAgentPrompt *bool `pulumi:"includeAgentPrompt"`
 	// ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
 	InstallId *string `pulumi:"installId"`
+	// Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
+	Recipients []string `pulumi:"recipients"`
 	// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
 	Region *string `pulumi:"region"`
 	// PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
 	RoutingKey *string `pulumi:"routingKey"`
 	// Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
 	ServiceId *string `pulumi:"serviceId"`
-	// Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+	// Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
 	Type string `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url *string `pulumi:"url"`
@@ -369,6 +567,8 @@ type ChannelConfigInput interface {
 type ChannelConfigArgs struct {
 	// Opsgenie API key.
 	AuthKey pulumi.StringPtrInput `pulumi:"authKey"`
+	// Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
+	BaseUrl pulumi.StringPtrInput `pulumi:"baseUrl"`
 	// Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
 	ChannelId pulumi.StringPtrInput `pulumi:"channelId"`
 	// Webhook payload format.
@@ -377,13 +577,15 @@ type ChannelConfigArgs struct {
 	IncludeAgentPrompt pulumi.BoolPtrInput `pulumi:"includeAgentPrompt"`
 	// ID of the organization's Slack App or PagerDuty App installation, created by connecting the platform in the Logfire UI (Organization Settings > Connections). The installation must belong to the same organization, be active, and match the channel type.
 	InstallId pulumi.StringPtrInput `pulumi:"installId"`
+	// Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
+	Recipients pulumi.StringArrayInput `pulumi:"recipients"`
 	// PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
 	Region pulumi.StringPtrInput `pulumi:"region"`
 	// PagerDuty Events API v2 integration routing key. Only for `pagerduty` channels; `pagerduty-integration` channels resolve the key from the installation instead.
 	RoutingKey pulumi.StringPtrInput `pulumi:"routingKey"`
 	// Logfire's ID (a UUID) for the PagerDuty service incidents are opened on, as approved for the installation when connecting PagerDuty. This is not PagerDuty's own service ID. Required for `pagerduty-integration` channels.
 	ServiceId pulumi.StringPtrInput `pulumi:"serviceId"`
-	// Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+	// Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
 	Type pulumi.StringInput `pulumi:"type"`
 	// Webhook URL endpoint.
 	Url pulumi.StringPtrInput `pulumi:"url"`
@@ -471,6 +673,11 @@ func (o ChannelConfigOutput) AuthKey() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.AuthKey }).(pulumi.StringPtrOutput)
 }
 
+// Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
+func (o ChannelConfigOutput) BaseUrl() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v ChannelConfig) *string { return v.BaseUrl }).(pulumi.StringPtrOutput)
+}
+
 // Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
 func (o ChannelConfigOutput) ChannelId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.ChannelId }).(pulumi.StringPtrOutput)
@@ -491,6 +698,11 @@ func (o ChannelConfigOutput) InstallId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.InstallId }).(pulumi.StringPtrOutput)
 }
 
+// Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
+func (o ChannelConfigOutput) Recipients() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v ChannelConfig) []string { return v.Recipients }).(pulumi.StringArrayOutput)
+}
+
 // PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
 func (o ChannelConfigOutput) Region() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.Region }).(pulumi.StringPtrOutput)
@@ -506,7 +718,7 @@ func (o ChannelConfigOutput) ServiceId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v ChannelConfig) *string { return v.ServiceId }).(pulumi.StringPtrOutput)
 }
 
-// Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+// Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
 func (o ChannelConfigOutput) Type() pulumi.StringOutput {
 	return o.ApplyT(func(v ChannelConfig) string { return v.Type }).(pulumi.StringOutput)
 }
@@ -550,6 +762,16 @@ func (o ChannelConfigPtrOutput) AuthKey() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+// Opsgenie API base URL, for example `https://api.eu.opsgenie.com` for an EU account. Only for `opsgenie` channels. Omitting it on an existing channel retains the current value; set it to `https://api.opsgenie.com` explicitly to return to the default US endpoint.
+func (o ChannelConfigPtrOutput) BaseUrl() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *ChannelConfig) *string {
+		if v == nil {
+			return nil
+		}
+		return v.BaseUrl
+	}).(pulumi.StringPtrOutput)
+}
+
 // Slack channel ID (for example `C0123456789`) the notifications are posted to. The Logfire Slack bot must already be a member of the channel.
 func (o ChannelConfigPtrOutput) ChannelId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
@@ -590,6 +812,16 @@ func (o ChannelConfigPtrOutput) InstallId() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+// Email addresses the channel notifies, 1 to 50. Required for `email` channels, which need a Logfire plan with custom email recipients. Logfire normalizes each address, for example by lowercasing its domain. The provider keeps the configured spelling when Logfire stores an equivalent one. A recipient who unsubscribes leaves the channel, and Logfire rejects an update that adds them back until you remove the address from the configuration.
+func (o ChannelConfigPtrOutput) Recipients() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *ChannelConfig) []string {
+		if v == nil {
+			return nil
+		}
+		return v.Recipients
+	}).(pulumi.StringArrayOutput)
+}
+
 // PagerDuty account region (`us` or `eu`). When omitted, Logfire uses the US Events API endpoint. Only for `pagerduty` channels; a `pagerduty-integration` channel takes its region from the connected account.
 func (o ChannelConfigPtrOutput) Region() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
@@ -620,7 +852,7 @@ func (o ChannelConfigPtrOutput) ServiceId() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
-// Channel type (`webhook`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
+// Channel type (`webhook`, `email`, `opsgenie`, `pagerduty`, `pagerduty-integration`, or `slack-integration`).
 func (o ChannelConfigPtrOutput) Type() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *ChannelConfig) *string {
 		if v == nil {
@@ -1957,6 +2189,8 @@ func (o SloAlertsSlowChannelAssignmentArrayOutput) Index(i pulumi.IntInput) SloA
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*AlertChannelAssignmentInput)(nil)).Elem(), AlertChannelAssignmentArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*AlertChannelAssignmentArrayInput)(nil)).Elem(), AlertChannelAssignmentArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*AlertInstancePolicyInput)(nil)).Elem(), AlertInstancePolicyArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*AlertInstancePolicyPtrInput)(nil)).Elem(), AlertInstancePolicyArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayInput)(nil)).Elem(), ApiKeyGatewayArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ApiKeyGatewayPtrInput)(nil)).Elem(), ApiKeyGatewayArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigInput)(nil)).Elem(), ChannelConfigArgs{})
@@ -1981,6 +2215,8 @@ func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsSlowChannelAssignmentArrayInput)(nil)).Elem(), SloAlertsSlowChannelAssignmentArray{})
 	pulumi.RegisterOutputType(AlertChannelAssignmentOutput{})
 	pulumi.RegisterOutputType(AlertChannelAssignmentArrayOutput{})
+	pulumi.RegisterOutputType(AlertInstancePolicyOutput{})
+	pulumi.RegisterOutputType(AlertInstancePolicyPtrOutput{})
 	pulumi.RegisterOutputType(ApiKeyGatewayOutput{})
 	pulumi.RegisterOutputType(ApiKeyGatewayPtrOutput{})
 	pulumi.RegisterOutputType(ChannelConfigOutput{})

@@ -136,9 +136,11 @@ type Alert struct {
 	Environments pulumi.StringArrayOutput `pulumi:"environments"`
 	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency pulumi.StringOutput `pulumi:"frequency"`
+	// Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+	InstancePolicy AlertInstancePolicyPtrOutput `pulumi:"instancePolicy"`
 	// Alert name (unique per project).
 	Name pulumi.StringOutput `pulumi:"name"`
-	// Notification rule. Must match API enum.
+	// Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
 	NotifyWhen pulumi.StringOutput `pulumi:"notifyWhen"`
 	// Project ID (UUID) used for alert API paths.
 	ProjectId pulumi.StringOutput `pulumi:"projectId"`
@@ -208,9 +210,11 @@ type alertState struct {
 	Environments []string `pulumi:"environments"`
 	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency *string `pulumi:"frequency"`
+	// Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+	InstancePolicy *AlertInstancePolicy `pulumi:"instancePolicy"`
 	// Alert name (unique per project).
 	Name *string `pulumi:"name"`
-	// Notification rule. Must match API enum.
+	// Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
 	NotifyWhen *string `pulumi:"notifyWhen"`
 	// Project ID (UUID) used for alert API paths.
 	ProjectId *string `pulumi:"projectId"`
@@ -233,9 +237,11 @@ type AlertState struct {
 	Environments pulumi.StringArrayInput
 	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency pulumi.StringPtrInput
+	// Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+	InstancePolicy AlertInstancePolicyPtrInput
 	// Alert name (unique per project).
 	Name pulumi.StringPtrInput
-	// Notification rule. Must match API enum.
+	// Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
 	NotifyWhen pulumi.StringPtrInput
 	// Project ID (UUID) used for alert API paths.
 	ProjectId pulumi.StringPtrInput
@@ -262,9 +268,11 @@ type alertArgs struct {
 	Environments []string `pulumi:"environments"`
 	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency string `pulumi:"frequency"`
+	// Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+	InstancePolicy *AlertInstancePolicy `pulumi:"instancePolicy"`
 	// Alert name (unique per project).
 	Name *string `pulumi:"name"`
-	// Notification rule. Must match API enum.
+	// Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
 	NotifyWhen string `pulumi:"notifyWhen"`
 	// Project ID (UUID) used for alert API paths.
 	ProjectId string `pulumi:"projectId"`
@@ -286,9 +294,11 @@ type AlertArgs struct {
 	Environments pulumi.StringArrayInput
 	// Evaluation frequency, as a duration from `1m` to `24h` (for example `5m`, `20m`, `1h`). Equivalent spellings are accepted and kept as written.
 	Frequency pulumi.StringInput
+	// Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+	InstancePolicy AlertInstancePolicyPtrInput
 	// Alert name (unique per project).
 	Name pulumi.StringPtrInput
-	// Notification rule. Must match API enum.
+	// Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
 	NotifyWhen pulumi.StringInput
 	// Project ID (UUID) used for alert API paths.
 	ProjectId pulumi.StringInput
@@ -410,12 +420,17 @@ func (o AlertOutput) Frequency() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.Frequency }).(pulumi.StringOutput)
 }
 
+// Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+func (o AlertOutput) InstancePolicy() AlertInstancePolicyPtrOutput {
+	return o.ApplyT(func(v *Alert) AlertInstancePolicyPtrOutput { return v.InstancePolicy }).(AlertInstancePolicyPtrOutput)
+}
+
 // Alert name (unique per project).
 func (o AlertOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
 }
 
-// Notification rule. Must match API enum.
+// Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
 func (o AlertOutput) NotifyWhen() pulumi.StringOutput {
 	return o.ApplyT(func(v *Alert) pulumi.StringOutput { return v.NotifyWhen }).(pulumi.StringOutput)
 }

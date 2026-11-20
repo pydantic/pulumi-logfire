@@ -127,11 +127,15 @@ export class Alert extends pulumi.CustomResource {
      */
     declare public readonly frequency: pulumi.Output<string>;
     /**
+     * Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+     */
+    declare public readonly instancePolicy: pulumi.Output<outputs.AlertInstancePolicy | undefined>;
+    /**
      * Alert name (unique per project).
      */
     declare public readonly name: pulumi.Output<string>;
     /**
-     * Notification rule. Must match API enum.
+     * Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
      */
     declare public readonly notifyWhen: pulumi.Output<string>;
     /**
@@ -169,6 +173,7 @@ export class Alert extends pulumi.CustomResource {
             resourceInputs["description"] = state?.description;
             resourceInputs["environments"] = state?.environments;
             resourceInputs["frequency"] = state?.frequency;
+            resourceInputs["instancePolicy"] = state?.instancePolicy;
             resourceInputs["name"] = state?.name;
             resourceInputs["notifyWhen"] = state?.notifyWhen;
             resourceInputs["projectId"] = state?.projectId;
@@ -200,6 +205,7 @@ export class Alert extends pulumi.CustomResource {
             resourceInputs["description"] = args?.description;
             resourceInputs["environments"] = args?.environments;
             resourceInputs["frequency"] = args?.frequency;
+            resourceInputs["instancePolicy"] = args?.instancePolicy;
             resourceInputs["name"] = args?.name;
             resourceInputs["notifyWhen"] = args?.notifyWhen;
             resourceInputs["projectId"] = args?.projectId;
@@ -237,11 +243,15 @@ export interface AlertState {
      */
     frequency?: pulumi.Input<string>;
     /**
+     * Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+     */
+    instancePolicy?: pulumi.Input<inputs.AlertInstancePolicy>;
+    /**
      * Alert name (unique per project).
      */
     name?: pulumi.Input<string>;
     /**
-     * Notification rule. Must match API enum.
+     * Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
      */
     notifyWhen?: pulumi.Input<string>;
     /**
@@ -287,11 +297,15 @@ export interface AlertArgs {
      */
     frequency: pulumi.Input<string>;
     /**
+     * Track each result row as its own occurrence, keyed by the identity columns, instead of evaluating the whole result as one. Needs an organization with alert instance policies enabled, otherwise the API answers 403 `alertInstancesNotEnabled`. Remove the attribute to evaluate the whole result as one again. The API's deprecated `continuityRuns` is not exposed. A new policy gets the value of `missingRuns`, and a change keeps the stored value unless it is lower than `missingRuns`.
+     */
+    instancePolicy?: pulumi.Input<inputs.AlertInstancePolicy>;
+    /**
      * Alert name (unique per project).
      */
     name?: pulumi.Input<string>;
     /**
-     * Notification rule. Must match API enum.
+     * Notification rule. Must match API enum. 'instances_changed' needs `instancePolicy`. It sends one notification for each run that opens or closes occurrences, listing them, from Logfire v2026-11-13.01.
      */
     notifyWhen: pulumi.Input<string>;
     /**

@@ -7,5 +7,5 @@ import (
 
 // New returns the upstream provider constructor for the bridge.
 func New(version string) func() provider.Provider {
-	return upstream.New(version)
+	return upstream.New(version, upstream.WithDashboardManager("Pulumi"))
 }

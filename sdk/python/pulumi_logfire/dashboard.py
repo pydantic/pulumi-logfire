@@ -22,17 +22,21 @@ class DashboardArgs:
                  definition: pulumi.Input[_builtins.str],
                  project_id: pulumi.Input[_builtins.str],
                  slug: pulumi.Input[_builtins.str],
+                 managed_allow_edits: Optional[pulumi.Input[_builtins.bool]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Dashboard resource.
         :param pulumi.Input[_builtins.str] definition: Dashboard definition JSON payload.
         :param pulumi.Input[_builtins.str] project_id: Project UUID used for API paths.
         :param pulumi.Input[_builtins.str] slug: Dashboard slug used in URLs.
+        :param pulumi.Input[_builtins.bool] managed_allow_edits: Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
         :param pulumi.Input[_builtins.str] name: Dashboard display name.
         """
         pulumi.set(__self__, "definition", definition)
         pulumi.set(__self__, "project_id", project_id)
         pulumi.set(__self__, "slug", slug)
+        if managed_allow_edits is not None:
+            pulumi.set(__self__, "managed_allow_edits", managed_allow_edits)
         if name is not None:
             pulumi.set(__self__, "name", name)
 
@@ -73,6 +77,18 @@ class DashboardArgs:
         pulumi.set(self, "slug", value)
 
     @_builtins.property
+    @pulumi.getter(name="managedAllowEdits")
+    def managed_allow_edits(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+        """
+        return pulumi.get(self, "managed_allow_edits")
+
+    @managed_allow_edits.setter
+    def managed_allow_edits(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "managed_allow_edits", value)
+
+    @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
@@ -89,18 +105,22 @@ class DashboardArgs:
 class _DashboardState:
     def __init__(__self__, *,
                  definition: Optional[pulumi.Input[_builtins.str]] = None,
+                 managed_allow_edits: Optional[pulumi.Input[_builtins.bool]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  slug: Optional[pulumi.Input[_builtins.str]] = None):
         """
         Input properties used for looking up and filtering Dashboard resources.
         :param pulumi.Input[_builtins.str] definition: Dashboard definition JSON payload.
+        :param pulumi.Input[_builtins.bool] managed_allow_edits: Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
         :param pulumi.Input[_builtins.str] name: Dashboard display name.
         :param pulumi.Input[_builtins.str] project_id: Project UUID used for API paths.
         :param pulumi.Input[_builtins.str] slug: Dashboard slug used in URLs.
         """
         if definition is not None:
             pulumi.set(__self__, "definition", definition)
+        if managed_allow_edits is not None:
+            pulumi.set(__self__, "managed_allow_edits", managed_allow_edits)
         if name is not None:
             pulumi.set(__self__, "name", name)
         if project_id is not None:
@@ -119,6 +139,18 @@ class _DashboardState:
     @definition.setter
     def definition(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "definition", value)
+
+    @_builtins.property
+    @pulumi.getter(name="managedAllowEdits")
+    def managed_allow_edits(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+        """
+        return pulumi.get(self, "managed_allow_edits")
+
+    @managed_allow_edits.setter
+    def managed_allow_edits(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "managed_allow_edits", value)
 
     @_builtins.property
     @pulumi.getter
@@ -164,12 +196,15 @@ class Dashboard(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  definition: Optional[pulumi.Input[_builtins.str]] = None,
+                 managed_allow_edits: Optional[pulumi.Input[_builtins.bool]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages a Logfire dashboard.
+
+        The provider marks the dashboard as managed by the tool that applies it, and Logfire shows a Managed badge on it. A new dashboard is also locked against edits in the Logfire UI and through the Logfire MCP server unless `managed_allow_edits` is `true`. The lock does not cover the dashboards API, which the provider uses. A Logfire instance without managed dashboards ignores the marker. An existing dashboard gets the marker on its next update.
 
         ## Example Usage
 
@@ -223,6 +258,7 @@ class Dashboard(pulumi.CustomResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] definition: Dashboard definition JSON payload.
+        :param pulumi.Input[_builtins.bool] managed_allow_edits: Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
         :param pulumi.Input[_builtins.str] name: Dashboard display name.
         :param pulumi.Input[_builtins.str] project_id: Project UUID used for API paths.
         :param pulumi.Input[_builtins.str] slug: Dashboard slug used in URLs.
@@ -235,6 +271,8 @@ class Dashboard(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Manages a Logfire dashboard.
+
+        The provider marks the dashboard as managed by the tool that applies it, and Logfire shows a Managed badge on it. A new dashboard is also locked against edits in the Logfire UI and through the Logfire MCP server unless `managed_allow_edits` is `true`. The lock does not cover the dashboards API, which the provider uses. A Logfire instance without managed dashboards ignores the marker. An existing dashboard gets the marker on its next update.
 
         ## Example Usage
 
@@ -301,6 +339,7 @@ class Dashboard(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  definition: Optional[pulumi.Input[_builtins.str]] = None,
+                 managed_allow_edits: Optional[pulumi.Input[_builtins.bool]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  project_id: Optional[pulumi.Input[_builtins.str]] = None,
                  slug: Optional[pulumi.Input[_builtins.str]] = None,
@@ -316,6 +355,7 @@ class Dashboard(pulumi.CustomResource):
             if definition is None and not opts.urn:
                 raise TypeError("Missing required property 'definition'")
             __props__.__dict__["definition"] = definition
+            __props__.__dict__["managed_allow_edits"] = managed_allow_edits
             __props__.__dict__["name"] = name
             if project_id is None and not opts.urn:
                 raise TypeError("Missing required property 'project_id'")
@@ -334,6 +374,7 @@ class Dashboard(pulumi.CustomResource):
             id: pulumi.Input[str],
             opts: Optional[pulumi.ResourceOptions] = None,
             definition: Optional[pulumi.Input[_builtins.str]] = None,
+            managed_allow_edits: Optional[pulumi.Input[_builtins.bool]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
             project_id: Optional[pulumi.Input[_builtins.str]] = None,
             slug: Optional[pulumi.Input[_builtins.str]] = None) -> 'Dashboard':
@@ -345,6 +386,7 @@ class Dashboard(pulumi.CustomResource):
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] definition: Dashboard definition JSON payload.
+        :param pulumi.Input[_builtins.bool] managed_allow_edits: Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
         :param pulumi.Input[_builtins.str] name: Dashboard display name.
         :param pulumi.Input[_builtins.str] project_id: Project UUID used for API paths.
         :param pulumi.Input[_builtins.str] slug: Dashboard slug used in URLs.
@@ -354,6 +396,7 @@ class Dashboard(pulumi.CustomResource):
         __props__ = _DashboardState.__new__(_DashboardState)
 
         __props__.__dict__["definition"] = definition
+        __props__.__dict__["managed_allow_edits"] = managed_allow_edits
         __props__.__dict__["name"] = name
         __props__.__dict__["project_id"] = project_id
         __props__.__dict__["slug"] = slug
@@ -366,6 +409,14 @@ class Dashboard(pulumi.CustomResource):
         Dashboard definition JSON payload.
         """
         return pulumi.get(self, "definition")
+
+    @_builtins.property
+    @pulumi.getter(name="managedAllowEdits")
+    def managed_allow_edits(self) -> pulumi.Output[Optional[_builtins.bool]]:
+        """
+        Whether the Logfire UI and the Logfire MCP server can edit the dashboard. Defaults to `false` for a new dashboard. A Logfire instance without managed dashboards, or with them turned off, ignores a configured value. Pulumi then warns and plans the value again on every run until Logfire applies it. A dashboard created by an earlier provider version stays editable until you set the attribute. Removing the attribute keeps the current value. Set it to `true` to allow edits again.
+        """
+        return pulumi.get(self, "managed_allow_edits")
 
     @_builtins.property
     @pulumi.getter
