@@ -257,21 +257,21 @@ func TestAutonamedSlugs(t *testing.T) {
 			t.Errorf("%s: prior name became %q, error %v", typ, name, err)
 		}
 
-		// A pattern's proposal is converted but never shortened.
-		long := strings.Repeat("a", 42) + "-1234567-service"
-		for proposed, want := range map[string]string{
-			strings.Repeat("a", 34) + "x1abcdef-sharedx": strings.Repeat("a", 34) + "x1abcdef-sharedx",
-			"My_Project-1abcdef":                         "my-project-1abcdef",
-		} {
-			if name, err := check(t, typ, "named", nil, propose(proposed)); err != nil || name != want {
-				t.Errorf("%s: proposed name %q became %q, error %v; want %q", typ, proposed, name, err, want)
-			}
+		// A pattern's proposal is used as given. A valid one at the length limit passes.
+		valid := strings.Repeat("a", 34) + "x1abcdef-sharedx"
+		if name, err := check(t, typ, "named", nil, propose(valid)); err != nil || name != valid {
+			t.Errorf("%s: proposed name %q became %q, error %v", typ, valid, name, err)
 		}
-		// A proposal that is still invalid fails at preview. A long one becomes a missing name.
-		for proposed, value := range map[string]string{"A": "length", "東京": "東京", long: "Missing required property"} {
+		// An invalid proposal fails at preview instead of being converted. A long one becomes a
+		// missing name.
+		for proposed, value := range map[string]string{
+			"My_Project-1abcdef": "lowercase", "Admin": "lowercase", "foo_bar": "lowercase",
+			"A": "length", "東京": "東京",
+			strings.Repeat("a", 51): "Missing required property",
+		} {
 			name, err := check(t, typ, "named", nil, propose(proposed))
 			if err == nil || !strings.Contains(err.Error(), value) {
-				t.Errorf("%s: proposed name %q became %q, error %v; want a validation error naming %q",
+				t.Errorf("%s: proposed name %q became %q, error %v; want an error containing %q",
 					typ, proposed, name, err, value)
 			}
 		}
