@@ -17,6 +17,7 @@ package logfire
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"path"
 	"regexp"
 	"strings"
@@ -264,11 +265,13 @@ var (
 )
 
 // slugAutoName generates a valid slug when a resource omits `name`. By default the bridge appends
-// "-" and seven random characters to the logical name, so that part keeps at most 42 characters.
-// An autonaming pattern proposes the whole name, random part included. A proposal that is
-// already a valid slug passes through unchanged. Another is converted, and if it is too long it
-// keeps its first 42 and last 8 characters, so a random suffix survives. A logical name with no
-// usable characters, such as "東京", falls back to the resource kind.
+// "-" and seven random characters to the logical name, so that part keeps at most 42 characters. A
+// logical name with no usable characters, such as "東京", falls back to the resource kind.
+//
+// An autonaming pattern proposes the whole name, random part included. A proposal is lowercased and
+// each run of other characters becomes a hyphen. It is never shortened, because the provider cannot
+// tell which characters are random, and dropping them could give two resources one name. A proposal
+// that is still not a valid name fails with an error that asks for another pattern.
 func slugAutoName(fallback string) *tfbridge.SchemaInfo {
 	return &tfbridge.SchemaInfo{
 		Name: "name",
@@ -285,21 +288,22 @@ func slugAutoName(fallback string) *tfbridge.SchemaInfo {
 					}
 					return s
 				}
-				if opts.Autonaming != nil && opts.Autonaming.Mode == info.ComputeDefaultAutonamingModePropose {
-					transform = func(name string) string {
-						if validSlug.MatchString(name) && len(name) <= maxSlugLen {
-							return name
-						}
-						s := slugify(name)
-						if len(s) > maxSlugLen {
-							s = slugify(s[:maxSlugLen-8] + s[len(s)-8:])
-						}
-						return s
-					}
+				propose := opts.Autonaming != nil && opts.Autonaming.Mode == info.ComputeDefaultAutonamingModePropose
+				if propose {
+					transform = slugify
 				}
-				return tfbridge.ComputeAutoNameDefault(ctx, tfbridge.AutoNameOptions{
+				name, err := tfbridge.ComputeAutoNameDefault(ctx, tfbridge.AutoNameOptions{
 					Separator: "-", Maxlen: maxSlugLen, Randlen: 7, Transform: transform,
 				}, opts)
+				if err != nil || !propose {
+					return name, err
+				}
+				if s, _ := name.(string); len(s) < 2 || !validSlug.MatchString(s) {
+					return nil, fmt.Errorf("the autonaming pattern proposed %q, which gives %q. "+
+						"A Logfire name needs 2 to %d lowercase letters, digits and internal hyphens. "+
+						"Change the pattern or set name", opts.Autonaming.ProposedName, s, maxSlugLen)
+				}
+				return name, nil
 			},
 		},
 	}

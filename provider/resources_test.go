@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -195,68 +196,69 @@ func TestAutonamedSlugs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	check := func(t *testing.T, typ tokens.Type, logicalName string, olds resource.PropertyMap,
+		autonaming *pulumirpc.CheckRequest_AutonamingOptions,
+	) (string, error) {
+		t.Helper()
+		inputs, err := plugin.MarshalProperties(resource.PropertyMap{}, plugin.MarshalOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		oldInputs, err := plugin.MarshalProperties(olds, plugin.MarshalOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
+			Urn:        string(resource.NewURN("stack", "project", "", typ, logicalName)),
+			Olds:       oldInputs,
+			News:       inputs,
+			RandomSeed: []byte("seed"),
+			Autonaming: autonaming,
+		})
+		if err != nil {
+			return "", err
+		}
+		if len(resp.Failures) > 0 {
+			return "", fmt.Errorf("check failed: %s", resp.Failures[0].Reason)
+		}
+		checked, err := plugin.UnmarshalProperties(resp.Inputs, plugin.MarshalOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		return checked["name"].StringValue(), nil
+	}
+	propose := func(name string) *pulumirpc.CheckRequest_AutonamingOptions {
+		return &pulumirpc.CheckRequest_AutonamingOptions{ProposedName: name, Mode: pulumirpc.CheckRequest_AutonamingOptions_PROPOSE}
+	}
 
-	slug := regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+	defaultName := regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*-[0-9a-f]{7}$`)
 	for _, typ := range []tokens.Type{"logfire:index/project:Project", "logfire:index/organization:Organization"} {
-		for _, logicalName := range []string{"myProject", "My_Org.1", "plain", strings.Repeat("long-", 12), "東京"} {
-			t.Run(string(typ)+"/"+logicalName, func(t *testing.T) {
-				inputs, err := plugin.MarshalProperties(resource.PropertyMap{}, plugin.MarshalOptions{})
-				if err != nil {
-					t.Fatal(err)
-				}
-				resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
-					Urn:        string(resource.NewURN("stack", "project", "", typ, logicalName)),
-					News:       inputs,
-					RandomSeed: []byte("seed"),
-				})
-				if err != nil {
-					t.Fatal(err)
-				}
-				for _, failure := range resp.Failures {
-					t.Errorf("check failed: %s", failure.Reason)
-				}
-				checked, err := plugin.UnmarshalProperties(resp.Inputs, plugin.MarshalOptions{})
-				if err != nil {
-					t.Fatal(err)
-				}
-				if name := checked["name"].StringValue(); !slug.MatchString(name) || len(name) > 50 {
-					t.Errorf("generated name %q is not a valid slug of at most 50 characters", name)
-				}
-			})
+		// Without a pattern, the logical name becomes a slug and gets a random suffix.
+		for _, logicalName := range []string{"myProject", "My_Org.1", "plain", "A", strings.Repeat("long-", 12), "東京"} {
+			name, err := check(t, typ, logicalName, nil, nil)
+			if err != nil || !defaultName.MatchString(name) || len(name) > 50 {
+				t.Errorf("%s %q: generated name %q, error %v", typ, logicalName, name, err)
+			}
 		}
 
-		// An autonaming pattern proposes the full name. A valid proposal passes through
-		// unchanged, and two that differ only in the random suffix stay distinct after
-		// conversion and shortening.
-		valid := strings.Repeat("a", 34) + "x" + "1abcdef" + "-sharedx"
-		seen := map[string]bool{}
-		for _, proposed := range []string{
-			strings.Repeat("a", 40) + "-1234567", strings.Repeat("a", 40) + "-1abcdef",
-			strings.Repeat("A", 50) + "-1234567", strings.Repeat("A", 50) + "-1abcdef",
-			valid, strings.Repeat("a", 34) + "y" + "1abcdef" + "-sharedx",
+		// A name in prior state is kept instead of a new one.
+		if name, err := check(t, typ, "named", resource.PropertyMap{"name": resource.NewStringProperty("kept-name")}, nil); err != nil || name != "kept-name" {
+			t.Errorf("%s: prior name became %q, error %v", typ, name, err)
+		}
+
+		// A pattern's proposal is converted but never shortened.
+		for proposed, want := range map[string]string{
+			strings.Repeat("a", 34) + "x1abcdef-sharedx": strings.Repeat("a", 34) + "x1abcdef-sharedx",
+			"My_Project-1abcdef":                         "my-project-1abcdef",
 		} {
-			resp, err := server.Check(context.Background(), &pulumirpc.CheckRequest{
-				Urn:        string(resource.NewURN("stack", "project", "", typ, "named")),
-				RandomSeed: []byte("seed"),
-				Autonaming: &pulumirpc.CheckRequest_AutonamingOptions{
-					ProposedName: proposed, Mode: pulumirpc.CheckRequest_AutonamingOptions_PROPOSE,
-				},
-			})
-			if err != nil {
-				t.Fatal(err)
+			if name, err := check(t, typ, "named", nil, propose(proposed)); err != nil || name != want {
+				t.Errorf("%s: proposed name %q became %q, error %v; want %q", typ, proposed, name, err, want)
 			}
-			checked, err := plugin.UnmarshalProperties(resp.Inputs, plugin.MarshalOptions{})
-			if err != nil {
-				t.Fatal(err)
+		}
+		for _, proposed := range []string{"A", "東京", strings.Repeat("a", 42) + "-1234567-service"} {
+			if name, err := check(t, typ, "named", nil, propose(proposed)); err == nil {
+				t.Errorf("%s: proposed name %q became %q; want an error", typ, proposed, name)
 			}
-			name := checked["name"].StringValue()
-			if !slug.MatchString(name) || len(name) > 50 || seen[name] {
-				t.Errorf("proposed name %q became %q", proposed, name)
-			}
-			if proposed == valid && name != valid {
-				t.Errorf("valid proposed name %q became %q", proposed, name)
-			}
-			seen[name] = true
 		}
 	}
 }
