@@ -110,7 +110,7 @@ if not MYPY:
         """
         missing_behavior: pulumi.Input[_builtins.str]
         """
-        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or 'expire'.
         """
         missing_runs: pulumi.Input[_builtins.int]
         """
@@ -132,7 +132,7 @@ class AlertInstancePolicyArgs:
                  pending_runs: pulumi.Input[_builtins.int]):
         """
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] identity_columns: Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
-        :param pulumi.Input[_builtins.str] missing_behavior: The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        :param pulumi.Input[_builtins.str] missing_behavior: The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or 'expire'.
         :param pulumi.Input[_builtins.int] missing_runs: Consecutive runs without the occurrence, 1 to 100, before it closes.
         :param pulumi.Input[_builtins.int] pending_runs: Consecutive matching runs, 1 to 100, before a new occurrence fires.
         """
@@ -157,7 +157,7 @@ class AlertInstancePolicyArgs:
     @pulumi.getter(name="missingBehavior")
     def missing_behavior(self) -> pulumi.Input[_builtins.str]:
         """
-        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or 'expire'.
         """
         return pulumi.get(self, "missing_behavior")
 

@@ -20,7 +20,7 @@ import (
 // While it is set, sign-in and SCIM group updates ignore this resource. Create fails
 // before it writes, because it reads `apiMappingStatus` first. Update and destroy
 // fail on the 409 that the API answers to a write. A refresh warns and sets
-// `apiMappingStatus` to `overriddenByEnvironment`. Remove the Helm value to manage
+// `apiMappingStatus` to 'overridden\_by\_environment'. Remove the Helm value to manage
 // the mapping with Pulumi.
 //
 // ## When the mapping applies
@@ -59,9 +59,9 @@ import (
 // mapping, copy it into the configuration, and apply. Import it the same way after a
 // create that failed once the instance had stored the mapping.
 //
-// To rename the resource or move it under another parent, add the old name to its `aliases`
-// resource option. Without one, Pulumi creates the new resource before it deletes the old
-// one, and the create fails because the instance still stores the mapping.
+// To rename the resource or move it under another parent, add an alias with its old URN
+// to the `aliases` resource option. Without one, Pulumi creates the new resource before it
+// deletes the old one, and the create fails because the instance still stores the mapping.
 //
 // Create and update replace the whole mapping, in the order of the list. The API has
 // no version and no lock, so when two writers update the mapping, the last write wins.
@@ -92,7 +92,7 @@ import (
 type GroupMappings struct {
 	pulumi.CustomResourceState
 
-	// `active` when sign-in uses the stored mapping. `overriddenByEnvironment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+	// 'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
 	ApiMappingStatus pulumi.StringOutput `pulumi:"apiMappingStatus"`
 	// The complete mapping, in the order that the instance stores it. An empty list stores no mapping.
 	Mappings GroupMappingsMappingArrayOutput `pulumi:"mappings"`
@@ -131,14 +131,14 @@ func GetGroupMappings(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering GroupMappings resources.
 type groupMappingsState struct {
-	// `active` when sign-in uses the stored mapping. `overriddenByEnvironment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+	// 'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
 	ApiMappingStatus *string `pulumi:"apiMappingStatus"`
 	// The complete mapping, in the order that the instance stores it. An empty list stores no mapping.
 	Mappings []GroupMappingsMapping `pulumi:"mappings"`
 }
 
 type GroupMappingsState struct {
-	// `active` when sign-in uses the stored mapping. `overriddenByEnvironment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+	// 'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
 	ApiMappingStatus pulumi.StringPtrInput
 	// The complete mapping, in the order that the instance stores it. An empty list stores no mapping.
 	Mappings GroupMappingsMappingArrayInput
@@ -246,7 +246,7 @@ func (o GroupMappingsOutput) ToGroupMappingsOutputWithContext(ctx context.Contex
 	return o
 }
 
-// `active` when sign-in uses the stored mapping. `overriddenByEnvironment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+// 'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
 func (o GroupMappingsOutput) ApiMappingStatus() pulumi.StringOutput {
 	return o.ApplyT(func(v *GroupMappings) pulumi.StringOutput { return v.ApiMappingStatus }).(pulumi.StringOutput)
 }

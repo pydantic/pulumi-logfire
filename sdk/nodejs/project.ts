@@ -62,13 +62,13 @@ export class Project extends pulumi.CustomResource {
      */
     declare public readonly name: pulumi.Output<string>;
     /**
-     * Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organizationId`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization, a name that is not known yet, or a name the instance does not list yet updates in place. After an organization is renamed, a refresh updates this value.
+     * Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organizationId`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
      */
     declare public readonly organization: pulumi.Output<string>;
     /**
      * ID of the organization that the project is in. Set when the project is in a named organization, through the `organization` argument or the provider `organization`. Null for a project in the organization of the credential.
      */
-    declare public /*out*/ readonly organizationId: pulumi.Output<string>;
+    declare public /*out*/ readonly organizationId: pulumi.Output<string | undefined>;
     /**
      * Project visibility (`public` or `private`).
      */
@@ -118,7 +118,7 @@ export interface ProjectState {
      */
     name?: pulumi.Input<string>;
     /**
-     * Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organizationId`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization, a name that is not known yet, or a name the instance does not list yet updates in place. After an organization is renamed, a refresh updates this value.
+     * Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organizationId`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
      */
     organization?: pulumi.Input<string>;
     /**
@@ -144,7 +144,7 @@ export interface ProjectArgs {
      */
     name?: pulumi.Input<string>;
     /**
-     * Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organizationId`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization, a name that is not known yet, or a name the instance does not list yet updates in place. After an organization is renamed, a refresh updates this value.
+     * Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organizationId`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
      */
     organization?: pulumi.Input<string>;
     /**

@@ -76,9 +76,12 @@ var groupMappingsDocs = strings.NewReplacer(
 		"destroys the old address, which stores an empty mapping, and creates the new one in the\n"+
 		"same apply. The create fails if it runs before the destroy, and the next apply stores\n"+
 		"the mapping again.",
-	"To rename the resource or move it under another parent, add the old name to its `aliases`\n"+
-		"resource option. Without one, Pulumi creates the new resource before it deletes the old\n"+
-		"one, and the create fails because the instance still stores the mapping.",
+	"To rename the resource or move it under another parent, add an alias with its old URN\n"+
+		"to the `aliases` resource option. Without one, Pulumi creates the new resource before it\n"+
+		"deletes the old one, and the create fails because the instance still stores the mapping.",
+	// Keep API values out of the bridge's property-name rewriter.
+	"`active`", "'active'",
+	"`overridden_by_environment`", `'overridden\_by\_environment'`,
 	"one Terraform configuration per instance", "one Pulumi stack per instance",
 	"another configuration or workspace", "another stack",
 )
@@ -153,6 +156,7 @@ func Provider() tfbridge.ProviderInfo {
 						// Keep API values out of the bridge's property-name rewriter.
 						content = bytes.ReplaceAll(content, []byte("`instances_changed`"), []byte(`'instances\_changed'`))
 						content = bytes.ReplaceAll(content, []byte("`no_longer_matching`"), []byte(`'no\_longer\_matching'`))
+						content = bytes.ReplaceAll(content, []byte("`expire`"), []byte("'expire'"))
 						content = withoutExample(content, "\n# Track each failing service as its own occurrence.", "\n```")
 						return replaceImportSection(content, alertImportSection), nil
 					},
@@ -175,6 +179,14 @@ func Provider() tfbridge.ProviderInfo {
 						content = bytes.ReplaceAll(content,
 							[]byte("Set `lifecycle { prevent_destroy = true }` to block it."),
 							[]byte("Set the `protect` resource option to block it."))
+						content = bytes.ReplaceAll(content,
+							[]byte("A new name for the same organization, a name that is not known yet, "+
+								"or a name the instance does not list yet updates in place."),
+							[]byte("A new name for the same organization updates in place. A preview shows an "+
+								"in-place update when the name is not known yet or the instance does not list it yet, "+
+								"but `pulumi up` compares again once the name resolves. A project moved into an "+
+								"organization that the same update creates is then replaced, so create the "+
+								"organization in an earlier update."))
 						return replaceImportSection(content, projectImportSection), nil
 					},
 				}, {
@@ -245,6 +257,8 @@ func Provider() tfbridge.ProviderInfo {
 	for res, fallback := range map[string]string{"logfire_project": "project", "logfire_organization": "organization"} {
 		prov.Resources[res].Fields = map[string]*tfbridge.SchemaInfo{"name": slugAutoName(fallback)}
 	}
+	// Null for a project in the organization of the credential.
+	prov.Resources["logfire_project"].Fields["organization_id"] = &tfbridge.SchemaInfo{MarkAsOptional: tfbridge.True()}
 
 	prov.MustApplyAutoAliases()
 	prov.SetAutonaming(255, "-")

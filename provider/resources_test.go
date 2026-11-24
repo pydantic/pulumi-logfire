@@ -64,6 +64,7 @@ func TestGeneratedSchema(t *testing.T) {
 			"## Conflict with the Helm value",
 			"one Pulumi stack per instance",
 			`$ pulumi import logfire:index/groupMappings:GroupMappings this "instance"`,
+			"add an alias with its old URN",
 		} {
 			if !strings.Contains(description, want) {
 				t.Errorf("group mappings description is missing %q", want)
@@ -73,6 +74,11 @@ func TestGeneratedSchema(t *testing.T) {
 			if strings.Contains(description, unwanted) {
 				t.Errorf("group mappings description contains %q", unwanted)
 			}
+		}
+		status := generated.PackageSpec.Resources["logfire:index/groupMappings:GroupMappings"].
+			Properties["apiMappingStatus"].Description
+		if strings.Contains(status, "overriddenByEnvironment") || strings.Contains(status, "`Active`") {
+			t.Errorf("apiMappingStatus values were rewritten as property names: %q", status)
 		}
 	})
 
@@ -84,6 +90,12 @@ func TestGeneratedSchema(t *testing.T) {
 		}
 		if _, ok := project.Properties["organizationId"]; !ok {
 			t.Error("organizationId output is missing")
+		}
+		if slices.Contains(project.Required, "organizationId") {
+			t.Error("organizationId output must be optional")
+		}
+		if !strings.Contains(description, "create the organization in an earlier update") {
+			t.Errorf("organization description does not warn about same-update moves: %q", description)
 		}
 		if _, ok := project.InputProperties["organizationId"]; ok {
 			t.Error("organizationId must not be an input")

@@ -48,7 +48,7 @@ class _GroupMappingsState:
                  mappings: Optional[pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingArgs']]]] = None):
         """
         Input properties used for looking up and filtering GroupMappings resources.
-        :param pulumi.Input[_builtins.str] api_mapping_status: `active` when sign-in uses the stored mapping. `overridden_by_environment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+        :param pulumi.Input[_builtins.str] api_mapping_status: 'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
         :param pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingArgs']]] mappings: The complete mapping, in the order that the instance stores it. An empty list stores no mapping.
         """
         if api_mapping_status is not None:
@@ -60,7 +60,7 @@ class _GroupMappingsState:
     @pulumi.getter(name="apiMappingStatus")
     def api_mapping_status(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        `active` when sign-in uses the stored mapping. `overridden_by_environment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+        'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
         """
         return pulumi.get(self, "api_mapping_status")
 
@@ -98,7 +98,7 @@ class GroupMappings(pulumi.CustomResource):
         While it is set, sign-in and SCIM group updates ignore this resource. Create fails
         before it writes, because it reads `api_mapping_status` first. Update and destroy
         fail on the 409 that the API answers to a write. A refresh warns and sets
-        `api_mapping_status` to `overridden_by_environment`. Remove the Helm value to manage
+        `api_mapping_status` to 'overridden\\_by\\_environment'. Remove the Helm value to manage
         the mapping with Pulumi.
 
         ## When the mapping applies
@@ -137,9 +137,9 @@ class GroupMappings(pulumi.CustomResource):
         mapping, copy it into the configuration, and apply. Import it the same way after a
         create that failed once the instance had stored the mapping.
 
-        To rename the resource or move it under another parent, add the old name to its `aliases`
-        resource option. Without one, Pulumi creates the new resource before it deletes the old
-        one, and the create fails because the instance still stores the mapping.
+        To rename the resource or move it under another parent, add an alias with its old URN
+        to the `aliases` resource option. Without one, Pulumi creates the new resource before it
+        deletes the old one, and the create fails because the instance still stores the mapping.
 
         Create and update replace the whole mapping, in the order of the list. The API has
         no version and no lock, so when two writers update the mapping, the last write wins.
@@ -187,7 +187,7 @@ class GroupMappings(pulumi.CustomResource):
         While it is set, sign-in and SCIM group updates ignore this resource. Create fails
         before it writes, because it reads `api_mapping_status` first. Update and destroy
         fail on the 409 that the API answers to a write. A refresh warns and sets
-        `api_mapping_status` to `overridden_by_environment`. Remove the Helm value to manage
+        `api_mapping_status` to 'overridden\\_by\\_environment'. Remove the Helm value to manage
         the mapping with Pulumi.
 
         ## When the mapping applies
@@ -226,9 +226,9 @@ class GroupMappings(pulumi.CustomResource):
         mapping, copy it into the configuration, and apply. Import it the same way after a
         create that failed once the instance had stored the mapping.
 
-        To rename the resource or move it under another parent, add the old name to its `aliases`
-        resource option. Without one, Pulumi creates the new resource before it deletes the old
-        one, and the create fails because the instance still stores the mapping.
+        To rename the resource or move it under another parent, add an alias with its old URN
+        to the `aliases` resource option. Without one, Pulumi creates the new resource before it
+        deletes the old one, and the create fails because the instance still stores the mapping.
 
         Create and update replace the whole mapping, in the order of the list. The API has
         no version and no lock, so when two writers update the mapping, the last write wins.
@@ -305,7 +305,7 @@ class GroupMappings(pulumi.CustomResource):
         :param str resource_name: The unique name of the resulting resource.
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[_builtins.str] api_mapping_status: `active` when sign-in uses the stored mapping. `overridden_by_environment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+        :param pulumi.Input[_builtins.str] api_mapping_status: 'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
         :param pulumi.Input[Sequence[pulumi.Input[Union['GroupMappingsMappingArgs', 'GroupMappingsMappingArgsDict']]]] mappings: The complete mapping, in the order that the instance stores it. An empty list stores no mapping.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
@@ -320,7 +320,7 @@ class GroupMappings(pulumi.CustomResource):
     @pulumi.getter(name="apiMappingStatus")
     def api_mapping_status(self) -> pulumi.Output[_builtins.str]:
         """
-        `active` when sign-in uses the stored mapping. `overridden_by_environment` when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
+        'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.
         """
         return pulumi.get(self, "api_mapping_status")
 

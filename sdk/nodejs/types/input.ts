@@ -22,7 +22,7 @@ export interface AlertInstancePolicy {
      */
     identityColumns: pulumi.Input<pulumi.Input<string>[]>;
     /**
-     * The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+     * The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
      */
     missingBehavior: pulumi.Input<string>;
     /**

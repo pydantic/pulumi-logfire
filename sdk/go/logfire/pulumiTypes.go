@@ -122,7 +122,7 @@ func (o AlertChannelAssignmentArrayOutput) Index(i pulumi.IntInput) AlertChannel
 type AlertInstancePolicy struct {
 	// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
 	IdentityColumns []string `pulumi:"identityColumns"`
-	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 	MissingBehavior string `pulumi:"missingBehavior"`
 	// Consecutive runs without the occurrence, 1 to 100, before it closes.
 	MissingRuns int `pulumi:"missingRuns"`
@@ -144,7 +144,7 @@ type AlertInstancePolicyInput interface {
 type AlertInstancePolicyArgs struct {
 	// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
 	IdentityColumns pulumi.StringArrayInput `pulumi:"identityColumns"`
-	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 	MissingBehavior pulumi.StringInput `pulumi:"missingBehavior"`
 	// Consecutive runs without the occurrence, 1 to 100, before it closes.
 	MissingRuns pulumi.IntInput `pulumi:"missingRuns"`
@@ -234,7 +234,7 @@ func (o AlertInstancePolicyOutput) IdentityColumns() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v AlertInstancePolicy) []string { return v.IdentityColumns }).(pulumi.StringArrayOutput)
 }
 
-// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 func (o AlertInstancePolicyOutput) MissingBehavior() pulumi.StringOutput {
 	return o.ApplyT(func(v AlertInstancePolicy) string { return v.MissingBehavior }).(pulumi.StringOutput)
 }
@@ -283,7 +283,7 @@ func (o AlertInstancePolicyPtrOutput) IdentityColumns() pulumi.StringArrayOutput
 	}).(pulumi.StringArrayOutput)
 }
 
-// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 func (o AlertInstancePolicyPtrOutput) MissingBehavior() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *AlertInstancePolicy) *string {
 		if v == nil {

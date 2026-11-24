@@ -115,7 +115,7 @@ class AlertInstancePolicy(dict):
                  pending_runs: _builtins.int):
         """
         :param Sequence[_builtins.str] identity_columns: Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
-        :param _builtins.str missing_behavior: The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        :param _builtins.str missing_behavior: The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or 'expire'.
         :param _builtins.int missing_runs: Consecutive runs without the occurrence, 1 to 100, before it closes.
         :param _builtins.int pending_runs: Consecutive matching runs, 1 to 100, before a new occurrence fires.
         """
@@ -136,7 +136,7 @@ class AlertInstancePolicy(dict):
     @pulumi.getter(name="missingBehavior")
     def missing_behavior(self) -> _builtins.str:
         """
-        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or `expire`.
+        The close reason of an occurrence that is missing for `missing_runs` runs. One of 'no_longer_matching' or 'expire'.
         """
         return pulumi.get(self, "missing_behavior")
 
