@@ -21,6 +21,9 @@ __all__ = [
     'ApiKeyGateway',
     'ChannelConfig',
     'GatewayEndpointProvider',
+    'GroupMappingsMapping',
+    'GroupMappingsMappingOrganizationRole',
+    'GroupMappingsMappingOrganizationRoleProjectRole',
     'ScheduleWindow',
     'SloAlerts',
     'SloAlertsFast',
@@ -494,6 +497,141 @@ class GatewayEndpointProvider(dict):
         Positive relative weight among providers with the same priority. Defaults to 1.
         """
         return pulumi.get(self, "weight")
+
+
+@pulumi.output_type
+class GroupMappingsMapping(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "groupId":
+            suggest = "group_id"
+        elif key == "organizationRoles":
+            suggest = "organization_roles"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GroupMappingsMapping. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GroupMappingsMapping.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GroupMappingsMapping.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 group_id: _builtins.str,
+                 organization_roles: Sequence['outputs.GroupMappingsMappingOrganizationRole']):
+        """
+        :param _builtins.str group_id: The identity-provider group ID. Each group ID appears once.
+        :param Sequence['GroupMappingsMappingOrganizationRoleArgs'] organization_roles: The roles that members of the group get in organizations.
+        """
+        pulumi.set(__self__, "group_id", group_id)
+        pulumi.set(__self__, "organization_roles", organization_roles)
+
+    @_builtins.property
+    @pulumi.getter(name="groupId")
+    def group_id(self) -> _builtins.str:
+        """
+        The identity-provider group ID. Each group ID appears once.
+        """
+        return pulumi.get(self, "group_id")
+
+    @_builtins.property
+    @pulumi.getter(name="organizationRoles")
+    def organization_roles(self) -> Sequence['outputs.GroupMappingsMappingOrganizationRole']:
+        """
+        The roles that members of the group get in organizations.
+        """
+        return pulumi.get(self, "organization_roles")
+
+
+@pulumi.output_type
+class GroupMappingsMappingOrganizationRole(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "projectRoles":
+            suggest = "project_roles"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GroupMappingsMappingOrganizationRole. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GroupMappingsMappingOrganizationRole.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GroupMappingsMappingOrganizationRole.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 organization: _builtins.str,
+                 role: _builtins.str,
+                 project_roles: Optional[Sequence['outputs.GroupMappingsMappingOrganizationRoleProjectRole']] = None):
+        """
+        :param _builtins.str organization: The organization name. The organization must exist.
+        :param _builtins.str role: The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        :param Sequence['GroupMappingsMappingOrganizationRoleProjectRoleArgs'] project_roles: The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+        """
+        pulumi.set(__self__, "organization", organization)
+        pulumi.set(__self__, "role", role)
+        if project_roles is not None:
+            pulumi.set(__self__, "project_roles", project_roles)
+
+    @_builtins.property
+    @pulumi.getter
+    def organization(self) -> _builtins.str:
+        """
+        The organization name. The organization must exist.
+        """
+        return pulumi.get(self, "organization")
+
+    @_builtins.property
+    @pulumi.getter
+    def role(self) -> _builtins.str:
+        """
+        The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        return pulumi.get(self, "role")
+
+    @_builtins.property
+    @pulumi.getter(name="projectRoles")
+    def project_roles(self) -> Optional[Sequence['outputs.GroupMappingsMappingOrganizationRoleProjectRole']]:
+        """
+        The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+        """
+        return pulumi.get(self, "project_roles")
+
+
+@pulumi.output_type
+class GroupMappingsMappingOrganizationRoleProjectRole(dict):
+    def __init__(__self__, *,
+                 project: _builtins.str,
+                 role: _builtins.str):
+        """
+        :param _builtins.str project: The project name. The project must exist in the organization.
+        :param _builtins.str role: The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        pulumi.set(__self__, "project", project)
+        pulumi.set(__self__, "role", role)
+
+    @_builtins.property
+    @pulumi.getter
+    def project(self) -> _builtins.str:
+        """
+        The project name. The project must exist in the organization.
+        """
+        return pulumi.get(self, "project")
+
+    @_builtins.property
+    @pulumi.getter
+    def role(self) -> _builtins.str:
+        """
+        The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        return pulumi.get(self, "role")
 
 
 @pulumi.output_type

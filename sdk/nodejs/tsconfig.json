@@ -27,6 +27,7 @@
         "gatewayProvider.ts",
         "gatewaySpendingLimits.ts",
         "getPagerdutyService.ts",
+        "groupMappings.ts",
         "index.ts",
         "organization.ts",
         "project.ts",

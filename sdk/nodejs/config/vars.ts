@@ -40,3 +40,14 @@ Object.defineProperty(exports, "customHeaders", {
     enumerable: true,
 });
 
+/**
+ * Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `logfire.Project` overrides this value.
+ */
+export declare const organization: string | undefined;
+Object.defineProperty(exports, "organization", {
+    get() {
+        return __config.get("organization");
+    },
+    enumerable: true,
+});
+

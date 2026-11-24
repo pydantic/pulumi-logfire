@@ -65,6 +65,11 @@ export const getPagerdutyService: typeof import("./getPagerdutyService").getPage
 export const getPagerdutyServiceOutput: typeof import("./getPagerdutyService").getPagerdutyServiceOutput = null as any;
 utilities.lazyLoad(exports, ["getPagerdutyService","getPagerdutyServiceOutput"], () => require("./getPagerdutyService"));
 
+export { GroupMappingsArgs, GroupMappingsState } from "./groupMappings";
+export type GroupMappings = import("./groupMappings").GroupMappings;
+export const GroupMappings: typeof import("./groupMappings").GroupMappings = null as any;
+utilities.lazyLoad(exports, ["GroupMappings"], () => require("./groupMappings"));
+
 export { OrganizationArgs, OrganizationState } from "./organization";
 export type Organization = import("./organization").Organization;
 export const Organization: typeof import("./organization").Organization = null as any;
@@ -134,6 +139,8 @@ const _module = {
                 return new GatewayProvider(name, <any>undefined, { urn })
             case "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits":
                 return new GatewaySpendingLimits(name, <any>undefined, { urn })
+            case "logfire:index/groupMappings:GroupMappings":
+                return new GroupMappings(name, <any>undefined, { urn })
             case "logfire:index/organization:Organization":
                 return new Organization(name, <any>undefined, { urn })
             case "logfire:index/project:Project":
@@ -162,6 +169,7 @@ pulumi.runtime.registerResourceModule("logfire", "index/gatewayEndpoint", _modul
 pulumi.runtime.registerResourceModule("logfire", "index/gatewayProjectSpendingLimits", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/gatewayProvider", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/gatewaySpendingLimits", _module)
+pulumi.runtime.registerResourceModule("logfire", "index/groupMappings", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/organization", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/project", _module)
 pulumi.runtime.registerResourceModule("logfire", "index/readToken", _module)

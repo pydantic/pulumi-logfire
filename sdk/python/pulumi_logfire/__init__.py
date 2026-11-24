@@ -18,6 +18,7 @@ from .gateway_project_spending_limits import *
 from .gateway_provider import *
 from .gateway_spending_limits import *
 from .get_pagerduty_service import *
+from .group_mappings import *
 from .organization import *
 from .project import *
 from .provider import *
@@ -124,6 +125,14 @@ _utilities.register(
   "fqn": "pulumi_logfire",
   "classes": {
    "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits": "GatewaySpendingLimits"
+  }
+ },
+ {
+  "pkg": "logfire",
+  "mod": "index/groupMappings",
+  "fqn": "pulumi_logfire",
+  "classes": {
+   "logfire:index/groupMappings:GroupMappings": "GroupMappings"
   }
  },
  {

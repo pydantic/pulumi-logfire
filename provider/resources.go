@@ -60,6 +60,27 @@ const (
 		"$ terraform import logfire_dashboard.example \"example-project/example-dashboard\"\n" +
 		"```\n\n" +
 		"Project UUID/dashboard UUID/slug imports are also supported."
+	groupMappingsImportSection = "## Import\n\n" +
+		"The instance has one group mapping, so the import ID is always `instance`:\n\n" +
+		"```console\n" +
+		"$ terraform import logfire_group_mappings.this \"instance\"\n" +
+		"```\n"
+)
+
+// groupMappingsDocs rewrites the Terraform workflow in the group mappings page for Pulumi. The
+// bridge drops a page that still mentions Terraform, examples included.
+var groupMappingsDocs = strings.NewReplacer(
+	"the mapping with Terraform.", "the mapping with Pulumi.",
+	"so Terraform does not replace", "so Pulumi does not replace",
+	"To move the resource to another address, use a `moved` block. Without one, Terraform\n"+
+		"destroys the old address, which stores an empty mapping, and creates the new one in the\n"+
+		"same apply. The create fails if it runs before the destroy, and the next apply stores\n"+
+		"the mapping again.",
+	"To rename the resource or move it under another parent, add the old name to its `aliases`\n"+
+		"resource option. Without one, Pulumi creates the new resource before it deletes the old\n"+
+		"one, and the create fails because the instance still stores the mapping.",
+	"one Terraform configuration per instance", "one Pulumi stack per instance",
+	"another configuration or workspace", "another stack",
 )
 
 //go:embed cmd/pulumi-resource-logfire/bridge-metadata.json
@@ -151,7 +172,17 @@ func Provider() tfbridge.ProviderInfo {
 				}, {
 					Path: "project.md",
 					Edit: func(_ string, content []byte) ([]byte, error) {
+						content = bytes.ReplaceAll(content,
+							[]byte("Set `lifecycle { prevent_destroy = true }` to block it."),
+							[]byte("Set the `protect` resource option to block it."))
 						return replaceImportSection(content, projectImportSection), nil
+					},
+				}, {
+					Path: "group_mappings.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						content = []byte(groupMappingsDocs.Replace(string(content)))
+						content = withoutExample(content, "\n## Example Usage", "\n## Conflict with the Helm value")
+						return replaceImportSection(content, groupMappingsImportSection), nil
 					},
 				}}, defaults...)
 			},

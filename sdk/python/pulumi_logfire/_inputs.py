@@ -25,6 +25,12 @@ __all__ = [
     'ChannelConfigArgsDict',
     'GatewayEndpointProviderArgs',
     'GatewayEndpointProviderArgsDict',
+    'GroupMappingsMappingArgs',
+    'GroupMappingsMappingArgsDict',
+    'GroupMappingsMappingOrganizationRoleArgs',
+    'GroupMappingsMappingOrganizationRoleArgsDict',
+    'GroupMappingsMappingOrganizationRoleProjectRoleArgs',
+    'GroupMappingsMappingOrganizationRoleProjectRoleArgsDict',
     'ScheduleWindowArgs',
     'ScheduleWindowArgsDict',
     'SloAlertsArgs',
@@ -636,6 +642,176 @@ class GatewayEndpointProviderArgs:
     @weight.setter
     def weight(self, value: Optional[pulumi.Input[_builtins.float]]):
         pulumi.set(self, "weight", value)
+
+
+if not MYPY:
+    class GroupMappingsMappingArgsDict(TypedDict):
+        group_id: pulumi.Input[_builtins.str]
+        """
+        The identity-provider group ID. Each group ID appears once.
+        """
+        organization_roles: pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleArgsDict']]]
+        """
+        The roles that members of the group get in organizations.
+        """
+elif False:
+    GroupMappingsMappingArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class GroupMappingsMappingArgs:
+    def __init__(__self__, *,
+                 group_id: pulumi.Input[_builtins.str],
+                 organization_roles: pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleArgs']]]):
+        """
+        :param pulumi.Input[_builtins.str] group_id: The identity-provider group ID. Each group ID appears once.
+        :param pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleArgs']]] organization_roles: The roles that members of the group get in organizations.
+        """
+        pulumi.set(__self__, "group_id", group_id)
+        pulumi.set(__self__, "organization_roles", organization_roles)
+
+    @_builtins.property
+    @pulumi.getter(name="groupId")
+    def group_id(self) -> pulumi.Input[_builtins.str]:
+        """
+        The identity-provider group ID. Each group ID appears once.
+        """
+        return pulumi.get(self, "group_id")
+
+    @group_id.setter
+    def group_id(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "group_id", value)
+
+    @_builtins.property
+    @pulumi.getter(name="organizationRoles")
+    def organization_roles(self) -> pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleArgs']]]:
+        """
+        The roles that members of the group get in organizations.
+        """
+        return pulumi.get(self, "organization_roles")
+
+    @organization_roles.setter
+    def organization_roles(self, value: pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleArgs']]]):
+        pulumi.set(self, "organization_roles", value)
+
+
+if not MYPY:
+    class GroupMappingsMappingOrganizationRoleArgsDict(TypedDict):
+        organization: pulumi.Input[_builtins.str]
+        """
+        The organization name. The organization must exist.
+        """
+        role: pulumi.Input[_builtins.str]
+        """
+        The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        project_roles: NotRequired[pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleProjectRoleArgsDict']]]]
+        """
+        The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+        """
+elif False:
+    GroupMappingsMappingOrganizationRoleArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class GroupMappingsMappingOrganizationRoleArgs:
+    def __init__(__self__, *,
+                 organization: pulumi.Input[_builtins.str],
+                 role: pulumi.Input[_builtins.str],
+                 project_roles: Optional[pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleProjectRoleArgs']]]] = None):
+        """
+        :param pulumi.Input[_builtins.str] organization: The organization name. The organization must exist.
+        :param pulumi.Input[_builtins.str] role: The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        :param pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleProjectRoleArgs']]] project_roles: The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+        """
+        pulumi.set(__self__, "organization", organization)
+        pulumi.set(__self__, "role", role)
+        if project_roles is not None:
+            pulumi.set(__self__, "project_roles", project_roles)
+
+    @_builtins.property
+    @pulumi.getter
+    def organization(self) -> pulumi.Input[_builtins.str]:
+        """
+        The organization name. The organization must exist.
+        """
+        return pulumi.get(self, "organization")
+
+    @organization.setter
+    def organization(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "organization", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def role(self) -> pulumi.Input[_builtins.str]:
+        """
+        The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        return pulumi.get(self, "role")
+
+    @role.setter
+    def role(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "role", value)
+
+    @_builtins.property
+    @pulumi.getter(name="projectRoles")
+    def project_roles(self) -> Optional[pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleProjectRoleArgs']]]]:
+        """
+        The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+        """
+        return pulumi.get(self, "project_roles")
+
+    @project_roles.setter
+    def project_roles(self, value: Optional[pulumi.Input[Sequence[pulumi.Input['GroupMappingsMappingOrganizationRoleProjectRoleArgs']]]]):
+        pulumi.set(self, "project_roles", value)
+
+
+if not MYPY:
+    class GroupMappingsMappingOrganizationRoleProjectRoleArgsDict(TypedDict):
+        project: pulumi.Input[_builtins.str]
+        """
+        The project name. The project must exist in the organization.
+        """
+        role: pulumi.Input[_builtins.str]
+        """
+        The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+elif False:
+    GroupMappingsMappingOrganizationRoleProjectRoleArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class GroupMappingsMappingOrganizationRoleProjectRoleArgs:
+    def __init__(__self__, *,
+                 project: pulumi.Input[_builtins.str],
+                 role: pulumi.Input[_builtins.str]):
+        """
+        :param pulumi.Input[_builtins.str] project: The project name. The project must exist in the organization.
+        :param pulumi.Input[_builtins.str] role: The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        pulumi.set(__self__, "project", project)
+        pulumi.set(__self__, "role", role)
+
+    @_builtins.property
+    @pulumi.getter
+    def project(self) -> pulumi.Input[_builtins.str]:
+        """
+        The project name. The project must exist in the organization.
+        """
+        return pulumi.get(self, "project")
+
+    @project.setter
+    def project(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "project", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def role(self) -> pulumi.Input[_builtins.str]:
+        """
+        The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+        """
+        return pulumi.get(self, "role")
+
+    @role.setter
+    def role(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "role", value)
 
 
 if not MYPY:

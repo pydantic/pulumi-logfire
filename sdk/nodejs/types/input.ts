@@ -128,6 +128,43 @@ export interface GatewayEndpointProvider {
     weight?: pulumi.Input<number>;
 }
 
+export interface GroupMappingsMapping {
+    /**
+     * The identity-provider group ID. Each group ID appears once.
+     */
+    groupId: pulumi.Input<string>;
+    /**
+     * The roles that members of the group get in organizations.
+     */
+    organizationRoles: pulumi.Input<pulumi.Input<inputs.GroupMappingsMappingOrganizationRole>[]>;
+}
+
+export interface GroupMappingsMappingOrganizationRole {
+    /**
+     * The organization name. The organization must exist.
+     */
+    organization: pulumi.Input<string>;
+    /**
+     * The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+     */
+    projectRoles?: pulumi.Input<pulumi.Input<inputs.GroupMappingsMappingOrganizationRoleProjectRole>[]>;
+    /**
+     * The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+     */
+    role: pulumi.Input<string>;
+}
+
+export interface GroupMappingsMappingOrganizationRoleProjectRole {
+    /**
+     * The project name. The project must exist in the organization.
+     */
+    project: pulumi.Input<string>;
+    /**
+     * The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+     */
+    role: pulumi.Input<string>;
+}
+
 export interface ScheduleWindow {
     /**
      * ISO weekday numbers: `1` is Monday and `7` is Sunday.

@@ -11,7 +11,7 @@ import (
 	"github.com/pydantic/pulumi-logfire/sdk/go/logfire/internal"
 )
 
-// Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, and the same exchange backs setting `billingEmail` at creation, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
+// Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
 //
 // ## Example Usage
 //
@@ -66,8 +66,10 @@ type Organization struct {
 	AiEnabled pulumi.BoolOutput `pulumi:"aiEnabled"`
 	// Avatar URL.
 	Avatar pulumi.StringOutput `pulumi:"avatar"`
-	// Billing contact email.
-	BillingEmail pulumi.StringOutput `pulumi:"billingEmail"`
+	// Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+	//
+	// Deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
+	BillingEmail pulumi.StringPtrOutput `pulumi:"billingEmail"`
 	// Timestamp when the organization was created.
 	CreatedAt pulumi.StringOutput `pulumi:"createdAt"`
 	// Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
@@ -124,7 +126,9 @@ type organizationState struct {
 	AiEnabled *bool `pulumi:"aiEnabled"`
 	// Avatar URL.
 	Avatar *string `pulumi:"avatar"`
-	// Billing contact email.
+	// Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+	//
+	// Deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
 	BillingEmail *string `pulumi:"billingEmail"`
 	// Timestamp when the organization was created.
 	CreatedAt *string `pulumi:"createdAt"`
@@ -153,7 +157,9 @@ type OrganizationState struct {
 	AiEnabled pulumi.BoolPtrInput
 	// Avatar URL.
 	Avatar pulumi.StringPtrInput
-	// Billing contact email.
+	// Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+	//
+	// Deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
 	BillingEmail pulumi.StringPtrInput
 	// Timestamp when the organization was created.
 	CreatedAt pulumi.StringPtrInput
@@ -184,7 +190,9 @@ func (OrganizationState) ElementType() reflect.Type {
 type organizationArgs struct {
 	// Avatar URL.
 	Avatar *string `pulumi:"avatar"`
-	// Billing contact email.
+	// Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+	//
+	// Deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
 	BillingEmail *string `pulumi:"billingEmail"`
 	// Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
 	DeletionProtection *bool `pulumi:"deletionProtection"`
@@ -204,7 +212,9 @@ type organizationArgs struct {
 type OrganizationArgs struct {
 	// Avatar URL.
 	Avatar pulumi.StringPtrInput
-	// Billing contact email.
+	// Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+	//
+	// Deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
 	BillingEmail pulumi.StringPtrInput
 	// Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
 	DeletionProtection pulumi.BoolPtrInput
@@ -317,9 +327,11 @@ func (o OrganizationOutput) Avatar() pulumi.StringOutput {
 	return o.ApplyT(func(v *Organization) pulumi.StringOutput { return v.Avatar }).(pulumi.StringOutput)
 }
 
-// Billing contact email.
-func (o OrganizationOutput) BillingEmail() pulumi.StringOutput {
-	return o.ApplyT(func(v *Organization) pulumi.StringOutput { return v.BillingEmail }).(pulumi.StringOutput)
+// Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+//
+// Deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
+func (o OrganizationOutput) BillingEmail() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Organization) pulumi.StringPtrOutput { return v.BillingEmail }).(pulumi.StringPtrOutput)
 }
 
 // Timestamp when the organization was created.
