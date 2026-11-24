@@ -60,6 +60,30 @@ const (
 		"$ terraform import logfire_dashboard.example \"example-project/example-dashboard\"\n" +
 		"```\n\n" +
 		"Project UUID/dashboard UUID/slug imports are also supported."
+	groupMappingsImportSection = "## Import\n\n" +
+		"The instance has one group mapping, so the import ID is always `instance`:\n\n" +
+		"```console\n" +
+		"$ terraform import logfire_group_mappings.this \"instance\"\n" +
+		"```\n"
+)
+
+// groupMappingsDocs rewrites the Terraform workflow in the group mappings page for Pulumi. The
+// bridge drops a page that still mentions Terraform, examples included.
+var groupMappingsDocs = strings.NewReplacer(
+	"the mapping with Terraform.", "the mapping with Pulumi.",
+	"so Terraform does not replace", "so Pulumi does not replace",
+	"To move the resource to another address, use a `moved` block. Without one, Terraform\n"+
+		"destroys the old address, which stores an empty mapping, and creates the new one in the\n"+
+		"same apply. The create fails if it runs before the destroy, and the next apply stores\n"+
+		"the mapping again.",
+	"To rename the resource or move it under another parent, add an alias with its old URN\n"+
+		"to the `aliases` resource option. Without one, Pulumi creates the new resource before it\n"+
+		"deletes the old one, and the create fails because the instance still stores the mapping.",
+	// Keep API values out of the bridge's property-name rewriter.
+	"`active`", "'active'",
+	"`overridden_by_environment`", `'overridden\_by\_environment'`,
+	"one Terraform configuration per instance", "one Pulumi stack per instance",
+	"another configuration or workspace", "another stack",
 )
 
 //go:embed cmd/pulumi-resource-logfire/bridge-metadata.json
@@ -132,6 +156,7 @@ func Provider() tfbridge.ProviderInfo {
 						// Keep API values out of the bridge's property-name rewriter.
 						content = bytes.ReplaceAll(content, []byte("`instances_changed`"), []byte(`'instances\_changed'`))
 						content = bytes.ReplaceAll(content, []byte("`no_longer_matching`"), []byte(`'no\_longer\_matching'`))
+						content = bytes.ReplaceAll(content, []byte("`expire`"), []byte("'expire'"))
 						content = withoutExample(content, "\n# Track each failing service as its own occurrence.", "\n```")
 						return replaceImportSection(content, alertImportSection), nil
 					},
@@ -151,7 +176,25 @@ func Provider() tfbridge.ProviderInfo {
 				}, {
 					Path: "project.md",
 					Edit: func(_ string, content []byte) ([]byte, error) {
+						content = bytes.ReplaceAll(content,
+							[]byte("Set `lifecycle { prevent_destroy = true }` to block it."),
+							[]byte("Set the `protect` resource option to block it."))
+						content = bytes.ReplaceAll(content,
+							[]byte("A new name for the same organization, a name that is not known yet, "+
+								"or a name the instance does not list yet updates in place."),
+							[]byte("A new name for the same organization updates in place. A preview shows an "+
+								"in-place update when the name is not known yet or the instance does not list it yet, "+
+								"but `pulumi up` compares again once the name resolves. A project moved into an "+
+								"organization that the same update creates is then replaced, so create the "+
+								"organization in an earlier update."))
 						return replaceImportSection(content, projectImportSection), nil
+					},
+				}, {
+					Path: "group_mappings.md",
+					Edit: func(_ string, content []byte) ([]byte, error) {
+						content = []byte(groupMappingsDocs.Replace(string(content)))
+						content = withoutExample(content, "\n## Example Usage", "\n## Conflict with the Helm value")
+						return replaceImportSection(content, groupMappingsImportSection), nil
 					},
 				}}, defaults...)
 			},
@@ -214,6 +257,8 @@ func Provider() tfbridge.ProviderInfo {
 	for res, fallback := range map[string]string{"logfire_project": "project", "logfire_organization": "organization"} {
 		prov.Resources[res].Fields = map[string]*tfbridge.SchemaInfo{"name": slugAutoName(fallback)}
 	}
+	// Null for a project in the organization of the credential.
+	prov.Resources["logfire_project"].Fields["organization_id"] = &tfbridge.SchemaInfo{MarkAsOptional: tfbridge.True()}
 
 	prov.MustApplyAutoAliases()
 	prov.SetAutonaming(255, "-")

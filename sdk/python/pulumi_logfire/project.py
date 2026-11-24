@@ -21,69 +21,13 @@ class ProjectArgs:
     def __init__(__self__, *,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 organization: Optional[pulumi.Input[_builtins.str]] = None,
                  visibility: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Project resource.
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
-        :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
-        """
-        if description is not None:
-            pulumi.set(__self__, "description", description)
-        if name is not None:
-            pulumi.set(__self__, "name", name)
-        if visibility is not None:
-            pulumi.set(__self__, "visibility", visibility)
-
-    @_builtins.property
-    @pulumi.getter
-    def description(self) -> Optional[pulumi.Input[_builtins.str]]:
-        """
-        Project description.
-        """
-        return pulumi.get(self, "description")
-
-    @description.setter
-    def description(self, value: Optional[pulumi.Input[_builtins.str]]):
-        pulumi.set(self, "description", value)
-
-    @_builtins.property
-    @pulumi.getter
-    def name(self) -> Optional[pulumi.Input[_builtins.str]]:
-        """
-        Project name/slug. Must be unique within the organization.
-        """
-        return pulumi.get(self, "name")
-
-    @name.setter
-    def name(self, value: Optional[pulumi.Input[_builtins.str]]):
-        pulumi.set(self, "name", value)
-
-    @_builtins.property
-    @pulumi.getter
-    def visibility(self) -> Optional[pulumi.Input[_builtins.str]]:
-        """
-        Project visibility (`public` or `private`).
-        """
-        return pulumi.get(self, "visibility")
-
-    @visibility.setter
-    def visibility(self, value: Optional[pulumi.Input[_builtins.str]]):
-        pulumi.set(self, "visibility", value)
-
-
-@pulumi.input_type
-class _ProjectState:
-    def __init__(__self__, *,
-                 description: Optional[pulumi.Input[_builtins.str]] = None,
-                 name: Optional[pulumi.Input[_builtins.str]] = None,
-                 organization: Optional[pulumi.Input[_builtins.str]] = None,
-                 visibility: Optional[pulumi.Input[_builtins.str]] = None):
-        """
-        Input properties used for looking up and filtering Project resources.
-        :param pulumi.Input[_builtins.str] description: Project description.
-        :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
-        :param pulumi.Input[_builtins.str] organization: Organization name. Computed from the API and cannot be set.
+        :param pulumi.Input[_builtins.str] organization: Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
         :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         if description is not None:
@@ -123,13 +67,101 @@ class _ProjectState:
     @pulumi.getter
     def organization(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Organization name. Computed from the API and cannot be set.
+        Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
         """
         return pulumi.get(self, "organization")
 
     @organization.setter
     def organization(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "organization", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def visibility(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Project visibility (`public` or `private`).
+        """
+        return pulumi.get(self, "visibility")
+
+    @visibility.setter
+    def visibility(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "visibility", value)
+
+
+@pulumi.input_type
+class _ProjectState:
+    def __init__(__self__, *,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 name: Optional[pulumi.Input[_builtins.str]] = None,
+                 organization: Optional[pulumi.Input[_builtins.str]] = None,
+                 organization_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 visibility: Optional[pulumi.Input[_builtins.str]] = None):
+        """
+        Input properties used for looking up and filtering Project resources.
+        :param pulumi.Input[_builtins.str] description: Project description.
+        :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
+        :param pulumi.Input[_builtins.str] organization: Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
+        :param pulumi.Input[_builtins.str] organization_id: ID of the organization that the project is in. Set when the project is in a named organization, through the `organization` argument or the provider `organization`. Null for a project in the organization of the credential.
+        :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
+        """
+        if description is not None:
+            pulumi.set(__self__, "description", description)
+        if name is not None:
+            pulumi.set(__self__, "name", name)
+        if organization is not None:
+            pulumi.set(__self__, "organization", organization)
+        if organization_id is not None:
+            pulumi.set(__self__, "organization_id", organization_id)
+        if visibility is not None:
+            pulumi.set(__self__, "visibility", visibility)
+
+    @_builtins.property
+    @pulumi.getter
+    def description(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Project description.
+        """
+        return pulumi.get(self, "description")
+
+    @description.setter
+    def description(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "description", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def name(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Project name/slug. Must be unique within the organization.
+        """
+        return pulumi.get(self, "name")
+
+    @name.setter
+    def name(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "name", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def organization(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
+        """
+        return pulumi.get(self, "organization")
+
+    @organization.setter
+    def organization(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "organization", value)
+
+    @_builtins.property
+    @pulumi.getter(name="organizationId")
+    def organization_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        ID of the organization that the project is in. Set when the project is in a named organization, through the `organization` argument or the provider `organization`. Null for a project in the organization of the credential.
+        """
+        return pulumi.get(self, "organization_id")
+
+    @organization_id.setter
+    def organization_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "organization_id", value)
 
     @_builtins.property
     @pulumi.getter
@@ -152,10 +184,11 @@ class Project(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 organization: Optional[pulumi.Input[_builtins.str]] = None,
                  visibility: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.
+        Manages a Logfire project. By default the credential creates the project in its own organization and must hold `organization:create_project`. On a self-hosted instance, an instance-admin credential creates the project in another organization with the `organization` argument or the provider `organization`.
 
         ## Example Usage
 
@@ -179,6 +212,7 @@ class Project(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
+        :param pulumi.Input[_builtins.str] organization: Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
         :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         ...
@@ -188,7 +222,7 @@ class Project(pulumi.CustomResource):
                  args: Optional[ProjectArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.
+        Manages a Logfire project. By default the credential creates the project in its own organization and must hold `organization:create_project`. On a self-hosted instance, an instance-admin credential creates the project in another organization with the `organization` argument or the provider `organization`.
 
         ## Example Usage
 
@@ -225,6 +259,7 @@ class Project(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  description: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 organization: Optional[pulumi.Input[_builtins.str]] = None,
                  visibility: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -237,8 +272,9 @@ class Project(pulumi.CustomResource):
 
             __props__.__dict__["description"] = description
             __props__.__dict__["name"] = name
+            __props__.__dict__["organization"] = organization
             __props__.__dict__["visibility"] = visibility
-            __props__.__dict__["organization"] = None
+            __props__.__dict__["organization_id"] = None
         super(Project, __self__).__init__(
             'logfire:index/project:Project',
             resource_name,
@@ -252,6 +288,7 @@ class Project(pulumi.CustomResource):
             description: Optional[pulumi.Input[_builtins.str]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
             organization: Optional[pulumi.Input[_builtins.str]] = None,
+            organization_id: Optional[pulumi.Input[_builtins.str]] = None,
             visibility: Optional[pulumi.Input[_builtins.str]] = None) -> 'Project':
         """
         Get an existing Project resource's state with the given name, id, and optional extra
@@ -262,7 +299,8 @@ class Project(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] description: Project description.
         :param pulumi.Input[_builtins.str] name: Project name/slug. Must be unique within the organization.
-        :param pulumi.Input[_builtins.str] organization: Organization name. Computed from the API and cannot be set.
+        :param pulumi.Input[_builtins.str] organization: Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
+        :param pulumi.Input[_builtins.str] organization_id: ID of the organization that the project is in. Set when the project is in a named organization, through the `organization` argument or the provider `organization`. Null for a project in the organization of the credential.
         :param pulumi.Input[_builtins.str] visibility: Project visibility (`public` or `private`).
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
@@ -272,6 +310,7 @@ class Project(pulumi.CustomResource):
         __props__.__dict__["description"] = description
         __props__.__dict__["name"] = name
         __props__.__dict__["organization"] = organization
+        __props__.__dict__["organization_id"] = organization_id
         __props__.__dict__["visibility"] = visibility
         return Project(resource_name, opts=opts, __props__=__props__)
 
@@ -295,9 +334,17 @@ class Project(pulumi.CustomResource):
     @pulumi.getter
     def organization(self) -> pulumi.Output[_builtins.str]:
         """
-        Organization name. Computed from the API and cannot be set.
+        Organization name. Defaults to the provider `organization`, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than `organization_id`. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the `protect` resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.
         """
         return pulumi.get(self, "organization")
+
+    @_builtins.property
+    @pulumi.getter(name="organizationId")
+    def organization_id(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        ID of the organization that the project is in. Set when the project is in a named organization, through the `organization` argument or the provider `organization`. Null for a project in the organization of the credential.
+        """
+        return pulumi.get(self, "organization_id")
 
     @_builtins.property
     @pulumi.getter

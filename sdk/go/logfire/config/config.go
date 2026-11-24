@@ -25,3 +25,8 @@ func GetBaseUrl(ctx *pulumi.Context) string {
 func GetCustomHeaders(ctx *pulumi.Context) string {
 	return config.Get(ctx, "logfire:customHeaders")
 }
+
+// Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `Project` overrides this value.
+func GetOrganization(ctx *pulumi.Context) string {
+	return config.Get(ctx, "logfire:organization")
+}

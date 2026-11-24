@@ -59,6 +59,10 @@
                 },
                 "description": "Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.",
                 "secret": true
+            },
+            "organization": {
+                "type": "string",
+                "description": "Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin \u003cspan pulumi-lang-nodejs=\"`apiKey`\" pulumi-lang-dotnet=\"`ApiKey`\" pulumi-lang-go=\"`apiKey`\" pulumi-lang-python=\"`api_key`\" pulumi-lang-yaml=\"`apiKey`\" pulumi-lang-java=\"`apiKey`\"\u003e`api_key`\u003c/span\u003e for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the \u003cspan pulumi-lang-nodejs=\"`apiKey`\" pulumi-lang-dotnet=\"`ApiKey`\" pulumi-lang-go=\"`apiKey`\" pulumi-lang-python=\"`api_key`\" pulumi-lang-yaml=\"`apiKey`\" pulumi-lang-java=\"`apiKey`\"\u003e`api_key`\u003c/span\u003e. The \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e argument of \u003cspan pulumi-lang-nodejs=\"`logfire.Project`\" pulumi-lang-dotnet=\"`logfire.Project`\" pulumi-lang-go=\"`Project`\" pulumi-lang-python=\"`Project`\" pulumi-lang-yaml=\"`logfire.Project`\" pulumi-lang-java=\"`logfire.Project`\"\u003e`logfire.Project`\u003c/span\u003e overrides this value."
             }
         }
     },
@@ -90,7 +94,7 @@
                 },
                 "missingBehavior": {
                     "type": "string",
-                    "description": "The close reason of an occurrence that is missing for \u003cspan pulumi-lang-nodejs=\"`missingRuns`\" pulumi-lang-dotnet=\"`MissingRuns`\" pulumi-lang-go=\"`missingRuns`\" pulumi-lang-python=\"`missing_runs`\" pulumi-lang-yaml=\"`missingRuns`\" pulumi-lang-java=\"`missingRuns`\"\u003e`missing_runs`\u003c/span\u003e runs. One of 'no_longer_matching' or \u003cspan pulumi-lang-nodejs=\"`expire`\" pulumi-lang-dotnet=\"`Expire`\" pulumi-lang-go=\"`expire`\" pulumi-lang-python=\"`expire`\" pulumi-lang-yaml=\"`expire`\" pulumi-lang-java=\"`expire`\"\u003e`expire`\u003c/span\u003e.\n"
+                    "description": "The close reason of an occurrence that is missing for \u003cspan pulumi-lang-nodejs=\"`missingRuns`\" pulumi-lang-dotnet=\"`MissingRuns`\" pulumi-lang-go=\"`missingRuns`\" pulumi-lang-python=\"`missing_runs`\" pulumi-lang-yaml=\"`missingRuns`\" pulumi-lang-java=\"`missingRuns`\"\u003e`missing_runs`\u003c/span\u003e runs. One of 'no_longer_matching' or 'expire'.\n"
                 },
                 "missingRuns": {
                     "type": "integer",
@@ -217,6 +221,76 @@
             "type": "object",
             "required": [
                 "providerId"
+            ]
+        },
+        "logfire:index/GroupMappingsMapping:GroupMappingsMapping": {
+            "properties": {
+                "groupId": {
+                    "type": "string",
+                    "description": "The identity-provider group ID. Each group ID appears once.\n"
+                },
+                "organizationRoles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/logfire:index/GroupMappingsMappingOrganizationRole:GroupMappingsMappingOrganizationRole"
+                    },
+                    "description": "The roles that members of the group get in organizations.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "groupId",
+                "organizationRoles"
+            ]
+        },
+        "logfire:index/GroupMappingsMappingOrganizationRole:GroupMappingsMappingOrganizationRole": {
+            "properties": {
+                "organization": {
+                    "type": "string",
+                    "description": "The organization name. The organization must exist.\n"
+                },
+                "projectRoles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/logfire:index/GroupMappingsMappingOrganizationRoleProjectRole:GroupMappingsMappingOrganizationRoleProjectRole"
+                    },
+                    "description": "The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.\n"
+                },
+                "role": {
+                    "type": "string",
+                    "description": "The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "organization",
+                "role"
+            ],
+            "language": {
+                "nodejs": {
+                    "requiredOutputs": [
+                        "organization",
+                        "projectRoles",
+                        "role"
+                    ]
+                }
+            }
+        },
+        "logfire:index/GroupMappingsMappingOrganizationRoleProjectRole:GroupMappingsMappingOrganizationRoleProjectRole": {
+            "properties": {
+                "project": {
+                    "type": "string",
+                    "description": "The project name. The project must exist in the organization.\n"
+                },
+                "role": {
+                    "type": "string",
+                    "description": "The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "project",
+                "role"
             ]
         },
         "logfire:index/ScheduleWindow:ScheduleWindow": {
@@ -440,6 +514,10 @@
                 },
                 "description": "Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.",
                 "secret": true
+            },
+            "organization": {
+                "type": "string",
+                "description": "Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin \u003cspan pulumi-lang-nodejs=\"`apiKey`\" pulumi-lang-dotnet=\"`ApiKey`\" pulumi-lang-go=\"`apiKey`\" pulumi-lang-python=\"`api_key`\" pulumi-lang-yaml=\"`apiKey`\" pulumi-lang-java=\"`apiKey`\"\u003e`api_key`\u003c/span\u003e for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the \u003cspan pulumi-lang-nodejs=\"`apiKey`\" pulumi-lang-dotnet=\"`ApiKey`\" pulumi-lang-go=\"`apiKey`\" pulumi-lang-python=\"`api_key`\" pulumi-lang-yaml=\"`apiKey`\" pulumi-lang-java=\"`apiKey`\"\u003e`api_key`\u003c/span\u003e. The \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e argument of \u003cspan pulumi-lang-nodejs=\"`logfire.Project`\" pulumi-lang-dotnet=\"`logfire.Project`\" pulumi-lang-go=\"`Project`\" pulumi-lang-python=\"`Project`\" pulumi-lang-yaml=\"`logfire.Project`\" pulumi-lang-java=\"`logfire.Project`\"\u003e`logfire.Project`\u003c/span\u003e overrides this value."
             }
         },
         "inputProperties": {
@@ -459,6 +537,10 @@
                 },
                 "description": "Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.",
                 "secret": true
+            },
+            "organization": {
+                "type": "string",
+                "description": "Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin \u003cspan pulumi-lang-nodejs=\"`apiKey`\" pulumi-lang-dotnet=\"`ApiKey`\" pulumi-lang-go=\"`apiKey`\" pulumi-lang-python=\"`api_key`\" pulumi-lang-yaml=\"`apiKey`\" pulumi-lang-java=\"`apiKey`\"\u003e`api_key`\u003c/span\u003e for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the \u003cspan pulumi-lang-nodejs=\"`apiKey`\" pulumi-lang-dotnet=\"`ApiKey`\" pulumi-lang-go=\"`apiKey`\" pulumi-lang-python=\"`api_key`\" pulumi-lang-yaml=\"`apiKey`\" pulumi-lang-java=\"`apiKey`\"\u003e`api_key`\u003c/span\u003e. The \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e argument of \u003cspan pulumi-lang-nodejs=\"`logfire.Project`\" pulumi-lang-dotnet=\"`logfire.Project`\" pulumi-lang-go=\"`Project`\" pulumi-lang-python=\"`Project`\" pulumi-lang-yaml=\"`logfire.Project`\" pulumi-lang-java=\"`logfire.Project`\"\u003e`logfire.Project`\u003c/span\u003e overrides this value."
             }
         },
         "methods": {
@@ -1637,8 +1719,57 @@
                 "type": "object"
             }
         },
+        "logfire:index/groupMappings:GroupMappings": {
+            "description": "Manages the identity-provider group mapping of a self-hosted Logfire instance. The mapping assigns organization and project roles to the members of identity-provider groups at their next sign-in. The instance has one mapping, so declare this resource once. It conflicts with the Helm value `groupOrganizationMapping`, which overrides the mapping that the API stores. The provider credential must be an API key from the admin organization with the `instance:admin` scope (`organization:admin` is equivalent).\n\n## Conflict with the Helm value\n\nThe Helm value `groupOrganizationMapping` overrides the mapping that the API stores.\nWhile it is set, sign-in and SCIM group updates ignore this resource. Create fails\nbefore it writes, because it reads \u003cspan pulumi-lang-nodejs=\"`apiMappingStatus`\" pulumi-lang-dotnet=\"`ApiMappingStatus`\" pulumi-lang-go=\"`apiMappingStatus`\" pulumi-lang-python=\"`api_mapping_status`\" pulumi-lang-yaml=\"`apiMappingStatus`\" pulumi-lang-java=\"`apiMappingStatus`\"\u003e`api_mapping_status`\u003c/span\u003e first. Update and destroy\nfail on the 409 that the API answers to a write. A refresh warns and sets\n\u003cspan pulumi-lang-nodejs=\"`apiMappingStatus`\" pulumi-lang-dotnet=\"`ApiMappingStatus`\" pulumi-lang-go=\"`apiMappingStatus`\" pulumi-lang-python=\"`api_mapping_status`\" pulumi-lang-yaml=\"`apiMappingStatus`\" pulumi-lang-java=\"`apiMappingStatus`\"\u003e`api_mapping_status`\u003c/span\u003e to 'overridden\\_by\\_environment'. Remove the Helm value to manage\nthe mapping with Pulumi.\n\n## When the mapping applies\n\nThe mapping applies at each user's next sign-in. A SCIM group `PATCH` that adds or\nremoves a member applies the mapping to that member at once. For every organization\nand project that it lists, the change adds, changes, or removes the user's access to\nmatch the user's identity-provider groups. When several groups grant a role in the\nsame scope, the most permissive role applies. Membership in a user's own personal\norganization is never removed. Neither a sign-in nor a SCIM update removes the last\nadmin of an organization or lowers that admin's role. The instance skips that change\nand logs a warning. Organizations that the mapping does not list stay unchanged. In a\nlisted organization, sign-in manages only the projects listed in \u003cspan pulumi-lang-nodejs=\"`projectRoles`\" pulumi-lang-dotnet=\"`ProjectRoles`\" pulumi-lang-go=\"`projectRoles`\" pulumi-lang-python=\"`project_roles`\" pulumi-lang-yaml=\"`projectRoles`\" pulumi-lang-java=\"`projectRoles`\"\u003e`project_roles`\u003c/span\u003e,\nwith one exception. When a sign-in or a SCIM update removes the user from a listed\norganization, it also removes all of the user's project memberships in that organization, including\nprojects that \u003cspan pulumi-lang-nodejs=\"`projectRoles`\" pulumi-lang-dotnet=\"`ProjectRoles`\" pulumi-lang-go=\"`projectRoles`\" pulumi-lang-python=\"`project_roles`\" pulumi-lang-yaml=\"`projectRoles`\" pulumi-lang-java=\"`projectRoles`\"\u003e`project_roles`\u003c/span\u003e does not list.\n\nBefore Logfire v2026-11-11.02, SCIM updates differ in two ways. Removing a user from one\ngroup can also remove access that another of the user's groups still grants, until the\nnext sign-in restores it. Removing a user from a listed organization leaves the user's\nproject memberships in that organization.\n\n## Role names are not validated\n\nThe API does not check role names. A wrong name gives no error. The sign-in skips\nthe role and the instance writes a warning to its log. The provider cannot check\nnames either, because roles belong to each organization. Compare each name with\nthe roles of its organization or project. Organizations and projects must exist,\nand the API answers a missing name with a 400.\n\n## Create, update, and destroy\n\nCreate reads the stored mapping first. It fails when the instance already stores a\nmapping, so Pulumi does not replace access rules that someone else wrote. The API\nitself would accept the write, so this check belongs to the provider. Import the stored\nmapping, copy it into the configuration, and apply. Import it the same way after a\ncreate that failed once the instance had stored the mapping.\n\nTo rename the resource or move it under another parent, add an alias with its old URN\nto the \u003cspan pulumi-lang-nodejs=\"`aliases`\" pulumi-lang-dotnet=\"`Aliases`\" pulumi-lang-go=\"`aliases`\" pulumi-lang-python=\"`aliases`\" pulumi-lang-yaml=\"`aliases`\" pulumi-lang-java=\"`aliases`\"\u003e`aliases`\u003c/span\u003e resource option. Without one, Pulumi creates the new resource before it\ndeletes the old one, and the create fails because the instance still stores the mapping.\n\nCreate and update replace the whole mapping, in the order of the list. The API has\nno version and no lock, so when two writers update the mapping, the last write wins.\nDeclare this resource in one Pulumi stack per instance. The provider\ncannot detect a second declaration in another stack. The create\ncheck sees only what is stored when it runs, so two declarations that create before\neither stores a mapping both pass it. After that, each apply replaces the other's\nmapping, and the last apply wins.\n\nDestroy stores an empty mapping. It stops managing the scopes that the mapping\nlisted. It does not restore access that earlier sign-ins changed or removed.\n\n## Requirements\n\nThis resource is only available on self-hosted deployments. It needs Logfire\nv2026-07-22.02 or newer (Helm chart logfire-0.13.36 or newer), the first release\nthat reports \u003cspan pulumi-lang-nodejs=\"`apiMappingStatus`\" pulumi-lang-dotnet=\"`ApiMappingStatus`\" pulumi-lang-go=\"`apiMappingStatus`\" pulumi-lang-python=\"`api_mapping_status`\" pulumi-lang-yaml=\"`apiMappingStatus`\" pulumi-lang-java=\"`apiMappingStatus`\"\u003e`api_mapping_status`\u003c/span\u003e and answers 409 while the Helm value overrides\nthe API. The provider credential is an API key from the admin organization with\nthe `instance:admin` scope. The equivalent `organization:admin` scope also works.\n\n## Import\n\nThe instance has one group mapping, so the import ID is always `instance`:\n\n```sh\n$ pulumi import logfire:index/groupMappings:GroupMappings this \"instance\"\n```\n",
+            "properties": {
+                "apiMappingStatus": {
+                    "type": "string",
+                    "description": "'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.\n"
+                },
+                "mappings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/logfire:index/GroupMappingsMapping:GroupMappingsMapping"
+                    },
+                    "description": "The complete mapping, in the order that the instance stores it. An empty list stores no mapping.\n"
+                }
+            },
+            "required": [
+                "apiMappingStatus",
+                "mappings"
+            ],
+            "inputProperties": {
+                "mappings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/logfire:index/GroupMappingsMapping:GroupMappingsMapping"
+                    },
+                    "description": "The complete mapping, in the order that the instance stores it. An empty list stores no mapping.\n"
+                }
+            },
+            "requiredInputs": [
+                "mappings"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering GroupMappings resources.\n",
+                "properties": {
+                    "apiMappingStatus": {
+                        "type": "string",
+                        "description": "'active' when sign-in uses the stored mapping. 'overridden_by_environment' when the Helm value `groupOrganizationMapping` is set, which makes the stored mapping unused.\n"
+                    },
+                    "mappings": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/logfire:index/GroupMappingsMapping:GroupMappingsMapping"
+                        },
+                        "description": "The complete mapping, in the order that the instance stores it. An empty list stores no mapping.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "logfire:index/organization:Organization": {
-            "description": "Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, and the same exchange backs setting \u003cspan pulumi-lang-nodejs=\"`billingEmail`\" pulumi-lang-dotnet=\"`BillingEmail`\" pulumi-lang-go=\"`billingEmail`\" pulumi-lang-python=\"`billing_email`\" pulumi-lang-yaml=\"`billingEmail`\" pulumi-lang-java=\"`billingEmail`\"\u003e`billing_email`\u003c/span\u003e at creation, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst example = new logfire.Organization(\"example\", {\n    deletionProtection: false,\n    displayName: \"Terraform Example Org\",\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample = logfire.Organization(\"example\",\n    deletion_protection=False,\n    display_name=\"Terraform Example Org\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Logfire.Organization(\"example\", new()\n    {\n        DeletionProtection = false,\n        DisplayName = \"Terraform Example Org\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewOrganization(ctx, \"example\", \u0026logfire.OrganizationArgs{\n\t\t\tDeletionProtection: pulumi.Bool(false),\n\t\t\tDisplayName:        pulumi.String(\"Terraform Example Org\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Organization;\nimport com.pulumi.logfire.OrganizationArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Organization(\"example\", OrganizationArgs.builder()\n            .deletionProtection(false)\n            .displayName(\"Terraform Example Org\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: logfire:Organization\n    properties:\n      # This defaults to true. Set false to allow destroy.\n      deletionProtection: false\n      displayName: Terraform Example Org\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\nImport an existing organization by name or UUID. The provider credential must be\n\nan API key from the admin organization carrying the `organization:admin` scope.\n\nBy name:\n\n```sh\n$ pulumi import logfire:index/organization:Organization example' \"terraform-example-org\"\n```\n\nBy UUID:\n\n```sh\n$ pulumi import logfire:index/organization:Organization example' \"9f9b2f9e-aaaa-bbbb-cccc-ddddeeeeffff\"\n```\n\n",
+            "description": "Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst example = new logfire.Organization(\"example\", {\n    deletionProtection: false,\n    displayName: \"Terraform Example Org\",\n});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample = logfire.Organization(\"example\",\n    deletion_protection=False,\n    display_name=\"Terraform Example Org\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Logfire.Organization(\"example\", new()\n    {\n        DeletionProtection = false,\n        DisplayName = \"Terraform Example Org\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewOrganization(ctx, \"example\", \u0026logfire.OrganizationArgs{\n\t\t\tDeletionProtection: pulumi.Bool(false),\n\t\t\tDisplayName:        pulumi.String(\"Terraform Example Org\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Organization;\nimport com.pulumi.logfire.OrganizationArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Organization(\"example\", OrganizationArgs.builder()\n            .deletionProtection(false)\n            .displayName(\"Terraform Example Org\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: logfire:Organization\n    properties:\n      # This defaults to true. Set false to allow destroy.\n      deletionProtection: false\n      displayName: Terraform Example Org\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nThe `pulumi import` command can be used, for example:\n\nImport an existing organization by name or UUID. The provider credential must be\n\nan API key from the admin organization carrying the `organization:admin` scope.\n\nBy name:\n\n```sh\n$ pulumi import logfire:index/organization:Organization example' \"terraform-example-org\"\n```\n\nBy UUID:\n\n```sh\n$ pulumi import logfire:index/organization:Organization example' \"9f9b2f9e-aaaa-bbbb-cccc-ddddeeeeffff\"\n```\n\n",
             "properties": {
                 "aiEnabled": {
                     "type": "boolean",
@@ -1650,7 +1781,8 @@
                 },
                 "billingEmail": {
                     "type": "string",
-                    "description": "Billing contact email.\n"
+                    "description": "Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.\n",
+                    "deprecationMessage": "Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0."
                 },
                 "createdAt": {
                     "type": "string",
@@ -1696,7 +1828,6 @@
             "required": [
                 "aiEnabled",
                 "avatar",
-                "billingEmail",
                 "createdAt",
                 "deletionProtection",
                 "description",
@@ -1715,7 +1846,8 @@
                 },
                 "billingEmail": {
                     "type": "string",
-                    "description": "Billing contact email.\n"
+                    "description": "Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.\n",
+                    "deprecationMessage": "Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0."
                 },
                 "deletionProtection": {
                     "type": "boolean",
@@ -1755,7 +1887,8 @@
                     },
                     "billingEmail": {
                         "type": "string",
-                        "description": "Billing contact email.\n"
+                        "description": "Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.\n",
+                        "deprecationMessage": "Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0."
                     },
                     "createdAt": {
                         "type": "string",
@@ -1802,7 +1935,7 @@
             }
         },
         "logfire:index/project:Project": {
-            "description": "Manages a Logfire project. The credential creates the project in its own organization and must hold `organization:create_project`.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst example = new logfire.Project(\"example\", {description: \"Managed by Pulumi\"});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample = logfire.Project(\"example\", description=\"Managed by Pulumi\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Logfire.Project(\"example\", new()\n    {\n        Description = \"Managed by Pulumi\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewProject(ctx, \"example\", \u0026logfire.ProjectArgs{\n\t\t\tDescription: pulumi.String(\"Managed by Pulumi\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Project;\nimport com.pulumi.logfire.ProjectArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Project(\"example\", ProjectArgs.builder()\n            .description(\"Managed by Pulumi\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: logfire:Project\n    properties:\n      description: Managed by Pulumi\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nImport by organization name and project name:\n\n```sh\n$ pulumi import logfire:index/project:Project example \"acme/example-project\"\n```\nSingle project UUID/name imports are also supported.\n\n",
+            "description": "Manages a Logfire project. By default the credential creates the project in its own organization and must hold `organization:create_project`. On a self-hosted instance, an instance-admin credential creates the project in another organization with the \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e argument or the provider \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as logfire from \"@pydantic/pulumi-logfire\";\n\nconst example = new logfire.Project(\"example\", {description: \"Managed by Pulumi\"});\n```\n```python\nimport pulumi\nimport pulumi_logfire as logfire\n\nexample = logfire.Project(\"example\", description=\"Managed by Pulumi\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Logfire = Pulumi.Logfire;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Logfire.Project(\"example\", new()\n    {\n        Description = \"Managed by Pulumi\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n\t\"github.com/pydantic/pulumi-logfire/sdk/go/logfire\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := logfire.NewProject(ctx, \"example\", \u0026logfire.ProjectArgs{\n\t\t\tDescription: pulumi.String(\"Managed by Pulumi\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.logfire.Project;\nimport com.pulumi.logfire.ProjectArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Project(\"example\", ProjectArgs.builder()\n            .description(\"Managed by Pulumi\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: logfire:Project\n    properties:\n      description: Managed by Pulumi\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nImport by organization name and project name:\n\n```sh\n$ pulumi import logfire:index/project:Project example \"acme/example-project\"\n```\nSingle project UUID/name imports are also supported.\n\n",
             "properties": {
                 "description": {
                     "type": "string",
@@ -1814,7 +1947,11 @@
                 },
                 "organization": {
                     "type": "string",
-                    "description": "Organization name. Computed from the API and cannot be set.\n"
+                    "description": "Organization name. Defaults to the provider \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than \u003cspan pulumi-lang-nodejs=\"`organizationId`\" pulumi-lang-dotnet=\"`OrganizationId`\" pulumi-lang-go=\"`organizationId`\" pulumi-lang-python=\"`organization_id`\" pulumi-lang-yaml=\"`organizationId`\" pulumi-lang-java=\"`organizationId`\"\u003e`organization_id`\u003c/span\u003e. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the \u003cspan pulumi-lang-nodejs=\"`protect`\" pulumi-lang-dotnet=\"`Protect`\" pulumi-lang-go=\"`protect`\" pulumi-lang-python=\"`protect`\" pulumi-lang-yaml=\"`protect`\" pulumi-lang-java=\"`protect`\"\u003e`protect`\u003c/span\u003e resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.\n"
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "ID of the organization that the project is in. Set when the project is in a named organization, through the \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e argument or the provider \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e. Null for a project in the organization of the credential.\n"
                 },
                 "visibility": {
                     "type": "string",
@@ -1835,6 +1972,10 @@
                     "type": "string",
                     "description": "Project name/slug. Must be unique within the organization.\n"
                 },
+                "organization": {
+                    "type": "string",
+                    "description": "Organization name. Defaults to the provider \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than \u003cspan pulumi-lang-nodejs=\"`organizationId`\" pulumi-lang-dotnet=\"`OrganizationId`\" pulumi-lang-go=\"`organizationId`\" pulumi-lang-python=\"`organization_id`\" pulumi-lang-yaml=\"`organizationId`\" pulumi-lang-java=\"`organizationId`\"\u003e`organization_id`\u003c/span\u003e. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the \u003cspan pulumi-lang-nodejs=\"`protect`\" pulumi-lang-dotnet=\"`Protect`\" pulumi-lang-go=\"`protect`\" pulumi-lang-python=\"`protect`\" pulumi-lang-yaml=\"`protect`\" pulumi-lang-java=\"`protect`\"\u003e`protect`\u003c/span\u003e resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.\n"
+                },
                 "visibility": {
                     "type": "string",
                     "description": "Project visibility (\u003cspan pulumi-lang-nodejs=\"`public`\" pulumi-lang-dotnet=\"`Public`\" pulumi-lang-go=\"`public`\" pulumi-lang-python=\"`public`\" pulumi-lang-yaml=\"`public`\" pulumi-lang-java=\"`public`\"\u003e`public`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`private`\" pulumi-lang-dotnet=\"`Private`\" pulumi-lang-go=\"`private`\" pulumi-lang-python=\"`private`\" pulumi-lang-yaml=\"`private`\" pulumi-lang-java=\"`private`\"\u003e`private`\u003c/span\u003e).\n"
@@ -1853,7 +1994,11 @@
                     },
                     "organization": {
                         "type": "string",
-                        "description": "Organization name. Computed from the API and cannot be set.\n"
+                        "description": "Organization name. Defaults to the provider \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e, else the organization of the provider credential. Setting it acts in that organization through the instance-admin token exchange (self-hosted only). Changing it replaces the project when the new name is another existing organization than \u003cspan pulumi-lang-nodejs=\"`organizationId`\" pulumi-lang-dotnet=\"`OrganizationId`\" pulumi-lang-go=\"`organizationId`\" pulumi-lang-python=\"`organization_id`\" pulumi-lang-yaml=\"`organizationId`\" pulumi-lang-java=\"`organizationId`\"\u003e`organization_id`\u003c/span\u003e. Logfire cannot move a project between organizations, so a replacement deletes the project with all its data and creates an empty project. Set the \u003cspan pulumi-lang-nodejs=\"`protect`\" pulumi-lang-dotnet=\"`Protect`\" pulumi-lang-go=\"`protect`\" pulumi-lang-python=\"`protect`\" pulumi-lang-yaml=\"`protect`\" pulumi-lang-java=\"`protect`\"\u003e`protect`\u003c/span\u003e resource option to block it. A new name for the same organization updates in place. A preview shows an in-place update when the name is not known yet or the instance does not list it yet, but `pulumi up` compares again once the name resolves. A project moved into an organization that the same update creates is then replaced, so create the organization in an earlier update. After an organization is renamed, a refresh updates this value.\n"
+                    },
+                    "organizationId": {
+                        "type": "string",
+                        "description": "ID of the organization that the project is in. Set when the project is in a named organization, through the \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e argument or the provider \u003cspan pulumi-lang-nodejs=\"`organization`\" pulumi-lang-dotnet=\"`Organization`\" pulumi-lang-go=\"`organization`\" pulumi-lang-python=\"`organization`\" pulumi-lang-yaml=\"`organization`\" pulumi-lang-java=\"`organization`\"\u003e`organization`\u003c/span\u003e. Null for a project in the organization of the credential.\n"
                     },
                     "visibility": {
                         "type": "string",

@@ -29,3 +29,8 @@ customHeaders: Optional[str]
 Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
 """
 
+organization: Optional[str]
+"""
+Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `api_key` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `api_key`. The `organization` argument of `Project` overrides this value.
+"""
+

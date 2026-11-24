@@ -5,7 +5,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 /**
- * Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, and the same exchange backs setting `billingEmail` at creation, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
+ * Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
  *
  * ## Example Usage
  *
@@ -76,9 +76,11 @@ export class Organization extends pulumi.CustomResource {
      */
     declare public readonly avatar: pulumi.Output<string>;
     /**
-     * Billing contact email.
+     * Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+     *
+     * @deprecated Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
      */
-    declare public readonly billingEmail: pulumi.Output<string>;
+    declare public readonly billingEmail: pulumi.Output<string | undefined>;
     /**
      * Timestamp when the organization was created.
      */
@@ -180,7 +182,9 @@ export interface OrganizationState {
      */
     avatar?: pulumi.Input<string>;
     /**
-     * Billing contact email.
+     * Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+     *
+     * @deprecated Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
      */
     billingEmail?: pulumi.Input<string>;
     /**
@@ -234,7 +238,9 @@ export interface OrganizationArgs {
      */
     avatar?: pulumi.Input<string>;
     /**
-     * Billing contact email.
+     * Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
+     *
+     * @deprecated Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.
      */
     billingEmail?: pulumi.Input<string>;
     /**

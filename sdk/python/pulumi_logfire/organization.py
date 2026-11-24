@@ -30,7 +30,7 @@ class OrganizationArgs:
         """
         The set of arguments for constructing a Organization resource.
         :param pulumi.Input[_builtins.str] avatar: Avatar URL.
-        :param pulumi.Input[_builtins.str] billing_email: Billing contact email.
+        :param pulumi.Input[_builtins.str] billing_email: Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         :param pulumi.Input[_builtins.bool] deletion_protection: Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
         :param pulumi.Input[_builtins.str] description: Organization description.
         :param pulumi.Input[_builtins.str] display_name: Display name shown in the UI.
@@ -40,6 +40,9 @@ class OrganizationArgs:
         """
         if avatar is not None:
             pulumi.set(__self__, "avatar", avatar)
+        if billing_email is not None:
+            warnings.warn("""Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""", DeprecationWarning)
+            pulumi.log.warn("""billing_email is deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""")
         if billing_email is not None:
             pulumi.set(__self__, "billing_email", billing_email)
         if deletion_protection is not None:
@@ -69,9 +72,10 @@ class OrganizationArgs:
 
     @_builtins.property
     @pulumi.getter(name="billingEmail")
+    @_utilities.deprecated("""Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""")
     def billing_email(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Billing contact email.
+        Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         """
         return pulumi.get(self, "billing_email")
 
@@ -172,7 +176,7 @@ class _OrganizationState:
         Input properties used for looking up and filtering Organization resources.
         :param pulumi.Input[_builtins.bool] ai_enabled: Whether AI features are enabled.
         :param pulumi.Input[_builtins.str] avatar: Avatar URL.
-        :param pulumi.Input[_builtins.str] billing_email: Billing contact email.
+        :param pulumi.Input[_builtins.str] billing_email: Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the organization was created.
         :param pulumi.Input[_builtins.bool] deletion_protection: Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
         :param pulumi.Input[_builtins.str] description: Organization description.
@@ -188,6 +192,9 @@ class _OrganizationState:
             pulumi.set(__self__, "ai_enabled", ai_enabled)
         if avatar is not None:
             pulumi.set(__self__, "avatar", avatar)
+        if billing_email is not None:
+            warnings.warn("""Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""", DeprecationWarning)
+            pulumi.log.warn("""billing_email is deprecated: Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""")
         if billing_email is not None:
             pulumi.set(__self__, "billing_email", billing_email)
         if created_at is not None:
@@ -237,9 +244,10 @@ class _OrganizationState:
 
     @_builtins.property
     @pulumi.getter(name="billingEmail")
+    @_utilities.deprecated("""Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""")
     def billing_email(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Billing contact email.
+        Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         """
         return pulumi.get(self, "billing_email")
 
@@ -384,7 +392,7 @@ class Organization(pulumi.CustomResource):
                  name: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
-        Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, and the same exchange backs setting `billing_email` at creation, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
+        Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
 
         ## Example Usage
 
@@ -420,7 +428,7 @@ class Organization(pulumi.CustomResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] avatar: Avatar URL.
-        :param pulumi.Input[_builtins.str] billing_email: Billing contact email.
+        :param pulumi.Input[_builtins.str] billing_email: Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         :param pulumi.Input[_builtins.bool] deletion_protection: Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
         :param pulumi.Input[_builtins.str] description: Organization description.
         :param pulumi.Input[_builtins.str] display_name: Display name shown in the UI.
@@ -435,7 +443,7 @@ class Organization(pulumi.CustomResource):
                  args: Optional[OrganizationArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, and the same exchange backs setting `billing_email` at creation, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
+        Manages a Logfire organization. This resource is only available for self-hosted deployments and requires an API key created in the admin organization (the one with the admin panel) carrying the `organization:admin` scope. A key minted inside another organization cannot manage organizations regardless of its scopes. Reading, updating, and deleting an organization authenticates with a short-lived organization-scoped token exchanged from that key, so every operation beyond creating and listing requires a Logfire backend from 2026-06-25 (v2026-06-25.01) or newer; creating and listing organizations require 2026-06-03 (v2026-06-03.01) or newer.
 
         ## Example Usage
 
@@ -545,7 +553,7 @@ class Organization(pulumi.CustomResource):
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] ai_enabled: Whether AI features are enabled.
         :param pulumi.Input[_builtins.str] avatar: Avatar URL.
-        :param pulumi.Input[_builtins.str] billing_email: Billing contact email.
+        :param pulumi.Input[_builtins.str] billing_email: Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         :param pulumi.Input[_builtins.str] created_at: Timestamp when the organization was created.
         :param pulumi.Input[_builtins.bool] deletion_protection: Prevents accidental destroy when true (defaults to true). Set to false and apply before deleting this resource.
         :param pulumi.Input[_builtins.str] description: Organization description.
@@ -594,9 +602,10 @@ class Organization(pulumi.CustomResource):
 
     @_builtins.property
     @pulumi.getter(name="billingEmail")
-    def billing_email(self) -> pulumi.Output[_builtins.str]:
+    @_utilities.deprecated("""Logfire no longer stores an organization billing email, so the provider ignores billing_email. Remove it from the configuration. The attribute will be removed in v0.4.0.""")
+    def billing_email(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        Billing contact email.
+        Logfire no longer stores a billing email for an organization. The provider does not send this value to Logfire and keeps the configured value only in state. It will be removed in v0.4.0.
         """
         return pulumi.get(self, "billing_email")
 

@@ -33,6 +33,10 @@ export class Provider extends pulumi.ProviderResource {
      * Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
      */
     declare public readonly baseUrl: pulumi.Output<string | undefined>;
+    /**
+     * Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `logfire.Project` overrides this value.
+     */
+    declare public readonly organization: pulumi.Output<string | undefined>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -48,6 +52,7 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["apiKey"] = args?.apiKey ? pulumi.secret(args.apiKey) : undefined;
             resourceInputs["baseUrl"] = args?.baseUrl;
             resourceInputs["customHeaders"] = pulumi.output(args?.customHeaders ? pulumi.secret(args.customHeaders) : undefined).apply(JSON.stringify);
+            resourceInputs["organization"] = args?.organization;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         const secretOpts = { additionalSecretOutputs: ["apiKey"] };
@@ -81,6 +86,10 @@ export interface ProviderArgs {
      * Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
      */
     customHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    /**
+     * Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `logfire.Project` overrides this value.
+     */
+    organization?: pulumi.Input<string>;
 }
 
 export namespace Provider {

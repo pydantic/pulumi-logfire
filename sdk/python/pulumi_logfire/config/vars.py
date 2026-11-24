@@ -41,3 +41,10 @@ class _ExportableConfig(types.ModuleType):
         """
         return __config__.get('customHeaders')
 
+    @_builtins.property
+    def organization(self) -> Optional[str]:
+        """
+        Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `api_key` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `api_key`. The `organization` argument of `Project` overrides this value.
+        """
+        return __config__.get('organization')
+

@@ -57,6 +57,51 @@ func TestGeneratedSchema(t *testing.T) {
 		}
 	})
 
+	t.Run("group mappings documentation", func(t *testing.T) {
+		description := generated.PackageSpec.Resources["logfire:index/groupMappings:GroupMappings"].Description
+		for _, want := range []string{
+			"Manages the identity-provider group mapping",
+			"## Conflict with the Helm value",
+			"one Pulumi stack per instance",
+			`$ pulumi import logfire:index/groupMappings:GroupMappings this "instance"`,
+			"add an alias with its old URN",
+		} {
+			if !strings.Contains(description, want) {
+				t.Errorf("group mappings description is missing %q", want)
+			}
+		}
+		for _, unwanted := range []string{"Terraform", "`moved`", "group_id"} {
+			if strings.Contains(description, unwanted) {
+				t.Errorf("group mappings description contains %q", unwanted)
+			}
+		}
+		status := generated.PackageSpec.Resources["logfire:index/groupMappings:GroupMappings"].
+			Properties["apiMappingStatus"].Description
+		if strings.Contains(status, "overriddenByEnvironment") || strings.Contains(status, "`Active`") {
+			t.Errorf("apiMappingStatus values were rewritten as property names: %q", status)
+		}
+	})
+
+	t.Run("project organization", func(t *testing.T) {
+		project := generated.PackageSpec.Resources["logfire:index/project:Project"]
+		description := project.InputProperties["organization"].Description
+		if !strings.Contains(description, "resource option to block it") || strings.Contains(description, "lifecycle") {
+			t.Errorf("organization description is not rewritten for Pulumi: %q", description)
+		}
+		if _, ok := project.Properties["organizationId"]; !ok {
+			t.Error("organizationId output is missing")
+		}
+		if slices.Contains(project.Required, "organizationId") {
+			t.Error("organizationId output must be optional")
+		}
+		if !strings.Contains(description, "create the organization in an earlier update") {
+			t.Errorf("organization description does not warn about same-update moves: %q", description)
+		}
+		if _, ok := project.InputProperties["organizationId"]; ok {
+			t.Error("organizationId must not be an input")
+		}
+	})
+
 	t.Run("dashboard managed edits", func(t *testing.T) {
 		const property = "managedAllowEdits"
 		dashboard := generated.PackageSpec.Resources["logfire:index/dashboard:Dashboard"]

@@ -22,7 +22,7 @@ export interface AlertInstancePolicy {
      */
     identityColumns: string[];
     /**
-     * The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+     * The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
      */
     missingBehavior: string;
     /**
@@ -126,6 +126,43 @@ export interface GatewayEndpointProvider {
      * Positive relative weight among providers with the same priority. Defaults to 1.
      */
     weight?: number;
+}
+
+export interface GroupMappingsMapping {
+    /**
+     * The identity-provider group ID. Each group ID appears once.
+     */
+    groupId: string;
+    /**
+     * The roles that members of the group get in organizations.
+     */
+    organizationRoles: outputs.GroupMappingsMappingOrganizationRole[];
+}
+
+export interface GroupMappingsMappingOrganizationRole {
+    /**
+     * The organization name. The organization must exist.
+     */
+    organization: string;
+    /**
+     * The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+     */
+    projectRoles: outputs.GroupMappingsMappingOrganizationRoleProjectRole[];
+    /**
+     * The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+     */
+    role: string;
+}
+
+export interface GroupMappingsMappingOrganizationRoleProjectRole {
+    /**
+     * The project name. The project must exist in the organization.
+     */
+    project: string;
+    /**
+     * The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+     */
+    role: string;
 }
 
 export interface ScheduleWindow {

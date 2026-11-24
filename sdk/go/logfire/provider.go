@@ -22,6 +22,8 @@ type Provider struct {
 	ApiKey pulumi.StringPtrOutput `pulumi:"apiKey"`
 	// Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 	BaseUrl pulumi.StringPtrOutput `pulumi:"baseUrl"`
+	// Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `Project` overrides this value.
+	Organization pulumi.StringPtrOutput `pulumi:"organization"`
 }
 
 // NewProvider registers a new resource with the given unique name, arguments, and options.
@@ -57,6 +59,8 @@ type providerArgs struct {
 	BaseUrl *string `pulumi:"baseUrl"`
 	// Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
 	CustomHeaders map[string]string `pulumi:"customHeaders"`
+	// Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `Project` overrides this value.
+	Organization *string `pulumi:"organization"`
 }
 
 // The set of arguments for constructing a Provider resource.
@@ -67,6 +71,8 @@ type ProviderArgs struct {
 	BaseUrl pulumi.StringPtrInput
 	// Additional HTTP headers to include on every Logfire API request. Intended for proxy, gateway, or edge authentication. Provider-managed headers cannot be overridden.
 	CustomHeaders pulumi.StringMapInput
+	// Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `Project` overrides this value.
+	Organization pulumi.StringPtrInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {
@@ -137,6 +143,11 @@ func (o ProviderOutput) ApiKey() pulumi.StringPtrOutput {
 // Base URL for the Logfire API. If omitted, the provider uses LOGFIRE_BASE_URL or infers the SaaS endpoint from the apiKey region. Self-hosted customers should set this explicitly.
 func (o ProviderOutput) BaseUrl() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.BaseUrl }).(pulumi.StringPtrOutput)
+}
+
+// Name of the organization that resources act in. Self-hosted instances only. The provider exchanges the instance-admin `apiKey` for a short-lived token for this organization. If omitted, the provider uses LOGFIRE_ORGANIZATION. If neither is set, resources act in the organization of the `apiKey`. The `organization` argument of `Project` overrides this value.
+func (o ProviderOutput) Organization() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringPtrOutput { return v.Organization }).(pulumi.StringPtrOutput)
 }
 
 func init() {

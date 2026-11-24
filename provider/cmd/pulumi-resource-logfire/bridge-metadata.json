@@ -68,6 +68,28 @@
             "logfire_gateway_spending_limits": {
                 "current": "logfire:index/gatewaySpendingLimits:GatewaySpendingLimits"
             },
+            "logfire_group_mappings": {
+                "current": "logfire:index/groupMappings:GroupMappings",
+                "fields": {
+                    "mapping": {
+                        "maxItemsOne": false,
+                        "elem": {
+                            "fields": {
+                                "organization_roles": {
+                                    "maxItemsOne": false,
+                                    "elem": {
+                                        "fields": {
+                                            "project_roles": {
+                                                "maxItemsOne": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "logfire_organization": {
                 "current": "logfire:index/organization:Organization"
             },

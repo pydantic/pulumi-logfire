@@ -122,7 +122,7 @@ func (o AlertChannelAssignmentArrayOutput) Index(i pulumi.IntInput) AlertChannel
 type AlertInstancePolicy struct {
 	// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
 	IdentityColumns []string `pulumi:"identityColumns"`
-	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 	MissingBehavior string `pulumi:"missingBehavior"`
 	// Consecutive runs without the occurrence, 1 to 100, before it closes.
 	MissingRuns int `pulumi:"missingRuns"`
@@ -144,7 +144,7 @@ type AlertInstancePolicyInput interface {
 type AlertInstancePolicyArgs struct {
 	// Result columns whose values identify an occurrence. One to 8 unique names of 1 to 128 characters.
 	IdentityColumns pulumi.StringArrayInput `pulumi:"identityColumns"`
-	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+	// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 	MissingBehavior pulumi.StringInput `pulumi:"missingBehavior"`
 	// Consecutive runs without the occurrence, 1 to 100, before it closes.
 	MissingRuns pulumi.IntInput `pulumi:"missingRuns"`
@@ -234,7 +234,7 @@ func (o AlertInstancePolicyOutput) IdentityColumns() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v AlertInstancePolicy) []string { return v.IdentityColumns }).(pulumi.StringArrayOutput)
 }
 
-// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 func (o AlertInstancePolicyOutput) MissingBehavior() pulumi.StringOutput {
 	return o.ApplyT(func(v AlertInstancePolicy) string { return v.MissingBehavior }).(pulumi.StringOutput)
 }
@@ -283,7 +283,7 @@ func (o AlertInstancePolicyPtrOutput) IdentityColumns() pulumi.StringArrayOutput
 	}).(pulumi.StringArrayOutput)
 }
 
-// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or `expire`.
+// The close reason of an occurrence that is missing for `missingRuns` runs. One of 'no_longer_matching' or 'expire'.
 func (o AlertInstancePolicyPtrOutput) MissingBehavior() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *AlertInstancePolicy) *string {
 		if v == nil {
@@ -994,6 +994,335 @@ func (o GatewayEndpointProviderArrayOutput) Index(i pulumi.IntInput) GatewayEndp
 	return pulumi.All(o, i).ApplyT(func(vs []interface{}) GatewayEndpointProvider {
 		return vs[0].([]GatewayEndpointProvider)[vs[1].(int)]
 	}).(GatewayEndpointProviderOutput)
+}
+
+type GroupMappingsMapping struct {
+	// The identity-provider group ID. Each group ID appears once.
+	GroupId string `pulumi:"groupId"`
+	// The roles that members of the group get in organizations.
+	OrganizationRoles []GroupMappingsMappingOrganizationRole `pulumi:"organizationRoles"`
+}
+
+// GroupMappingsMappingInput is an input type that accepts GroupMappingsMappingArgs and GroupMappingsMappingOutput values.
+// You can construct a concrete instance of `GroupMappingsMappingInput` via:
+//
+//	GroupMappingsMappingArgs{...}
+type GroupMappingsMappingInput interface {
+	pulumi.Input
+
+	ToGroupMappingsMappingOutput() GroupMappingsMappingOutput
+	ToGroupMappingsMappingOutputWithContext(context.Context) GroupMappingsMappingOutput
+}
+
+type GroupMappingsMappingArgs struct {
+	// The identity-provider group ID. Each group ID appears once.
+	GroupId pulumi.StringInput `pulumi:"groupId"`
+	// The roles that members of the group get in organizations.
+	OrganizationRoles GroupMappingsMappingOrganizationRoleArrayInput `pulumi:"organizationRoles"`
+}
+
+func (GroupMappingsMappingArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GroupMappingsMapping)(nil)).Elem()
+}
+
+func (i GroupMappingsMappingArgs) ToGroupMappingsMappingOutput() GroupMappingsMappingOutput {
+	return i.ToGroupMappingsMappingOutputWithContext(context.Background())
+}
+
+func (i GroupMappingsMappingArgs) ToGroupMappingsMappingOutputWithContext(ctx context.Context) GroupMappingsMappingOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GroupMappingsMappingOutput)
+}
+
+// GroupMappingsMappingArrayInput is an input type that accepts GroupMappingsMappingArray and GroupMappingsMappingArrayOutput values.
+// You can construct a concrete instance of `GroupMappingsMappingArrayInput` via:
+//
+//	GroupMappingsMappingArray{ GroupMappingsMappingArgs{...} }
+type GroupMappingsMappingArrayInput interface {
+	pulumi.Input
+
+	ToGroupMappingsMappingArrayOutput() GroupMappingsMappingArrayOutput
+	ToGroupMappingsMappingArrayOutputWithContext(context.Context) GroupMappingsMappingArrayOutput
+}
+
+type GroupMappingsMappingArray []GroupMappingsMappingInput
+
+func (GroupMappingsMappingArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GroupMappingsMapping)(nil)).Elem()
+}
+
+func (i GroupMappingsMappingArray) ToGroupMappingsMappingArrayOutput() GroupMappingsMappingArrayOutput {
+	return i.ToGroupMappingsMappingArrayOutputWithContext(context.Background())
+}
+
+func (i GroupMappingsMappingArray) ToGroupMappingsMappingArrayOutputWithContext(ctx context.Context) GroupMappingsMappingArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GroupMappingsMappingArrayOutput)
+}
+
+type GroupMappingsMappingOutput struct{ *pulumi.OutputState }
+
+func (GroupMappingsMappingOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GroupMappingsMapping)(nil)).Elem()
+}
+
+func (o GroupMappingsMappingOutput) ToGroupMappingsMappingOutput() GroupMappingsMappingOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOutput) ToGroupMappingsMappingOutputWithContext(ctx context.Context) GroupMappingsMappingOutput {
+	return o
+}
+
+// The identity-provider group ID. Each group ID appears once.
+func (o GroupMappingsMappingOutput) GroupId() pulumi.StringOutput {
+	return o.ApplyT(func(v GroupMappingsMapping) string { return v.GroupId }).(pulumi.StringOutput)
+}
+
+// The roles that members of the group get in organizations.
+func (o GroupMappingsMappingOutput) OrganizationRoles() GroupMappingsMappingOrganizationRoleArrayOutput {
+	return o.ApplyT(func(v GroupMappingsMapping) []GroupMappingsMappingOrganizationRole { return v.OrganizationRoles }).(GroupMappingsMappingOrganizationRoleArrayOutput)
+}
+
+type GroupMappingsMappingArrayOutput struct{ *pulumi.OutputState }
+
+func (GroupMappingsMappingArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GroupMappingsMapping)(nil)).Elem()
+}
+
+func (o GroupMappingsMappingArrayOutput) ToGroupMappingsMappingArrayOutput() GroupMappingsMappingArrayOutput {
+	return o
+}
+
+func (o GroupMappingsMappingArrayOutput) ToGroupMappingsMappingArrayOutputWithContext(ctx context.Context) GroupMappingsMappingArrayOutput {
+	return o
+}
+
+func (o GroupMappingsMappingArrayOutput) Index(i pulumi.IntInput) GroupMappingsMappingOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) GroupMappingsMapping {
+		return vs[0].([]GroupMappingsMapping)[vs[1].(int)]
+	}).(GroupMappingsMappingOutput)
+}
+
+type GroupMappingsMappingOrganizationRole struct {
+	// The organization name. The organization must exist.
+	Organization string `pulumi:"organization"`
+	// The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+	ProjectRoles []GroupMappingsMappingOrganizationRoleProjectRole `pulumi:"projectRoles"`
+	// The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+	Role string `pulumi:"role"`
+}
+
+// GroupMappingsMappingOrganizationRoleInput is an input type that accepts GroupMappingsMappingOrganizationRoleArgs and GroupMappingsMappingOrganizationRoleOutput values.
+// You can construct a concrete instance of `GroupMappingsMappingOrganizationRoleInput` via:
+//
+//	GroupMappingsMappingOrganizationRoleArgs{...}
+type GroupMappingsMappingOrganizationRoleInput interface {
+	pulumi.Input
+
+	ToGroupMappingsMappingOrganizationRoleOutput() GroupMappingsMappingOrganizationRoleOutput
+	ToGroupMappingsMappingOrganizationRoleOutputWithContext(context.Context) GroupMappingsMappingOrganizationRoleOutput
+}
+
+type GroupMappingsMappingOrganizationRoleArgs struct {
+	// The organization name. The organization must exist.
+	Organization pulumi.StringInput `pulumi:"organization"`
+	// The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+	ProjectRoles GroupMappingsMappingOrganizationRoleProjectRoleArrayInput `pulumi:"projectRoles"`
+	// The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+	Role pulumi.StringInput `pulumi:"role"`
+}
+
+func (GroupMappingsMappingOrganizationRoleArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GroupMappingsMappingOrganizationRole)(nil)).Elem()
+}
+
+func (i GroupMappingsMappingOrganizationRoleArgs) ToGroupMappingsMappingOrganizationRoleOutput() GroupMappingsMappingOrganizationRoleOutput {
+	return i.ToGroupMappingsMappingOrganizationRoleOutputWithContext(context.Background())
+}
+
+func (i GroupMappingsMappingOrganizationRoleArgs) ToGroupMappingsMappingOrganizationRoleOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GroupMappingsMappingOrganizationRoleOutput)
+}
+
+// GroupMappingsMappingOrganizationRoleArrayInput is an input type that accepts GroupMappingsMappingOrganizationRoleArray and GroupMappingsMappingOrganizationRoleArrayOutput values.
+// You can construct a concrete instance of `GroupMappingsMappingOrganizationRoleArrayInput` via:
+//
+//	GroupMappingsMappingOrganizationRoleArray{ GroupMappingsMappingOrganizationRoleArgs{...} }
+type GroupMappingsMappingOrganizationRoleArrayInput interface {
+	pulumi.Input
+
+	ToGroupMappingsMappingOrganizationRoleArrayOutput() GroupMappingsMappingOrganizationRoleArrayOutput
+	ToGroupMappingsMappingOrganizationRoleArrayOutputWithContext(context.Context) GroupMappingsMappingOrganizationRoleArrayOutput
+}
+
+type GroupMappingsMappingOrganizationRoleArray []GroupMappingsMappingOrganizationRoleInput
+
+func (GroupMappingsMappingOrganizationRoleArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GroupMappingsMappingOrganizationRole)(nil)).Elem()
+}
+
+func (i GroupMappingsMappingOrganizationRoleArray) ToGroupMappingsMappingOrganizationRoleArrayOutput() GroupMappingsMappingOrganizationRoleArrayOutput {
+	return i.ToGroupMappingsMappingOrganizationRoleArrayOutputWithContext(context.Background())
+}
+
+func (i GroupMappingsMappingOrganizationRoleArray) ToGroupMappingsMappingOrganizationRoleArrayOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GroupMappingsMappingOrganizationRoleArrayOutput)
+}
+
+type GroupMappingsMappingOrganizationRoleOutput struct{ *pulumi.OutputState }
+
+func (GroupMappingsMappingOrganizationRoleOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GroupMappingsMappingOrganizationRole)(nil)).Elem()
+}
+
+func (o GroupMappingsMappingOrganizationRoleOutput) ToGroupMappingsMappingOrganizationRoleOutput() GroupMappingsMappingOrganizationRoleOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOrganizationRoleOutput) ToGroupMappingsMappingOrganizationRoleOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleOutput {
+	return o
+}
+
+// The organization name. The organization must exist.
+func (o GroupMappingsMappingOrganizationRoleOutput) Organization() pulumi.StringOutput {
+	return o.ApplyT(func(v GroupMappingsMappingOrganizationRole) string { return v.Organization }).(pulumi.StringOutput)
+}
+
+// The roles that members of the group get in projects of this organization. Only listed projects are managed. Omit it or use an empty list for none.
+func (o GroupMappingsMappingOrganizationRoleOutput) ProjectRoles() GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput {
+	return o.ApplyT(func(v GroupMappingsMappingOrganizationRole) []GroupMappingsMappingOrganizationRoleProjectRole {
+		return v.ProjectRoles
+	}).(GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput)
+}
+
+// The built-in or custom organization role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+func (o GroupMappingsMappingOrganizationRoleOutput) Role() pulumi.StringOutput {
+	return o.ApplyT(func(v GroupMappingsMappingOrganizationRole) string { return v.Role }).(pulumi.StringOutput)
+}
+
+type GroupMappingsMappingOrganizationRoleArrayOutput struct{ *pulumi.OutputState }
+
+func (GroupMappingsMappingOrganizationRoleArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GroupMappingsMappingOrganizationRole)(nil)).Elem()
+}
+
+func (o GroupMappingsMappingOrganizationRoleArrayOutput) ToGroupMappingsMappingOrganizationRoleArrayOutput() GroupMappingsMappingOrganizationRoleArrayOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOrganizationRoleArrayOutput) ToGroupMappingsMappingOrganizationRoleArrayOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleArrayOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOrganizationRoleArrayOutput) Index(i pulumi.IntInput) GroupMappingsMappingOrganizationRoleOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) GroupMappingsMappingOrganizationRole {
+		return vs[0].([]GroupMappingsMappingOrganizationRole)[vs[1].(int)]
+	}).(GroupMappingsMappingOrganizationRoleOutput)
+}
+
+type GroupMappingsMappingOrganizationRoleProjectRole struct {
+	// The project name. The project must exist in the organization.
+	Project string `pulumi:"project"`
+	// The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+	Role string `pulumi:"role"`
+}
+
+// GroupMappingsMappingOrganizationRoleProjectRoleInput is an input type that accepts GroupMappingsMappingOrganizationRoleProjectRoleArgs and GroupMappingsMappingOrganizationRoleProjectRoleOutput values.
+// You can construct a concrete instance of `GroupMappingsMappingOrganizationRoleProjectRoleInput` via:
+//
+//	GroupMappingsMappingOrganizationRoleProjectRoleArgs{...}
+type GroupMappingsMappingOrganizationRoleProjectRoleInput interface {
+	pulumi.Input
+
+	ToGroupMappingsMappingOrganizationRoleProjectRoleOutput() GroupMappingsMappingOrganizationRoleProjectRoleOutput
+	ToGroupMappingsMappingOrganizationRoleProjectRoleOutputWithContext(context.Context) GroupMappingsMappingOrganizationRoleProjectRoleOutput
+}
+
+type GroupMappingsMappingOrganizationRoleProjectRoleArgs struct {
+	// The project name. The project must exist in the organization.
+	Project pulumi.StringInput `pulumi:"project"`
+	// The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+	Role pulumi.StringInput `pulumi:"role"`
+}
+
+func (GroupMappingsMappingOrganizationRoleProjectRoleArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*GroupMappingsMappingOrganizationRoleProjectRole)(nil)).Elem()
+}
+
+func (i GroupMappingsMappingOrganizationRoleProjectRoleArgs) ToGroupMappingsMappingOrganizationRoleProjectRoleOutput() GroupMappingsMappingOrganizationRoleProjectRoleOutput {
+	return i.ToGroupMappingsMappingOrganizationRoleProjectRoleOutputWithContext(context.Background())
+}
+
+func (i GroupMappingsMappingOrganizationRoleProjectRoleArgs) ToGroupMappingsMappingOrganizationRoleProjectRoleOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleProjectRoleOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GroupMappingsMappingOrganizationRoleProjectRoleOutput)
+}
+
+// GroupMappingsMappingOrganizationRoleProjectRoleArrayInput is an input type that accepts GroupMappingsMappingOrganizationRoleProjectRoleArray and GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput values.
+// You can construct a concrete instance of `GroupMappingsMappingOrganizationRoleProjectRoleArrayInput` via:
+//
+//	GroupMappingsMappingOrganizationRoleProjectRoleArray{ GroupMappingsMappingOrganizationRoleProjectRoleArgs{...} }
+type GroupMappingsMappingOrganizationRoleProjectRoleArrayInput interface {
+	pulumi.Input
+
+	ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutput() GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput
+	ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutputWithContext(context.Context) GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput
+}
+
+type GroupMappingsMappingOrganizationRoleProjectRoleArray []GroupMappingsMappingOrganizationRoleProjectRoleInput
+
+func (GroupMappingsMappingOrganizationRoleProjectRoleArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GroupMappingsMappingOrganizationRoleProjectRole)(nil)).Elem()
+}
+
+func (i GroupMappingsMappingOrganizationRoleProjectRoleArray) ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutput() GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput {
+	return i.ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutputWithContext(context.Background())
+}
+
+func (i GroupMappingsMappingOrganizationRoleProjectRoleArray) ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput)
+}
+
+type GroupMappingsMappingOrganizationRoleProjectRoleOutput struct{ *pulumi.OutputState }
+
+func (GroupMappingsMappingOrganizationRoleProjectRoleOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*GroupMappingsMappingOrganizationRoleProjectRole)(nil)).Elem()
+}
+
+func (o GroupMappingsMappingOrganizationRoleProjectRoleOutput) ToGroupMappingsMappingOrganizationRoleProjectRoleOutput() GroupMappingsMappingOrganizationRoleProjectRoleOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOrganizationRoleProjectRoleOutput) ToGroupMappingsMappingOrganizationRoleProjectRoleOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleProjectRoleOutput {
+	return o
+}
+
+// The project name. The project must exist in the organization.
+func (o GroupMappingsMappingOrganizationRoleProjectRoleOutput) Project() pulumi.StringOutput {
+	return o.ApplyT(func(v GroupMappingsMappingOrganizationRoleProjectRole) string { return v.Project }).(pulumi.StringOutput)
+}
+
+// The built-in or custom project role name. The API does not check it, so a wrong name gives no error and sign-in skips the role.
+func (o GroupMappingsMappingOrganizationRoleProjectRoleOutput) Role() pulumi.StringOutput {
+	return o.ApplyT(func(v GroupMappingsMappingOrganizationRoleProjectRole) string { return v.Role }).(pulumi.StringOutput)
+}
+
+type GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput struct{ *pulumi.OutputState }
+
+func (GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]GroupMappingsMappingOrganizationRoleProjectRole)(nil)).Elem()
+}
+
+func (o GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput) ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutput() GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput) ToGroupMappingsMappingOrganizationRoleProjectRoleArrayOutputWithContext(ctx context.Context) GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput {
+	return o
+}
+
+func (o GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput) Index(i pulumi.IntInput) GroupMappingsMappingOrganizationRoleProjectRoleOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) GroupMappingsMappingOrganizationRoleProjectRole {
+		return vs[0].([]GroupMappingsMappingOrganizationRoleProjectRole)[vs[1].(int)]
+	}).(GroupMappingsMappingOrganizationRoleProjectRoleOutput)
 }
 
 type ScheduleWindow struct {
@@ -2197,6 +2526,12 @@ func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*ChannelConfigPtrInput)(nil)).Elem(), ChannelConfigArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*GatewayEndpointProviderInput)(nil)).Elem(), GatewayEndpointProviderArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*GatewayEndpointProviderArrayInput)(nil)).Elem(), GatewayEndpointProviderArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GroupMappingsMappingInput)(nil)).Elem(), GroupMappingsMappingArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GroupMappingsMappingArrayInput)(nil)).Elem(), GroupMappingsMappingArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GroupMappingsMappingOrganizationRoleInput)(nil)).Elem(), GroupMappingsMappingOrganizationRoleArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GroupMappingsMappingOrganizationRoleArrayInput)(nil)).Elem(), GroupMappingsMappingOrganizationRoleArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GroupMappingsMappingOrganizationRoleProjectRoleInput)(nil)).Elem(), GroupMappingsMappingOrganizationRoleProjectRoleArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*GroupMappingsMappingOrganizationRoleProjectRoleArrayInput)(nil)).Elem(), GroupMappingsMappingOrganizationRoleProjectRoleArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ScheduleWindowInput)(nil)).Elem(), ScheduleWindowArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*ScheduleWindowArrayInput)(nil)).Elem(), ScheduleWindowArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*SloAlertsInput)(nil)).Elem(), SloAlertsArgs{})
@@ -2223,6 +2558,12 @@ func init() {
 	pulumi.RegisterOutputType(ChannelConfigPtrOutput{})
 	pulumi.RegisterOutputType(GatewayEndpointProviderOutput{})
 	pulumi.RegisterOutputType(GatewayEndpointProviderArrayOutput{})
+	pulumi.RegisterOutputType(GroupMappingsMappingOutput{})
+	pulumi.RegisterOutputType(GroupMappingsMappingArrayOutput{})
+	pulumi.RegisterOutputType(GroupMappingsMappingOrganizationRoleOutput{})
+	pulumi.RegisterOutputType(GroupMappingsMappingOrganizationRoleArrayOutput{})
+	pulumi.RegisterOutputType(GroupMappingsMappingOrganizationRoleProjectRoleOutput{})
+	pulumi.RegisterOutputType(GroupMappingsMappingOrganizationRoleProjectRoleArrayOutput{})
 	pulumi.RegisterOutputType(ScheduleWindowOutput{})
 	pulumi.RegisterOutputType(ScheduleWindowArrayOutput{})
 	pulumi.RegisterOutputType(SloAlertsOutput{})
